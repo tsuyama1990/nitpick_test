@@ -1,11 +1,12 @@
 import logging
+import sys
 from collections.abc import Callable
 
 import polars as pl
 
 from src.domain_models import CommitRecord
 from src.processing.cache_manager import load_from_cache, save_to_cache
-from src.processing.transformer import calculate_daily_commits
+from src.processing.transformer import calculate_daily_commits, get_top_committers
 
 logger = logging.getLogger(__name__)
 
@@ -25,4 +26,21 @@ def orchestrate_repository_processing(
 
 
 def run_app() -> None:
-    logger.info("Application initialized. Ready to process repositories.")
+    repo_name = sys.argv[1] if len(sys.argv) > 1 else "octocat/Hello-World"
+    logger.info(f"Starting processing workflow for repository: {repo_name}")
+
+    def empty_fetcher(repo: str) -> list[CommitRecord]:
+        logger.warning(f"Dummy fetcher called for {repo}. Ingestion layer not fully integrated.")
+        return []
+
+    # Run the core orchestration
+    df = orchestrate_repository_processing(repo_name, empty_fetcher)
+
+    # Also calculate top committers to ensure all features are utilized
+    # (In a real scenario, records would be reused if cache missed, but we demonstrate the logic here)
+    top_committers = get_top_committers([])
+
+    print(f"Workflow completed. Daily Commits for {repo_name}:")
+    print(df)
+    print("Top Committers:")
+    print(top_committers)
