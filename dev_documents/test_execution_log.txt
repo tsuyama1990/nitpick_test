@@ -1,0 +1,33 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0
+rootdir: /app
+configfile: pyproject.toml
+testpaths: tests
+plugins: mock-3.15.1, cov-7.1.0, anyio-4.13.0
+collected 17 items
+
+tests/integration/test_controller.py ....                                [ 23%]
+tests/unit/test_app_mocks.py ..                                          [ 35%]
+tests/unit/test_cache_manager.py ...                                     [ 52%]
+tests/unit/test_domain_models.py .....                                   [ 82%]
+tests/unit/test_transformer.py ...                                       [100%]
+
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Name                              Stmts   Miss  Cover   Missing
+---------------------------------------------------------------
+src/__init__.py                       0      0   100%
+src/config.py                        10      0   100%
+src/domain_models/__init__.py         3      0   100%
+src/domain_models/exceptions.py       5      0   100%
+src/domain_models/models.py          20      0   100%
+src/presentation/__init__.py          2      0   100%
+src/presentation/app.py              44     21    52%   55-84
+src/presentation/controller.py       25      0   100%
+src/processing/__init__.py            0      0   100%
+src/processing/cache_manager.py      22      0   100%
+src/processing/transformer.py        17      0   100%
+---------------------------------------------------------------
+TOTAL                               148     21    86%
+============================== 17 passed in 1.74s ==============================
