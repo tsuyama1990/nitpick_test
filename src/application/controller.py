@@ -40,7 +40,7 @@ def run_app() -> None:
     # (In a real scenario, records would be reused if cache missed, but we demonstrate the logic here)
     top_committers = get_top_committers([])
 
-    print(f"Workflow completed. Daily Commits for {repo_name}:")
-    print(df)
-    print("Top Committers:")
-    print(top_committers)
+    logger.info(f"Workflow completed. Daily Commits for {repo_name}:")
+    logger.info(f"\n{df}")
+    logger.info("Top Committers:")
+    logger.info(f"\n{top_committers}")
