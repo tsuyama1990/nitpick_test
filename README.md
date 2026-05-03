@@ -1,132 +1,49 @@
 # GitHub Repository Analysis Dashboard PoC
 
-![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
-![Python Version](https://img.shields.io/badge/python-3.12%2B-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
+## Overview
 
-A high-performance, strictly typed Proof of Concept (PoC) for analyzing GitHub repositories. This system ingests live data from the GitHub REST API, processes commit histories at lightning speed using Polars, and presents interactive visualizations via Streamlit, all while enforcing strict architectural boundaries and security best practices.
+This is a Python application that fetches and analyzes GitHub repository metadata and commits. Built primarily using modern, highly strictly-typed Python libraries such as Pydantic to ensure maximum reliability and clarity.
 
-## Key Features
+## Features
 
-*   **Live API Integration**: Connects directly to the GitHub REST API to fetch real-time repository metadata and commit histories.
-*   **High-Performance Aggregation**: Leverages `polars` to transform and aggregate thousands of commit records efficiently, calculating daily trends and identifying top contributors.
-*   **Intelligent Local Caching**: Implements a Time-to-Live (TTL) Parquet-based caching mechanism to drastically reduce API latency and completely prevent rate-limiting penalties.
-*   **Zero-Exposure Security**: Strictly enforces environment-variable-only credential management (`dotenv`), ensuring GitHub Personal Access Tokens are never hardcoded, leaked in logs, or exposed in the UI.
-*   **Robust Error Handling**: Domain-specific exceptions intercept API failures (e.g., 404 Not Found, 403 Rate Limit), translating them into user-friendly UI alerts without crashing the application.
+- **GitHub Ingestion**: Fetches core repository statistics (stars, forks, open issues).
+- **Commit History**: Fetches up to 100 recent commits for the repository.
+- **Robustness**: Provides secure credential loading without hardcoding secrets and features typed API clients.
 
-## Architecture Overview
+## Installation
 
-The system is built on a tiered architecture ensuring separation of concerns:
-1.  **Ingestion Layer**: Safely interacts with the GitHub API, parses JSON, and validates data using strict Pydantic models.
-2.  **Processing & Storage Layer**: Aggregates data using Polars and manages the local disk cache.
-3.  **Presentation Layer**: A lightweight Streamlit UI that orchestrates the backend and renders charts.
+1. Make sure you have `uv` installed.
+2. Clone the repository and navigate to its root.
+3. Install dependencies:
+   ```bash
+   uv sync
+   ```
+4. Copy `.env.example` to `.env` and fill in your GitHub Personal Access Token:
+   ```bash
+   cp .env.example .env
+   # Edit .env and set GITHUB_TOKEN=your_token
+   ```
 
-```mermaid
-graph TD
-    User([User]) --> UI[Streamlit Web UI<br/>Presentation Layer]
-    UI --> AppLogic[Application Controller]
-    AppLogic --> Cache[Cache Manager<br/>Transformation & Storage]
-    Cache -- Cache Miss --> Transformer[Polars Transformer]
-    Transformer --> APIClient[GitHub API Client<br/>Ingestion Layer]
-    APIClient -- HTTP GET --> GitHubAPI((GitHub REST API))
-    GitHubAPI -- JSON Response --> APIClient
-    APIClient --> Transformer
-    Transformer -- Processed Data --> DiskCache[(Local Parquet/CSV Cache)]
-    DiskCache -- Read Cache --> Cache
-    Cache -- DataFrame --> AppLogic
-    AppLogic --> UI
-```
+## Structure
 
-## Prerequisites
-
-*   Python >= 3.12
-*   [`uv`](https://docs.astral.sh/uv/) (Extremely fast Python package installer and resolver)
-*   A GitHub Personal Access Token (for Live API access)
-
-## Installation & Setup
-
-1.  **Clone the repository:**
-    ```bash
-    git clone <repository_url>
-    cd <repository_directory>
-    ```
-
-2.  **Install dependencies using `uv`:**
-    ```bash
-    uv sync
-    ```
-
-3.  **Configure Environment Variables:**
-    Copy the example environment file and add your GitHub token.
-    ```bash
-    cp .env.example .env
-    # Edit .env and insert your actual token at GITHUB_TOKEN=
-    ```
+- `src/domain_models/`: Pydantic models acting as the core data types (e.g., `RepositoryMetadata`, `CommitRecord`, configs, and exceptions).
+- `src/ingestion/`: The `github_client.py` component to securely make external API calls.
+- `tests/unit/`: Comprehensive unit tests ensuring strict typing and HTTP handling without using live external endpoints.
 
 ## Usage
 
-### Launch the Streamlit Dashboard
+You can use the API client locally as follows:
 
-Run the main application using the `uv` environment:
+```python
+from src.domain_models.config import get_config
+from src.ingestion.github_client import GitHubClient
 
-```bash
-uv run streamlit run src/presentation/app.py
+config = get_config()
+client = GitHubClient(config)
+
+metadata = client.get_repository_metadata("streamlit", "streamlit")
+print(metadata.model_dump())
+
+commits = client.get_commits("streamlit", "streamlit")
+print(commits[0].model_dump())
 ```
-
-*   Open your browser to the URL provided in the terminal (usually `http://localhost:8501`).
-*   Enter a repository name in the format `owner/repo` (e.g., `streamlit/streamlit` or `tiangolo/fastapi`).
-*   View the generated KPIs, commit trends, and top committer charts.
-
-### Run the Interactive Tutorial
-
-To understand the system's inner workings and validate the data flow step-by-step:
-
-```bash
-uv run marimo edit tutorials/UAT_AND_TUTORIAL.py
-```
-
-## Development Workflow
-
-This project adheres to strict quality standards. Ensure you run the following commands before submitting code:
-
-*   **Run Linters & Formatting (Ruff)**:
-    ```bash
-    uv run ruff check .
-    uv run ruff format .
-    ```
-
-*   **Run Type Checking (Mypy)**:
-    ```bash
-    uv run mypy src tests
-    ```
-
-*   **Run Tests (Pytest)**:
-    ```bash
-    # Run isolated unit tests (Mocked API)
-    uv run pytest tests/unit
-
-    # Run full test suite with coverage
-    uv run pytest
-    ```
-
-## Project Structure
-
-```text
-.
-├── .env.example
-├── pyproject.toml
-├── src/
-│   ├── config.py
-│   ├── domain/        # Pydantic Models & Exceptions
-│   ├── ingestion/     # GitHub API Client
-│   ├── processing/    # Polars Transformer & Cache
-│   └── presentation/  # Streamlit UI & Controller
-├── tests/
-│   ├── unit/
-│   └── integration/
-└── tutorials/         # Marimo UAT notebooks
-```
-
-## License
-
-This project is licensed under the MIT License.
