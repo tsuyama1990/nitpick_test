@@ -13,6 +13,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "marimo>=0.23.4",
     "mypy>=1.20.2",
     "pytest>=9.0.3",
     "pytest-cov>=7.1.0",
@@ -41,6 +42,7 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = ["S101"]  # Allow assert in tests
+"tutorials/*.py" = ["N803", "N807", "B018"] # Allow marimo related ignore rules
 
 [tool.ruff.lint.mccabe]
 max-complexity = 10  # Exceeding this prompts function splitting (prevent AI long functions)
