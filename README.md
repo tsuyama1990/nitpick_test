@@ -13,6 +13,7 @@ A high-performance, strictly typed Proof of Concept (PoC) for analyzing GitHub r
 *   **Intelligent Local Caching**: Implements a Time-to-Live (TTL) Parquet-based caching mechanism to drastically reduce API latency and completely prevent rate-limiting penalties.
 *   **Zero-Exposure Security**: Strictly enforces environment-variable-only credential management (`dotenv`), ensuring GitHub Personal Access Tokens are never hardcoded, leaked in logs, or exposed in the UI.
 *   **Robust Error Handling**: Domain-specific exceptions intercept API failures (e.g., 404 Not Found, 403 Rate Limit), translating them into user-friendly UI alerts without crashing the application.
+*   **High-Speed File I/O**: Compresses and saves DataFrames directly to disk utilizing PyArrow and Apache Parquet.
 
 ## Architecture Overview
 
@@ -67,11 +68,7 @@ graph TD
 
 ### Launch the Streamlit Dashboard
 
-Run the main application using the `uv` environment:
-
-```bash
-uv run streamlit run src/presentation/app.py
-```
+*(UI layer implementation is currently pending. The core engine is ready for data ingestion, processing, and caching.)*
 
 *   Open your browser to the URL provided in the terminal (usually `http://localhost:8501`).
 *   Enter a repository name in the format `owner/repo` (e.g., `streamlit/streamlit` or `tiangolo/fastapi`).
@@ -82,7 +79,7 @@ uv run streamlit run src/presentation/app.py
 To understand the system's inner workings and validate the data flow step-by-step:
 
 ```bash
-uv run marimo edit tutorials/UAT_AND_TUTORIAL.py
+uv run marimo edit tests/uat/UAT_c02.py
 ```
 
 ## Development Workflow
