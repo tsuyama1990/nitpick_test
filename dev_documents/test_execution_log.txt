@@ -1,0 +1,26 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0
+rootdir: /app
+configfile: pyproject.toml
+testpaths: tests
+plugins: mock-3.15.1, cov-7.1.0, anyio-4.13.0, respx-0.23.1
+collected 6 items
+
+tests/e2e/test_github_client_integration.py s                            [ 16%]
+tests/unit/test_github_client.py .....                                   [100%]
+
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Name                              Stmts   Miss  Cover   Missing
+---------------------------------------------------------------
+src/__init__.py                       0      0   100%
+src/config.py                         7      1    86%   15
+src/domain_models/__init__.py         3      0   100%
+src/domain_models/exceptions.py       4      0   100%
+src/domain_models/models.py          14      0   100%
+src/ingestion/__init__.py             2      0   100%
+src/ingestion/github_client.py       48      7    85%   43, 52-54, 75-77
+---------------------------------------------------------------
+TOTAL                                78      8    90%
+========================= 5 passed, 1 skipped in 1.03s =========================
