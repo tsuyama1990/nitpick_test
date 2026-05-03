@@ -1,2 +1,9 @@
+from src.application.controller import run_app
+
+
 def main() -> None:
-    pass
+    run_app()
+
+
+if __name__ == "__main__":
+    main()

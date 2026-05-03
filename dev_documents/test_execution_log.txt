@@ -3,10 +3,11 @@ platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0
 rootdir: /app
 configfile: pyproject.toml
 plugins: mock-3.15.1, cov-7.1.0, anyio-4.13.0
-collected 10 items
+collected 12 items
 
-tests/unit/test_cache_manager.py ...                                     [ 30%]
-tests/unit/test_domain_models.py .....                                   [ 80%]
+tests/integration/test_controller.py ..                                  [ 16%]
+tests/unit/test_cache_manager.py ...                                     [ 41%]
+tests/unit/test_domain_models.py .....                                   [ 83%]
 tests/unit/test_transformer.py ..                                        [100%]
 
 ================================ tests coverage ================================
@@ -15,14 +16,16 @@ _______________ coverage: platform linux, python 3.12.13-final-0 _______________
 Name                              Stmts   Miss  Cover   Missing
 ---------------------------------------------------------------
 src/__init__.py                       0      0   100%
-src/config.py                         9      0   100%
+src/application/__init__.py           0      0   100%
+src/application/controller.py        17      1    94%   28
+src/config.py                        10      0   100%
 src/domain_models/__init__.py         2      0   100%
 src/domain_models/models.py          14      0   100%
 src/processing/__init__.py            0      0   100%
 src/processing/cache_manager.py      22      0   100%
 src/processing/transformer.py        17      3    82%   8, 26, 36
 ---------------------------------------------------------------
-TOTAL                                64      3    95%
-============================== 10 passed in 0.96s ==============================
+TOTAL                                82      4    95%
+============================== 12 passed in 1.00s ==============================
 /app/.venv/lib/python3.12/site-packages/coverage/inorout.py:561: CoverageWarning: Module dev_src was never imported. (module-not-imported); see https://coverage.readthedocs.io/en/7.13.5/messages.html#warning-module-not-imported
   self.warn(f"Module {pkg} was never imported.", slug="module-not-imported")
