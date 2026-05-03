@@ -12,12 +12,12 @@ from src.ingestion.github_client import GitHubClient
 
 
 @pytest.fixture
-def mock_token_env(monkeypatch: pytest.MonkeyPatch) -> None:
+def _mock_token_env(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("GITHUB_TOKEN", "fake-token-123")
 
 
 @respx.mock
-def test_fetch_repository_metadata_success(mock_token_env: None) -> None:
+def test_fetch_repository_metadata_success(_mock_token_env: pytest.MonkeyPatch) -> None:
     client = GitHubClient()
 
     mock_response = {
@@ -40,7 +40,7 @@ def test_fetch_repository_metadata_success(mock_token_env: None) -> None:
 
 
 @respx.mock
-def test_fetch_repository_metadata_not_found(mock_token_env: None) -> None:
+def test_fetch_repository_metadata_not_found(_mock_token_env: pytest.MonkeyPatch) -> None:
     client = GitHubClient()
     respx.get("https://api.github.com/repos/invalid/repo").mock(return_value=httpx.Response(404))
 
@@ -49,7 +49,7 @@ def test_fetch_repository_metadata_not_found(mock_token_env: None) -> None:
 
 
 @respx.mock
-def test_fetch_repository_metadata_auth_error(mock_token_env: None) -> None:
+def test_fetch_repository_metadata_auth_error(_mock_token_env: pytest.MonkeyPatch) -> None:
     client = GitHubClient()
     respx.get("https://api.github.com/repos/streamlit/streamlit").mock(
         return_value=httpx.Response(401)
@@ -60,7 +60,7 @@ def test_fetch_repository_metadata_auth_error(mock_token_env: None) -> None:
 
 
 @respx.mock
-def test_fetch_repository_metadata_rate_limit(mock_token_env: None) -> None:
+def test_fetch_repository_metadata_rate_limit(_mock_token_env: pytest.MonkeyPatch) -> None:
     client = GitHubClient()
     respx.get("https://api.github.com/repos/streamlit/streamlit").mock(
         return_value=httpx.Response(403, text="API Rate Limit Exceeded")
@@ -71,7 +71,20 @@ def test_fetch_repository_metadata_rate_limit(mock_token_env: None) -> None:
 
 
 @respx.mock
-def test_fetch_latest_commits_success(mock_token_env: None) -> None:
+def test_fetch_repository_metadata_generic_error(_mock_token_env: pytest.MonkeyPatch) -> None:
+    from src.domain_models.exceptions import GitHubAPIError
+
+    client = GitHubClient()
+    respx.get("https://api.github.com/repos/streamlit/streamlit").mock(
+        return_value=httpx.Response(403, text="Forbidden access to resource")
+    )
+
+    with pytest.raises(GitHubAPIError, match="HTTP 403"):
+        client.fetch_repository_metadata("streamlit", "streamlit")
+
+
+@respx.mock
+def test_fetch_latest_commits_success(_mock_token_env: pytest.MonkeyPatch) -> None:
     client = GitHubClient()
 
     mock_response = [

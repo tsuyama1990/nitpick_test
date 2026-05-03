@@ -7,6 +7,7 @@ from src.config import GITHUB_API_BASE_URL, GITHUB_API_TIMEOUT, get_github_token
 from src.domain_models import (
     AuthenticationError,
     CommitRecord,
+    GitHubAPIError,
     RateLimitError,
     RepositoryMetadata,
     RepositoryNotFoundError,
@@ -18,13 +19,15 @@ class GitHubClient:
 
     def __init__(self) -> None:
         self.base_url = GITHUB_API_BASE_URL
-        self.token = get_github_token()
-        self.headers = {
+        self.timeout = GITHUB_API_TIMEOUT
+
+    @property
+    def _headers(self) -> dict[str, str]:
+        return {
             "Accept": "application/vnd.github+json",
-            "Authorization": f"Bearer {self.token}",
+            "Authorization": f"Bearer {get_github_token()}",
             "X-GitHub-Api-Version": "2022-11-28",
         }
-        self.timeout = GITHUB_API_TIMEOUT
 
     def _handle_response_errors(self, response: httpx.Response) -> None:
         """Translates HTTP errors into custom domain exceptions."""
@@ -34,12 +37,15 @@ class GitHubClient:
         if response.status_code == 404:
             msg = "The specified repository was not found."
             raise RepositoryNotFoundError(msg)
-        if response.status_code in (401, 403):
+        if response.status_code == 401:
+            msg = "Authentication failed. Invalid or expired token."
+            raise AuthenticationError(msg)
+        if response.status_code in (403, 429):
             if "rate limit" in response.text.lower() or response.status_code == 429:
                 msg = "GitHub API rate limit exceeded."
                 raise RateLimitError(msg)
-            msg = "Authentication failed. Invalid or expired token."
-            raise AuthenticationError(msg)
+            msg = f"GitHub API error: HTTP {response.status_code}"
+            raise GitHubAPIError(msg)
 
         response.raise_for_status()
 
@@ -47,7 +53,7 @@ class GitHubClient:
         """Fetches metadata for a given GitHub repository."""
         url = f"{self.base_url}/repos/{owner}/{repo}"
         with httpx.Client(timeout=self.timeout) as client:
-            response = client.get(url, headers=self.headers)
+            response = client.get(url, headers=self._headers)
             self._handle_response_errors(response)
 
         data = response.json()
@@ -64,7 +70,7 @@ class GitHubClient:
         url = f"{self.base_url}/repos/{owner}/{repo}/commits"
         params: dict[str, Any] = {"per_page": limit}
         with httpx.Client(timeout=self.timeout) as client:
-            response = client.get(url, headers=self.headers, params=params)
+            response = client.get(url, headers=self._headers, params=params)
             self._handle_response_errors(response)
 
         data = response.json()
