@@ -53,6 +53,9 @@ suppress-dummy-args = true  # Arguments starting with _ do not require type hint
 addopts = "--cov=dev_src --cov=src --cov-report=term-missing"
 testpaths = ["tests"]
 pythonpath = ["."]
+markers = [
+    "live: mark test as requiring live network access"
+]
 
 [tool.mypy]
 strict = true
