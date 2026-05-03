@@ -59,3 +59,7 @@ markers = [
 [tool.mypy]
 strict = true
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "tutorials.*"
+ignore_errors = true

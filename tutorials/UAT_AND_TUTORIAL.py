@@ -1,20 +1,25 @@
-# ruff: noqa: N807
+import typing
+
 import marimo
 
 __generated_with = "0.23.4"
 app = marimo.App(width="medium")
 
-@app.cell
-def __():
-    import marimo as mo
-    return mo,
 
 @app.cell
-def __(mo):
+def __1() -> tuple[typing.Any]:
+    import marimo as mo
+
+    return (mo,)
+
+
+@app.cell
+def __2(mo: typing.Any) -> None:
     mo.md("# CYCLE 01 UAT: API Client Validation")
 
+
 @app.cell
-def __(mo):
+def __3(mo: typing.Any) -> None:
     mo.md(
         """
         ## Scenario ID: C01-01 - Successful Data Extraction
@@ -24,13 +29,15 @@ def __(mo):
         """
     )
 
+
 @app.cell
-def __():
+def __4() -> None:
     # Implementation for C01-01 will go here
     pass
 
+
 @app.cell
-def __(mo):
+def __5(mo: typing.Any) -> None:
     mo.md(
         """
         ## Scenario ID: C01-02 - Error Handling for Invalid Repositories
@@ -38,13 +45,15 @@ def __(mo):
         """
     )
 
+
 @app.cell
-def __():
+def __6() -> None:
     # Implementation for C01-02 will go here
     pass
 
+
 @app.cell
-def __(mo):
+def __7(mo: typing.Any) -> None:
     mo.md(
         """
         ## Scenario ID: C01-03 - Authentication Failure Handling
@@ -52,10 +61,12 @@ def __(mo):
         """
     )
 
+
 @app.cell
-def __():
+def __8() -> None:
     # Implementation for C01-03 will go here
     pass
+
 
 if __name__ == "__main__":
     app.run()

@@ -17,7 +17,9 @@ class RepositoryMetadata(BaseModel):
     repo_name: str = Field(..., description="The name of the repository.", alias="name")
     star_count: int = Field(..., ge=0, description="The number of stars.", alias="stargazers_count")
     fork_count: int = Field(..., ge=0, description="The number of forks.", alias="forks_count")
-    open_issue_count: int = Field(..., ge=0, description="The number of open issues.", alias="open_issues_count")
+    open_issue_count: int = Field(
+        ..., ge=0, description="The number of open issues.", alias="open_issues_count"
+    )
 
     @property
     def owner(self) -> str:

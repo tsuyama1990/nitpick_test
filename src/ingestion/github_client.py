@@ -14,7 +14,7 @@ from src.domain_models import (
 
 class GitHubClient:
     def __init__(self, token: str | None = None) -> None:
-        self.token = token if token is not None else Settings(_env_file=".env", _env_file_encoding="utf-8").github_token  # type: ignore[call-arg]
+        self.token = token if token is not None else Settings().github_token  # type: ignore[call-arg]
         self.base_url = "https://api.github.com"
         self.timeout = 10.0
         self.headers = {

@@ -4,23 +4,24 @@ rootdir: /app
 configfile: pyproject.toml
 testpaths: tests
 plugins: mock-3.15.1, cov-7.1.0, anyio-4.13.0, httpx-0.36.2
-collected 17 items / 2 deselected / 15 selected
+collected 18 items / 2 deselected / 16 selected
 
-tests/unit/test_config.py ..                                             [ 13%]
-tests/unit/test_github_client.py .........                               [ 73%]
-tests/unit/test_models.py ....                                           [100%]
+tests/unit/test_config.py ..                                             [ 12%]
+tests/unit/test_github_client.py .........                               [ 68%]
+tests/unit/test_models.py .....                                          [100%]
 
 ================================ tests coverage ================================
 _______________ coverage: platform linux, python 3.12.13-final-0 _______________
 
 Name                              Stmts   Miss  Cover   Missing
 ---------------------------------------------------------------
+src/__init__.py                       0      0   100%
 src/config.py                         4      0   100%
 src/domain_models/__init__.py         3      0   100%
 src/domain_models/exceptions.py       4      0   100%
 src/domain_models/models.py          32      0   100%
 src/ingestion/__init__.py             2      0   100%
-src/ingestion/github_client.py       54      0   100%
+src/ingestion/github_client.py       56      0   100%
 ---------------------------------------------------------------
-TOTAL                                99      0   100%
-======================= 15 passed, 2 deselected in 0.84s =======================
+TOTAL                               101      0   100%
+======================= 16 passed, 2 deselected in 0.85s =======================
