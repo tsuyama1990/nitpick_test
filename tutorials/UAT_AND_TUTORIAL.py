@@ -13,6 +13,7 @@ def __():
     from src.config import get_settings
     from src.domain_models import AuthenticationError, RepositoryNotFoundError
     from src.ingestion.github_client import GitHubClient
+
     return AuthenticationError, GitHubClient, RepositoryNotFoundError, get_settings, mo, os
 
 
@@ -35,7 +36,7 @@ def __(get_settings, mo, os):
 def __(GITHUB_TOKEN, GitHubClient):
     client = GitHubClient(token=GITHUB_TOKEN)
     client
-    return client,
+    return (client,)
 
 
 @app.cell
@@ -51,11 +52,13 @@ def __(client, mo):
 def __(client, mo, target_owner, target_repo):
     try:
         repo_metadata = client.get_repository_metadata(target_owner, target_repo)
-        mo.md(f"**Success!** Repository: {repo_metadata.owner}/{repo_metadata.repo} | Stars: {repo_metadata.stars} | Forks: {repo_metadata.forks}")
+        mo.md(
+            f"**Success!** Repository: {repo_metadata.owner}/{repo_metadata.repo} | Stars: {repo_metadata.stars} | Forks: {repo_metadata.forks}"
+        )
     except Exception as e:
         repo_metadata = None
         mo.md(f"**Error:** {e!s}")
-    return repo_metadata,
+    return (repo_metadata,)
 
 
 @app.cell
@@ -68,7 +71,7 @@ def __(client, mo, target_owner, target_repo):
     except Exception as e:
         commits = None
         mo.md(f"**Error:** {e!s}")
-    return commits,
+    return (commits,)
 
 
 @app.cell

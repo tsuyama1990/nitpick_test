@@ -51,7 +51,7 @@ class GitHubClient:
                     repo=data["name"],
                     stars=data["stargazers_count"],
                     forks=data["forks_count"],
-                    open_issues=data["open_issues_count"]
+                    open_issues=data["open_issues_count"],
                 )
         except Exception as e:
             self._handle_request_error(e)
@@ -68,11 +68,13 @@ class GitHubClient:
 
                 commits = []
                 for item in data:
-                    commits.append(CommitRecord(
-                        commit_hash=item["sha"],
-                        author_name=item["commit"]["author"]["name"],
-                        timestamp=item["commit"]["author"]["date"]
-                    ))
+                    commits.append(
+                        CommitRecord(
+                            commit_hash=item["sha"],
+                            author_name=item["commit"]["author"]["name"],
+                            timestamp=item["commit"]["author"]["date"],
+                        )
+                    )
                 return commits
         except Exception as e:
             self._handle_request_error(e)

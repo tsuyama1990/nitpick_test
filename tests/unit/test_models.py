@@ -17,6 +17,7 @@ def test_repository_metadata_valid() -> None:
     assert repo.owner == "streamlit"
     assert repo.stars == 1000
 
+
 def test_repository_metadata_invalid_stars() -> None:
     with pytest.raises(ValidationError):
         RepositoryMetadata(
@@ -27,6 +28,7 @@ def test_repository_metadata_invalid_stars() -> None:
             open_issues=50,
         )
 
+
 def test_commit_record_valid() -> None:
     dt = datetime(2023, 1, 1, 12, 0, 0, tzinfo=UTC)
     commit = CommitRecord(
@@ -36,6 +38,7 @@ def test_commit_record_valid() -> None:
     )
     assert commit.commit_hash == "abcdef123456"
     assert commit.timestamp == dt
+
 
 def test_commit_record_invalid_timestamp() -> None:
     with pytest.raises(ValidationError):
