@@ -1,255 +1,76 @@
 # CYCLE 01 SPECIFICATION: API Client and Data Extraction
 
 ## Summary
-The primary goal of Cycle 01 is to establish a secure, reliable, and well-structured connection to the GitHub REST API. This cycle focuses on building the foundational "Ingestion Layer" of our architecture, which is responsible for authenticating with the external service, executing HTTP GET requests, and retrieving raw JSON data concerning repository metadata and commit history. A paramount concern in this cycle is the strict adherence to security best practices regarding credential management. Under no circumstances will GitHub Personal Access Tokens be hardcoded or logged. The system will rely exclusively on environment variables for configuration. By the conclusion of this cycle, the application will possess the capability to target specific repositories, handle pagination if necessary (or limit to the most recent 100 commits as per requirements), and gracefully manage API-specific errors such as rate limiting and authentication failures. This ingestion mechanism acts as the critical entry point for all data flowing into the subsequent transformation and visualisation layers.
-# CYCLE 01 SPECIFICATION: API Client and Data Extraction
-
-## Summary
-The primary goal of Cycle 01 is to establish a secure, reliable, and well-structured connection to the GitHub REST API. This cycle focuses on building the foundational "Ingestion Layer" of our architecture, which is responsible for authenticating with the external service, executing HTTP GET requests, and retrieving raw JSON data concerning repository metadata and commit history. A paramount concern in this cycle is the strict adherence to security best practices regarding credential management. Under no circumstances will GitHub Personal Access Tokens be hardcoded or logged. The system will rely exclusively on environment variables for configuration. By the conclusion of this cycle, the application will possess the capability to target specific repositories, handle pagination if necessary (or limit to the most recent 100 commits as per requirements), and gracefully manage API-specific errors such as rate limiting and authentication failures. This ingestion mechanism acts as the critical entry point for all data flowing into the subsequent transformation and visualisation layers.
-# CYCLE 01 SPECIFICATION: API Client and Data Extraction
-
-## Summary
-The primary goal of Cycle 01 is to establish a secure, reliable, and well-structured connection to the GitHub REST API. This cycle focuses on building the foundational "Ingestion Layer" of our architecture, which is responsible for authenticating with the external service, executing HTTP GET requests, and retrieving raw JSON data concerning repository metadata and commit history. A paramount concern in this cycle is the strict adherence to security best practices regarding credential management. Under no circumstances will GitHub Personal Access Tokens be hardcoded or logged. The system will rely exclusively on environment variables for configuration. By the conclusion of this cycle, the application will possess the capability to target specific repositories, handle pagination if necessary (or limit to the most recent 100 commits as per requirements), and gracefully manage API-specific errors such as rate limiting and authentication failures. This ingestion mechanism acts as the critical entry point for all data flowing into the subsequent transformation and visualisation layers.
-# CYCLE 01 SPECIFICATION: API Client and Data Extraction
-
-## Summary
-The primary goal of Cycle 01 is to establish a secure, reliable, and well-structured connection to the GitHub REST API. This cycle focuses on building the foundational "Ingestion Layer" of our architecture, which is responsible for authenticating with the external service, executing HTTP GET requests, and retrieving raw JSON data concerning repository metadata and commit history. A paramount concern in this cycle is the strict adherence to security best practices regarding credential management. Under no circumstances will GitHub Personal Access Tokens be hardcoded or logged. The system will rely exclusively on environment variables for configuration. By the conclusion of this cycle, the application will possess the capability to target specific repositories, handle pagination if necessary (or limit to the most recent 100 commits as per requirements), and gracefully manage API-specific errors such as rate limiting and authentication failures. This ingestion mechanism acts as the critical entry point for all data flowing into the subsequent transformation and visualisation layers.
-# CYCLE 01 SPECIFICATION: API Client and Data Extraction
-
-## Summary
-The primary goal of Cycle 01 is to establish a secure, reliable, and well-structured connection to the GitHub REST API. This cycle focuses on building the foundational "Ingestion Layer" of our architecture, which is responsible for authenticating with the external service, executing HTTP GET requests, and retrieving raw JSON data concerning repository metadata and commit history. A paramount concern in this cycle is the strict adherence to security best practices regarding credential management. Under no circumstances will GitHub Personal Access Tokens be hardcoded or logged. The system will rely exclusively on environment variables for configuration. By the conclusion of this cycle, the application will possess the capability to target specific repositories, handle pagination if necessary (or limit to the most recent 100 commits as per requirements), and gracefully manage API-specific errors such as rate limiting and authentication failures. This ingestion mechanism acts as the critical entry point for all data flowing into the subsequent transformation and visualisation layers.
-
+The primary goal of Cycle 01 is to establish a highly secure, mathematically reliable, and impeccably structured connection to the official GitHub REST API. This specific development cycle focuses entirely on building the foundational "Ingestion Layer" of our system architecture. This critical layer is solely responsible for securely authenticating with the external service using sensitive tokens, executing highly robust HTTP GET requests with strict timeout policies, and successfully retrieving raw JSON data payloads concerning target repository metadata and the chronological commit history. A paramount, non-negotiable concern throughout this entire cycle is the strict, uncompromising adherence to modern security best practices regarding credential management. Under absolutely no circumstances will GitHub Personal Access Tokens be hardcoded into the source code, nor will they ever be printed to standard output or logging frameworks. The system will rely exclusively and entirely on environment variables for all sensitive configuration. By the successful conclusion of this cycle, the core application will possess the robust capability to precisely target specific user-defined repositories, handle data pagination if necessary (or strictly limit extraction to the most recent 100 commits as explicitly dictated by the requirements), and gracefully, safely manage complex API-specific HTTP errors such as punitive rate limiting and unauthorized authentication failures without crashing the runtime environment. This ingestion mechanism acts as the absolute critical entry point for all data flowing into the subsequent, heavy-duty transformation and visualisation layers.
 
 ## Infrastructure & Dependencies
 
 ### A. Project Secrets (`.env.example`)
-*   **GITHUB_TOKEN**: A GitHub Personal Access Token required for authenticating with the GitHub REST API to avoid severe rate limits.
-    *   **Instruction for Coder**: Append this key to the `.env.example` file with a clear comment: `# Target Project Secrets: GitHub Personal Access Token (Leave empty in example file)`. Ensure `python-dotenv` is used to load this secret securely.
+*   **GITHUB_TOKEN**: A GitHub Personal Access Token is strictly required for successfully authenticating with the GitHub REST API to actively avoid severe, restrictive rate limits imposed on anonymous traffic.
+    *   **Instruction for Coder**: You must explicitly append this exact key to the `.env.example` file accompanied by a highly clear, descriptive comment: `# Target Project Secrets: GitHub Personal Access Token (Leave empty in example file)`. Ensure the `python-dotenv` library is explicitly used within `config.py` to load this secret securely into the Python `os.environ` dictionary.
 
 ### B. System Configurations (`docker-compose.yml`)
 *   (No specific system configurations for this cycle beyond standard Python environment setup.)
     *   **Instruction for Coder**: If setting up a local development environment using Docker, expose the application port (e.g., 8501 for Streamlit) and mount the source code volume. Preserve valid YAML formatting and idempotency.
 
 ### C. Sandbox Resilience (CRITICAL TEST STRATEGY)
-*   **Mandate Mocking**: You **MUST** explicitly mock all external API calls relying on the newly defined secrets in `.env.example` in unit and integration tests (using `unittest.mock` or `pytest-mock`). The Sandbox environment executing automated tests will not possess valid real API keys. If tests attempt actual network calls without valid `.env` values, the pipeline will inevitably fail, leading to infinite retry loops. Live API tests must be strictly segregated and optionally executed only when a valid token is explicitly provided by a human operator.
+*   **Mandate Mocking**: You **MUST** explicitly and comprehensively mock all external API network calls that rely on the newly defined secrets in `.env.example` across all standard unit and integration tests (using libraries like `unittest.mock` or `pytest-mock`). The isolated Sandbox environment executing automated tests will fundamentally not possess valid, real API keys. If automated tests attempt actual outbound network calls without valid `.env` values, the continuous integration pipeline will inevitably fail catastrophically, potentially leading to infinite retry loops and resource exhaustion. Live API E2E tests must be strictly, explicitly segregated and optionally executed only when a valid, working token is explicitly provided by a human operator.
 
 ## System Architecture
-The architecture for Cycle 01 centers on establishing the Ingestion Layer, ensuring clear separation from future processing and presentation logic.
+The architecture for Cycle 01 centers entirely on establishing the isolated Ingestion Layer, ensuring mathematical separation from all future processing and presentation logic.
 
 ```text
 .
 ├── .env.example
 ├── src/
 │   ├── __init__.py
-│   ├── config.py             # Configuration management (dotenv)
+│   ├── config.py             # Configuration management (strictly using dotenv)
 │   ├── domain/
 │   │   ├── __init__.py
-│   │   ├── models.py         # Pydantic models for repo and commit data
-│   │   └── exceptions.py     # Custom domain exceptions
+│   │   ├── models.py         # Strictly typed Pydantic models for repo and commit data
+│   │   └── exceptions.py     # Custom, descriptive domain exceptions for error handling
 │   └── ingestion/
 │       ├── __init__.py
-│       └── github_client.py  # Core HTTP client logic
+│       └── github_client.py  # Core, robust HTTP client logic handling requests
 └── tests/
     ├── conftest.py
     └── unit/
         └── test_github_client.py
 ```
 
-*   `src/config.py`: Responsible for loading environment variables securely using `python-dotenv`.
-*   `src/domain/models.py`: Defines the strict data structures (Pydantic models) representing the expected JSON payload from GitHub.
-*   `src/domain/exceptions.py`: Centralizes error definitions (e.g., `AuthenticationError`, `RateLimitError`).
-*   `src/ingestion/github_client.py`: The primary engine for HTTP requests, utilizing libraries like `httpx` or `requests`. It consumes configuration, executes requests, parses JSON, and instantiates the domain models.
-## System Architecture
-The architecture for Cycle 01 centers on establishing the Ingestion Layer, ensuring clear separation from future processing and presentation logic.
-
-```text
-.
-├── .env.example
-├── src/
-│   ├── __init__.py
-│   ├── config.py             # Configuration management (dotenv)
-│   ├── domain/
-│   │   ├── __init__.py
-│   │   ├── models.py         # Pydantic models for repo and commit data
-│   │   └── exceptions.py     # Custom domain exceptions
-│   └── ingestion/
-│       ├── __init__.py
-│       └── github_client.py  # Core HTTP client logic
-└── tests/
-    ├── conftest.py
-    └── unit/
-        └── test_github_client.py
-```
-
-*   `src/config.py`: Responsible for loading environment variables securely using `python-dotenv`.
-*   `src/domain/models.py`: Defines the strict data structures (Pydantic models) representing the expected JSON payload from GitHub.
-*   `src/domain/exceptions.py`: Centralizes error definitions (e.g., `AuthenticationError`, `RateLimitError`).
-*   `src/ingestion/github_client.py`: The primary engine for HTTP requests, utilizing libraries like `httpx` or `requests`. It consumes configuration, executes requests, parses JSON, and instantiates the domain models.
-## System Architecture
-The architecture for Cycle 01 centers on establishing the Ingestion Layer, ensuring clear separation from future processing and presentation logic.
-
-```text
-.
-├── .env.example
-├── src/
-│   ├── __init__.py
-│   ├── config.py             # Configuration management (dotenv)
-│   ├── domain/
-│   │   ├── __init__.py
-│   │   ├── models.py         # Pydantic models for repo and commit data
-│   │   └── exceptions.py     # Custom domain exceptions
-│   └── ingestion/
-│       ├── __init__.py
-│       └── github_client.py  # Core HTTP client logic
-└── tests/
-    ├── conftest.py
-    └── unit/
-        └── test_github_client.py
-```
-
-*   `src/config.py`: Responsible for loading environment variables securely using `python-dotenv`.
-*   `src/domain/models.py`: Defines the strict data structures (Pydantic models) representing the expected JSON payload from GitHub.
-*   `src/domain/exceptions.py`: Centralizes error definitions (e.g., `AuthenticationError`, `RateLimitError`).
-*   `src/ingestion/github_client.py`: The primary engine for HTTP requests, utilizing libraries like `httpx` or `requests`. It consumes configuration, executes requests, parses JSON, and instantiates the domain models.
-## System Architecture
-The architecture for Cycle 01 centers on establishing the Ingestion Layer, ensuring clear separation from future processing and presentation logic.
-
-```text
-.
-├── .env.example
-├── src/
-│   ├── __init__.py
-│   ├── config.py             # Configuration management (dotenv)
-│   ├── domain/
-│   │   ├── __init__.py
-│   │   ├── models.py         # Pydantic models for repo and commit data
-│   │   └── exceptions.py     # Custom domain exceptions
-│   └── ingestion/
-│       ├── __init__.py
-│       └── github_client.py  # Core HTTP client logic
-└── tests/
-    ├── conftest.py
-    └── unit/
-        └── test_github_client.py
-```
-
-*   `src/config.py`: Responsible for loading environment variables securely using `python-dotenv`.
-*   `src/domain/models.py`: Defines the strict data structures (Pydantic models) representing the expected JSON payload from GitHub.
-*   `src/domain/exceptions.py`: Centralizes error definitions (e.g., `AuthenticationError`, `RateLimitError`).
-*   `src/ingestion/github_client.py`: The primary engine for HTTP requests, utilizing libraries like `httpx` or `requests`. It consumes configuration, executes requests, parses JSON, and instantiates the domain models.
-## System Architecture
-The architecture for Cycle 01 centers on establishing the Ingestion Layer, ensuring clear separation from future processing and presentation logic.
-
-```text
-.
-├── .env.example
-├── src/
-│   ├── __init__.py
-│   ├── config.py             # Configuration management (dotenv)
-│   ├── domain/
-│   │   ├── __init__.py
-│   │   ├── models.py         # Pydantic models for repo and commit data
-│   │   └── exceptions.py     # Custom domain exceptions
-│   └── ingestion/
-│       ├── __init__.py
-│       └── github_client.py  # Core HTTP client logic
-└── tests/
-    ├── conftest.py
-    └── unit/
-        └── test_github_client.py
-```
-
-*   `src/config.py`: Responsible for loading environment variables securely using `python-dotenv`.
-*   `src/domain/models.py`: Defines the strict data structures (Pydantic models) representing the expected JSON payload from GitHub.
-*   `src/domain/exceptions.py`: Centralizes error definitions (e.g., `AuthenticationError`, `RateLimitError`).
-*   `src/ingestion/github_client.py`: The primary engine for HTTP requests, utilizing libraries like `httpx` or `requests`. It consumes configuration, executes requests, parses JSON, and instantiates the domain models.
+*   `src/config.py`: Exclusively responsible for loading environment variables securely using the `python-dotenv` library, ensuring failure if required keys are missing.
+*   `src/domain/models.py`: Defines the strict, mathematically rigid data structures (utilizing Pydantic base models) representing the exact expected JSON payload from GitHub, ensuring runtime type safety.
+*   `src/domain/exceptions.py`: Centralizes and mathematically defines error states (e.g., `AuthenticationError`, `RateLimitError`, `RepositoryNotFoundError`) to prevent raw HTTP errors from leaking.
+*   `src/ingestion/github_client.py`: The absolute primary engine for outbound HTTP requests, utilizing robust libraries like `httpx` or `requests` configured with strict timeouts. It consumes the secure configuration, executes requests, parses raw JSON, and instantly instantiates the strictly typed domain models.
 
 ## Design Architecture
-This cycle relies heavily on Pydantic to define the system's contract with the external GitHub API.
+This specific cycle relies heavily and exclusively on the Pydantic library to precisely define the system's strict mathematical contract with the external, volatile GitHub API.
 
-*   **`domain.models.RepositoryMetadata`**: Represents the core information of a repository.
-    *   *Constraints*: Owner and Repo name must be strings. Star count, fork count, and open issue count must be non-negative integers.
-    *   *Consumers*: The future Transformation Layer and the Presentation Layer.
-*   **`domain.models.CommitRecord`**: Represents an individual commit within the history.
-    *   *Constraints*: Commit hash must be a string. Author name is a string. Date must be parsable into a Python `datetime` or `date` object.
-    *   *Consumers*: The Transformation Layer for aggregation.
-*   **Extensibility**: By defining these as base Pydantic models, we allow for future attributes (e.g., repository language, pull request counts) to be added effortlessly without breaking existing validation logic. The strict typing ensures that the system fails fast if the GitHub API payload unexpectedly changes format.
-## Design Architecture
-This cycle relies heavily on Pydantic to define the system's contract with the external GitHub API.
-
-*   **`domain.models.RepositoryMetadata`**: Represents the core information of a repository.
-    *   *Constraints*: Owner and Repo name must be strings. Star count, fork count, and open issue count must be non-negative integers.
-    *   *Consumers*: The future Transformation Layer and the Presentation Layer.
-*   **`domain.models.CommitRecord`**: Represents an individual commit within the history.
-    *   *Constraints*: Commit hash must be a string. Author name is a string. Date must be parsable into a Python `datetime` or `date` object.
-    *   *Consumers*: The Transformation Layer for aggregation.
-*   **Extensibility**: By defining these as base Pydantic models, we allow for future attributes (e.g., repository language, pull request counts) to be added effortlessly without breaking existing validation logic. The strict typing ensures that the system fails fast if the GitHub API payload unexpectedly changes format.
-## Design Architecture
-This cycle relies heavily on Pydantic to define the system's contract with the external GitHub API.
-
-*   **`domain.models.RepositoryMetadata`**: Represents the core information of a repository.
-    *   *Constraints*: Owner and Repo name must be strings. Star count, fork count, and open issue count must be non-negative integers.
-    *   *Consumers*: The future Transformation Layer and the Presentation Layer.
-*   **`domain.models.CommitRecord`**: Represents an individual commit within the history.
-    *   *Constraints*: Commit hash must be a string. Author name is a string. Date must be parsable into a Python `datetime` or `date` object.
-    *   *Consumers*: The Transformation Layer for aggregation.
-*   **Extensibility**: By defining these as base Pydantic models, we allow for future attributes (e.g., repository language, pull request counts) to be added effortlessly without breaking existing validation logic. The strict typing ensures that the system fails fast if the GitHub API payload unexpectedly changes format.
+*   **`domain.models.RepositoryMetadata`**: Precisely represents the core, essential high-level information of a specific target repository.
+    *   *Constraints*: Owner and Repo name fields must be strictly validated as strings. Star count, fork count, and open issue count fields must be strictly validated as non-negative integers. Any deviation must trigger a fast validation error.
+    *   *Consumers*: Designed to be seamlessly consumed by the future Polars Transformation Layer and the Streamlit Presentation Layer.
+*   **`domain.models.CommitRecord`**: Precisely represents a single, individual atomic commit within the repository's chronological history.
+    *   *Constraints*: Commit hash must be explicitly validated as a string. Author name is explicitly validated as a string. The timestamp Date must be strictly parsable into a native Python `datetime` or `date` object to facilitate future time-series analysis.
+    *   *Consumers*: Designed to be consumed by the Polars Transformation Layer for massive-scale chronological aggregation.
+*   **Extensibility**: By defining these data structures entirely as foundational Pydantic base models, we mathematically allow for future, complex attributes (e.g., repository programming language, pull request counts, issue velocity) to be added effortlessly without breaking or destabilizing existing validation logic. The incredibly strict static typing mathematically ensures that the entire system fails incredibly fast right at the edge if the external GitHub API payload unexpectedly changes format.
 
 ## Implementation Approach
-1.  **Environment Setup**: Install `python-dotenv`, `pydantic`, and an HTTP client like `httpx`. Ensure `pytest` and `pytest-mock` are ready.
-2.  **Configuration Management**: Implement `config.py` to read the `.env` file and expose the `GITHUB_TOKEN`. Validate that the token is present.
-3.  **Domain Models**: Define `RepositoryMetadata` and `CommitRecord` in `models.py` using Pydantic, aligning fields with the expected GitHub API JSON response. Define custom exceptions in `exceptions.py`.
-4.  **API Client Implementation**: Create `github_client.py`. Implement functions to fetch repository info and the latest 100 commits.
-5.  **Error Handling**: Integrate `try...except` blocks within the client to catch HTTP errors (status codes 401, 403, 404, 429) and raise the corresponding custom domain exceptions. Ensure headers include the authorization token securely.
-6.  **Data Parsing**: Ensure the client parses the raw JSON directly into the defined Pydantic models before returning the data to the caller.
-## Implementation Approach
-1.  **Environment Setup**: Install `python-dotenv`, `pydantic`, and an HTTP client like `httpx`. Ensure `pytest` and `pytest-mock` are ready.
-2.  **Configuration Management**: Implement `config.py` to read the `.env` file and expose the `GITHUB_TOKEN`. Validate that the token is present.
-3.  **Domain Models**: Define `RepositoryMetadata` and `CommitRecord` in `models.py` using Pydantic, aligning fields with the expected GitHub API JSON response. Define custom exceptions in `exceptions.py`.
-4.  **API Client Implementation**: Create `github_client.py`. Implement functions to fetch repository info and the latest 100 commits.
-5.  **Error Handling**: Integrate `try...except` blocks within the client to catch HTTP errors (status codes 401, 403, 404, 429) and raise the corresponding custom domain exceptions. Ensure headers include the authorization token securely.
-6.  **Data Parsing**: Ensure the client parses the raw JSON directly into the defined Pydantic models before returning the data to the caller.
-## Implementation Approach
-1.  **Environment Setup**: Install `python-dotenv`, `pydantic`, and an HTTP client like `httpx`. Ensure `pytest` and `pytest-mock` are ready.
-2.  **Configuration Management**: Implement `config.py` to read the `.env` file and expose the `GITHUB_TOKEN`. Validate that the token is present.
-3.  **Domain Models**: Define `RepositoryMetadata` and `CommitRecord` in `models.py` using Pydantic, aligning fields with the expected GitHub API JSON response. Define custom exceptions in `exceptions.py`.
-4.  **API Client Implementation**: Create `github_client.py`. Implement functions to fetch repository info and the latest 100 commits.
-5.  **Error Handling**: Integrate `try...except` blocks within the client to catch HTTP errors (status codes 401, 403, 404, 429) and raise the corresponding custom domain exceptions. Ensure headers include the authorization token securely.
-6.  **Data Parsing**: Ensure the client parses the raw JSON directly into the defined Pydantic models before returning the data to the caller.
+1.  **Environment Setup**: Install `python-dotenv` for configuration, `pydantic` for schema validation, and a robust HTTP client like `httpx`. Ensure `pytest` and `pytest-mock` are correctly configured for testing.
+2.  **Configuration Management**: Implement the `config.py` module to securely read the `.env` file and expose the critical `GITHUB_TOKEN`. Rigorously validate that the token is present and not an empty string.
+3.  **Domain Models**: Meticulously define `RepositoryMetadata` and `CommitRecord` in `models.py` using Pydantic, perfectly aligning the fields with the expected, documented GitHub REST API JSON response structure. Define the custom domain exceptions in `exceptions.py`.
+4.  **API Client Implementation**: Architect and create `github_client.py`. Implement functions engineered to securely fetch the repository metadata and definitively fetch the latest 100 commits, implementing strict HTTP timeout values (e.g., 10 seconds) to prevent infinite hangs.
+5.  **Error Handling**: Deeply integrate comprehensive `try...except` blocks within the client logic to actively intercept raw HTTP errors (specifically targeting status codes 401, 403, 404, 429) and instantly raise the corresponding, descriptive custom domain exceptions. Ensure all outbound HTTP headers correctly and securely include the authorization token.
+6.  **Data Parsing**: Mathematically ensure the client immediately parses the raw, untyped JSON payload directly into the strictly defined Pydantic models *before* returning the complex data to any upstream caller.
 
 ## Test Strategy
 
 ### Unit Testing Approach
-The unit tests must rigorously verify the logic within `github_client.py` and the Pydantic models without making actual network requests.
-*   **Mocking**: Use `pytest-mock` to intercept calls made by `httpx.get` (or `requests.get`).
-*   **Success Scenarios**: Configure the mock to return predefined, valid JSON strings representing repository metadata and commit histories. Assert that the client correctly parses this mock data into the appropriate Pydantic models and that the values match precisely.
-*   **Error Handling Verification**: Configure the mock to return HTTP error status codes (e.g., 404 Not Found, 403 Forbidden). Assert that the client intercepts these responses and raises the correct custom exceptions defined in `domain/exceptions.py`.
-*   **Configuration Tests**: Verify that `config.py` correctly loads the token from a mock environment and fails gracefully if the environment variable is missing.
+The highly isolated unit tests must absolutely rigorously verify the mathematical logic within `github_client.py` and the strict Pydantic models without ever making actual outbound network requests.
+*   **Mocking Strategy**: Use the `pytest-mock` framework extensively to intercept and override calls made by `httpx.get` (or `requests.get`).
+*   **Success Scenarios Verification**: Configure the testing mock to return predefined, completely valid JSON strings perfectly representing standard repository metadata and commit histories. Mathematically assert that the client correctly parses this simulated data into the appropriate Pydantic model instances and that the specific integer and string values match precisely.
+*   **Error Handling Verification**: Configure the testing mock to instantly return specific HTTP error status codes (e.g., 404 Not Found, 403 Forbidden). Mathematically assert that the client successfully intercepts these raw responses and correctly raises the precise, custom exceptions strictly defined in `domain/exceptions.py`.
+*   **Configuration Validation**: Definitively verify that `config.py` correctly loads the secret token from a heavily mocked OS environment and fails incredibly gracefully (e.g., by raising an initialization error) if the required environment variable is completely missing.
 
 ### Integration Testing Approach
-Integration tests will verify the contract between the configuration, the client, and the domain models.
-*   While avoiding actual API calls is preferred for sandbox stability, a specifically marked integration test (e.g., `@pytest.mark.live`) can be implemented to hit a highly available, public repository (like `torvalds/linux`) to ensure the real-world JSON payload matches the assumptions hardcoded into the Pydantic models. This live test must be explicitly segregated and not run during standard CI unless a token is injected.
-## Test Strategy
-
-### Unit Testing Approach
-The unit tests must rigorously verify the logic within `github_client.py` and the Pydantic models without making actual network requests.
-*   **Mocking**: Use `pytest-mock` to intercept calls made by `httpx.get` (or `requests.get`).
-*   **Success Scenarios**: Configure the mock to return predefined, valid JSON strings representing repository metadata and commit histories. Assert that the client correctly parses this mock data into the appropriate Pydantic models and that the values match precisely.
-*   **Error Handling Verification**: Configure the mock to return HTTP error status codes (e.g., 404 Not Found, 403 Forbidden). Assert that the client intercepts these responses and raises the correct custom exceptions defined in `domain/exceptions.py`.
-*   **Configuration Tests**: Verify that `config.py` correctly loads the token from a mock environment and fails gracefully if the environment variable is missing.
-
-### Integration Testing Approach
-Integration tests will verify the contract between the configuration, the client, and the domain models.
-*   While avoiding actual API calls is preferred for sandbox stability, a specifically marked integration test (e.g., `@pytest.mark.live`) can be implemented to hit a highly available, public repository (like `torvalds/linux`) to ensure the real-world JSON payload matches the assumptions hardcoded into the Pydantic models. This live test must be explicitly segregated and not run during standard CI unless a token is injected.
-## Test Strategy
-
-### Unit Testing Approach
-The unit tests must rigorously verify the logic within `github_client.py` and the Pydantic models without making actual network requests.
-*   **Mocking**: Use `pytest-mock` to intercept calls made by `httpx.get` (or `requests.get`).
-*   **Success Scenarios**: Configure the mock to return predefined, valid JSON strings representing repository metadata and commit histories. Assert that the client correctly parses this mock data into the appropriate Pydantic models and that the values match precisely.
-*   **Error Handling Verification**: Configure the mock to return HTTP error status codes (e.g., 404 Not Found, 403 Forbidden). Assert that the client intercepts these responses and raises the correct custom exceptions defined in `domain/exceptions.py`.
-*   **Configuration Tests**: Verify that `config.py` correctly loads the token from a mock environment and fails gracefully if the environment variable is missing.
-
-### Integration Testing Approach
-Integration tests will verify the contract between the configuration, the client, and the domain models.
-*   While avoiding actual API calls is preferred for sandbox stability, a specifically marked integration test (e.g., `@pytest.mark.live`) can be implemented to hit a highly available, public repository (like `torvalds/linux`) to ensure the real-world JSON payload matches the assumptions hardcoded into the Pydantic models. This live test must be explicitly segregated and not run during standard CI unless a token is injected.
+Complex integration tests will rigorously verify the strict architectural contract between the configuration module, the HTTP client, and the deeply typed domain models.
+*   While avoiding actual live API calls is strongly preferred for absolute sandbox stability, a very specifically marked integration test (e.g., decorated with `@pytest.mark.live`) can be implemented to carefully hit a highly available, extremely public repository (like `torvalds/linux`) to explicitly ensure the real-world JSON payload flawlessly matches the strict assumptions hardcoded into the Pydantic schemas. This highly volatile live test must be explicitly segregated and practically never run during standard automated CI pipelines unless a valid token is deliberately injected into the runner environment.
