@@ -43,6 +43,14 @@ graph TD
 *   [`uv`](https://docs.astral.sh/uv/) (Extremely fast Python package installer and resolver)
 *   A GitHub Personal Access Token (for Live API access)
 
+## Verified Capabilities (Current Phase)
+
+*   **Secure Environment**: Loads configuration strictly from environment variables without exposing sensitive tokens.
+*   **API Ingestion**: Connects to the GitHub REST API (`get_repository_metadata`, `get_recent_commits`).
+*   **Strict Typing**: Ensures all received JSON payloads conform strictly to domain models (`RepositoryMetadata`, `CommitRecord`) mapped with Pydantic.
+*   **Resilience & Graceful Failures**: Maps HTTP exceptions accurately to domain errors (e.g. `RepositoryNotFoundError`, `RateLimitError`).
+*   **Interactive UAT**: Verified by an interactive Marimo Notebook (`UAT_AND_TUTORIAL.py`).
+
 ## Installation & Setup
 
 1.  **Clone the repository:**
