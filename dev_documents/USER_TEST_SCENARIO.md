@@ -1,72 +1,55 @@
-# User Test Scenarios: GitHub Analytics Dashboard PoC
+# User Test Scenarios & Tutorial Plan: GitHub Analytics Dashboard PoC
 
-本ドキュメントは、GitHubリポジトリ分析ダッシュボードのPoCが要件定義（ALL_SPEC.md）を厳密に満たしているかを検証するためのE2Eテストシナリオ群です。開発サイクル完了後、自動または手動で以下のシナリオをすべてパスすることを確認してください。
+This document serves as the master plan for User Acceptance Testing (UAT) and the primary tutorial for verifying the capabilities of the GitHub Repository Analysis Dashboard Proof of Concept (PoC). It outlines the strategy for executing tests, validating requirements, and ensuring a seamless user experience.
 
-## Scenario 1: 正常系フルサイクルとキャッシュ挙動の厳格検証 (Strict Happy Path & Caching)
+## Tutorial Strategy
 
-**目的**: アプリケーションが正常に動作し、かつキャッシュ機構がAPIのレートリミット保護として確実に機能していることを確認する。
+The overarching strategy is to provide a single, interactive, and executable environment where users and reviewers can validate all requirements detailed in `ALL_SPEC.md` without needing to manually run disparate Python scripts or deeply understand the test suite.
 
-**前提条件**:
-- 有効なGitHub Personal Access Tokenが `.env` に設定されていること。
-- アプリケーションが `streamlit run` で起動していること。
+We will achieve this by utilizing **Marimo**, a reactive Python notebook framework. This approach offers several advantages:
+1.  **Reproducibility**: The notebook strictly defines the execution environment and sequence.
+2.  **Interactivity**: Users can tweak parameters (like the target repository name) and immediately see the data flow through the ingestion and transformation layers.
+3.  **Documentation combined with Code**: The tutorial text is interspersed with the actual executable code, making the system architecture tangible.
 
-**テスト手順**:
-1. StreamlitのUIから、実在する人気リポジトリ（例: `streamlit/streamlit` または `tiangolo/fastapi`）を入力し、データ取得を実行する。
-2. **[検証]**: 画面上部に「スター数」「フォーク数」「オープンIssue数」がKPIとして表示され、APIから取得した実際の数値と一致していること。
-3. **[検証]**: 「日付ごとのコミット数推移」「コミッター別コミット数（上位5名）」のグラフがエラーなく描画されていること。
-4. アプリケーションのターミナル出力（ログ）を確認し、APIへのHTTPリクエスト（200 OK）が飛んだことを確認する。
-5. 直後に、**全く同じリポジトリ名**で再度データ取得を実行する。
-6. **[厳格な検証]**: 2回目の実行時は、ローカルの `.parquet` または `.csv` キャッシュからデータが読み込まれ、**GitHub APIへの追加のHTTPリクエストが一切発生していないこと**（ログで確認、またはUIのレスポンスが1回目より劇的に高速であること）。
+### Execution Modes
+The tutorial must support two execution modes to ensure resilience and ease of testing, particularly in CI environments:
 
----
+*   **Real Mode (Live API)**: Requires a valid GitHub Personal Access Token in the `.env` file. This mode executes the full End-to-End (E2E) flow, hitting the live GitHub REST API, validating network handling, rate limiting protection, and real-world data parsing.
+*   **Mock Mode (CI / No-API-Key)**: If no token is provided, the tutorial must not crash. Instead, it should gracefully fall back to using static, pre-defined mock JSON data representing the GitHub API response. This allows the core logic (Polars transformation, Pydantic validation) to be verified in sandboxed environments without external dependencies.
 
-## Scenario 2: 異常系・APIエラーハンドリング (Negative Flow & Error Handling)
+## Tutorial Plan
 
-**目的**: 無効な入力やAPIエラー発生時に、システムがクラッシュ（スタックトレースの露出）せず、ユーザーフレンドリーなエラーメッセージを表示できるか検証する。
+To ensure simplicity and maintainability, **a SINGLE Marimo file** will be created to house all scenarios.
 
-**前提条件**: アプリケーションが起動していること。
+**File Location:** `tutorials/UAT_AND_TUTORIAL.py`
 
-**テスト手順**:
-1. **存在しないリポジトリ（404エラー）**:
-   - UIの入力欄に `non-existent-owner/invalid-repo-12345` を入力し実行する。
-   - **[検証]**: アプリケーションがダウンせず、UI上に「リポジトリが見つかりません。オーナー名とリポジトリ名を確認してください」等の適切なエラー警告（`st.error` や `st.warning`）が表示されること。
-2. **無効なフォーマットの入力**:
-   - 入力欄に `invalid_repo_format_without_slash` を入力する。
-   - **[検証]**: APIリクエストを送信する前にバリデーションが働き、「`owner/repo` の形式で入力してください」と警告が出ること。
-3. **無効なトークン（401/403エラー）**:
-   - `.env` のトークンを一時的にデタラメな文字列（例: `ghp_invalidtokenxxxx`）に書き換え、アプリを再起動する。
-   - 存在するリポジトリ（例: `facebook/react`）を入力する。
-   - **[検証]**: 「認証エラーが発生しました。トークンが有効か確認してください」という趣旨のメッセージがUIに表示され、生のJSONエラーレスポンスやスタックトレースが画面に漏洩していないこと。
+This single file will be structured sequentially to guide the user through the system's capabilities, mapping directly to the development cycles:
 
----
+### Section 1: Cycle 01 - Ingestion & Validation
+*   **Action**: Attempt to load configuration. Determine if operating in 'Real Mode' or 'Mock Mode'.
+*   **Action**: Instantiate the API client (or mock client).
+*   **Validation**: Fetch repository metadata and the latest 100 commits for a target repository (e.g., `streamlit/streamlit`).
+*   **Display**: Show the raw Pydantic domain models to prove data structure adherence and type safety.
+*   **Error Test**: Deliberately query a non-existent repository (`invalid/repo123`) to demonstrate graceful custom exception handling (404 Not Found) without exposing stack traces.
 
-## Scenario 3: セキュリティと環境構成要件の監査 (Security & Compliance Audit)
+### Section 2: Cycle 02 - Transformation & Caching Engine
+*   **Action**: Pass the `CommitRecord` objects obtained in Section 1 into the Polars Transformation engine.
+*   **Validation**: Display the resulting DataFrames:
+    *   Table showing Daily Commit Counts.
+    *   Table showing Top 5 Committers.
+*   **Caching Test**: Execute a timing test. Fetch the data again using the main application controller. The notebook must demonstrate that the second fetch is significantly faster (cache hit) and bypassing the external network.
 
-**目的**: コードベースに認証情報がハードコードされていないか、および機密情報のログ漏洩がないかを静的・動的に検証する。
+### Section 3: Cycle 03 - UI Pre-flight Check
+*   *Note: While the notebook cannot run the Streamlit UI directly, it validates the data payload prepared for it.*
+*   **Action**: Invoke the central Application Controller.
+*   **Validation**: Display the final `DashboardData` DTO, proving that the presentation layer will receive cleanly formatted KPIs and DataFrames ready for direct rendering via `st.line_chart` and `st.bar_chart`.
 
-**テスト手順**:
-1. **シークレット分離の確認**:
-   - プロジェクト内のすべての `.py` ファイルに対して、`ghp_` やパスワードらしき文字列がハードコードされていないことを `grep` 等で確認する。
-   - **[検証]**: 認証情報はすべて `os.environ` または `dotenv` 経由で取得されていること。
-2. **雛形ファイルの確認**:
-   - プロジェクトルートに `.env.example` が存在することを確認する。
-   - **[検証]**: `.env.example` の中身が `GITHUB_TOKEN=` のようにキーのみ（またはダミー値）であり、本物のトークンが含まれていないこと。
-3. **ログ漏洩の確認 (動的検証)**:
-   - Scenario 1（正常系）と Scenario 2（無効なトークンでの異常系）を実行する。
-   - **[厳格な検証]**: アプリケーションを実行しているターミナルの標準出力・標準エラー出力に、`.env` から読み込んだ実際のトークン文字列が一切 `print` またはログ出力されていないことを目視および検索で確認する。
+## Tutorial Validation
 
----
+The ultimate validation of this system requires running the Streamlit application alongside the Marimo tutorial.
 
-## Scenario 4: データ加工ロジックの厳密なバリデーション (Data Transformation Accuracy)
-
-**目的**: Polarsを用いたデータ変換（集計・ソート・絞り込み）が、要件定義通りに正確に行われているかを検証する。
-
-**前提条件**:
-- Pytestが実行可能な環境であること。
-- サンプルとして、固定のJSONモックデータ（ダミーのコミット履歴100件）がテスト用ディレクトリに用意されていること。
-
-**テスト手順**:
-1. テストフレームワーク（Pytest）を実行し、Transformationモジュール（Cycle 2で作成したPolarsの処理関数）のユニットテストを走らせる。
-2. **[検証]**: 「日付ごとのコミット数」を集計するテストがパスすること。同日のコミットが正しく合算されていること。
-3. **[検証]**: 「コミッター別のコミット数」を集計する関数に対し、6名以上のコミッターが存在するモックデータを渡した際、**正確にコミット数が多い順に「上位5名」のみ**が抽出されていること（同数の場合のタイブレーク処理でクラッシュしないことも含む）。
-4. **[検証]**: 日付データ（ISO 8601形式などの文字列）が、Polars上で正しく `Date` または `Datetime` 型にキャストされてから集計されていること。
+1.  **Marimo Validation**: Execute `uv run marimo edit tutorials/UAT_AND_TUTORIAL.py`. Step through all cells. Ensure no unhandled exceptions occur and the output clearly demonstrates the system's capabilities in either Real or Mock mode.
+2.  **Streamlit E2E Validation**: Execute `uv run streamlit run src/presentation/app.py`.
+    *   Input a valid repository and visually confirm the KPIs and charts render correctly based on live data.
+    *   Input an invalid repository and visually confirm a user-friendly error message is displayed (e.g., "Repository not found") without crashing the application.
+    *   *Security Audit*: Confirm that during both success and failure scenarios, no sensitive tokens from the `.env` file are ever printed to the terminal console or exposed in the UI.
