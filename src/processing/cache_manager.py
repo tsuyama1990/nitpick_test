@@ -21,7 +21,7 @@ def save_to_cache(repo_name: str, df: pl.DataFrame, cache_dir: Path | None = Non
 
 
 def load_from_cache(
-    repo_name: str, cache_dir: Path | None = None, ttl_seconds: int = 3600
+    repo_name: str, cache_dir: Path | None = None, ttl_seconds: int | None = None
 ) -> pl.DataFrame | None:
     """Loads a Polars DataFrame from the cache if it exists and is within TTL."""
     filepath = _get_cache_filepath(repo_name, cache_dir)
@@ -31,8 +31,9 @@ def load_from_cache(
 
     mtime = filepath.stat().st_mtime
     current_time = time.time()
+    ttl = ttl_seconds if ttl_seconds is not None else settings.cache_ttl_seconds
 
-    if (current_time - mtime) > ttl_seconds:
+    if (current_time - mtime) > ttl:
         return None
 
     return pl.read_parquet(filepath)

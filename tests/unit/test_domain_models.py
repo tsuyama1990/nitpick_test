@@ -29,7 +29,7 @@ def test_repository_metadata_extra_forbid() -> None:
             star_count=10,
             fork_count=5,
             open_issue_count=2,
-            extra_field="bad", # type: ignore[call-arg]
+            extra_field="bad",  # type: ignore[call-arg]
         )
 
 
@@ -47,5 +47,5 @@ def test_commit_record_extra_forbid() -> None:
             commit_hash="abc1234",
             author="alice",
             date=datetime(2023, 1, 1, tzinfo=UTC),
-            extra_field="bad", # type: ignore[call-arg]
+            extra_field="bad",  # type: ignore[call-arg]
         )

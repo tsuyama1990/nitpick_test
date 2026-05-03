@@ -4,16 +4,21 @@ from src.domain_models import CommitRecord
 
 
 def _records_to_df(records: list[CommitRecord]) -> pl.DataFrame:
-    # Convert dates to string (YYYY-MM-DD) for aggregation
-    data = [
+    if not records:
+        return pl.DataFrame(
+            {"commit_hash": [], "author": [], "date": []},
+            schema={"commit_hash": pl.Utf8, "author": pl.Utf8, "date": pl.Utf8},
+        )
+
+    # Construct DataFrame and use vectorized date extraction to pure string
+    df = pl.DataFrame(
         {
-            "commit_hash": r.commit_hash,
-            "author": r.author,
-            "date": r.date.strftime("%Y-%m-%d"),
+            "commit_hash": [r.commit_hash for r in records],
+            "author": [r.author for r in records],
+            "date": [r.date for r in records],
         }
-        for r in records
-    ]
-    return pl.DataFrame(data, schema={"commit_hash": pl.Utf8, "author": pl.Utf8, "date": pl.Utf8})
+    )
+    return df.with_columns(pl.col("date").dt.strftime("%Y-%m-%d").alias("date"))
 
 
 def calculate_daily_commits(records: list[CommitRecord]) -> pl.DataFrame:
