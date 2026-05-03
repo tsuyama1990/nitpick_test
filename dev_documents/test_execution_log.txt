@@ -17,7 +17,7 @@ _______________ coverage: platform linux, python 3.12.13-final-0 _______________
 Name                              Stmts   Miss  Cover   Missing
 ---------------------------------------------------------------
 src/__init__.py                       0      0   100%
-src/config.py                         9      2    78%   15-16
+src/config.py                        11      2    82%   18-19
 src/domain_models/__init__.py         4      0   100%
 src/domain_models/commit.py           7      0   100%
 src/domain_models/exceptions.py       4      0   100%
@@ -25,5 +25,5 @@ src/domain_models/repository.py       8      0   100%
 src/ingestion/__init__.py             0      0   100%
 src/ingestion/github_client.py       45      1    98%   44
 ---------------------------------------------------------------
-TOTAL                                77      3    96%
-============================== 9 passed in 0.66s ===============================
+TOTAL                                79      3    96%
+============================== 9 passed in 0.97s ===============================

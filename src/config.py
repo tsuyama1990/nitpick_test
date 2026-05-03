@@ -4,6 +4,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+GITHUB_API_BASE_URL = os.environ.get("GITHUB_API_BASE_URL", "https://api.github.com")
+GITHUB_API_TIMEOUT = float(os.environ.get("GITHUB_API_TIMEOUT", "10.0"))
+
 
 def get_github_token() -> str:
     """

@@ -3,7 +3,7 @@ from typing import Any
 
 import httpx
 
-from src.config import get_github_token
+from src.config import GITHUB_API_BASE_URL, GITHUB_API_TIMEOUT, get_github_token
 from src.domain_models import (
     AuthenticationError,
     CommitRecord,
@@ -17,14 +17,14 @@ class GitHubClient:
     """Client for interacting with the GitHub REST API."""
 
     def __init__(self) -> None:
-        self.base_url = "https://api.github.com"
+        self.base_url = GITHUB_API_BASE_URL
         self.token = get_github_token()
         self.headers = {
             "Accept": "application/vnd.github+json",
             "Authorization": f"Bearer {self.token}",
             "X-GitHub-Api-Version": "2022-11-28",
         }
-        self.timeout = 10.0
+        self.timeout = GITHUB_API_TIMEOUT
 
     def _handle_response_errors(self, response: httpx.Response) -> None:
         """Translates HTTP errors into custom domain exceptions."""
