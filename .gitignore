@@ -6,3 +6,34 @@ dev_documents/project_state.json
 dev_documents/project_state_local.json
 logs/
 .nitpick/worktrees/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environment
+.env.local
+.venv/
+venv/
+env/
+
+# Test/Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Linter/Types
+.mypy_cache/
+.ruff_cache/
+
+# Distributions
+*.egg-info/
+build/
+dist/
+
+# OS specific
+.DS_Store
