@@ -51,7 +51,7 @@ max-complexity = 10
 suppress-dummy-args = true
 
 [tool.pytest.ini_options]
-addopts = "--cov=dev_src --cov=src --cov-report=term-missing -m 'not live'"
+addopts = "--cov=src --cov-report=term-missing -m 'not live'"
 testpaths = ["tests"]
 markers = [
     "live: mark test as hitting live APIs"

@@ -23,6 +23,4 @@ src/ingestion/__init__.py             0      0   100%
 src/ingestion/github_client.py       58      0   100%
 ---------------------------------------------------------------
 TOTAL                               123      4    97%
-======================= 13 passed, 2 deselected in 0.86s =======================
-/app/.venv/lib/python3.12/site-packages/coverage/inorout.py:561: CoverageWarning: Module dev_src was never imported. (module-not-imported); see https://coverage.readthedocs.io/en/7.13.5/messages.html#warning-module-not-imported
-  self.warn(f"Module {pkg} was never imported.", slug="module-not-imported")
+======================= 13 passed, 2 deselected in 0.94s =======================

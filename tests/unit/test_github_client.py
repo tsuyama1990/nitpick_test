@@ -1,5 +1,6 @@
-import pytest
 import httpx
+import pytest
+
 try:
     from datetime import UTC, datetime
 except ImportError:
