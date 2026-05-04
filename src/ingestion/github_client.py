@@ -1,6 +1,7 @@
 import logging
 
 import httpx
+from pydantic import TypeAdapter
 
 from src.domain_models import (
     AuthenticationError,
@@ -10,6 +11,8 @@ from src.domain_models import (
     RepositoryMetadata,
     RepositoryNotFoundError,
 )
+
+_commit_adapter = TypeAdapter(list[CommitRecord])
 
 # Explicitly configure httpx logger to avoid leaking Authorization headers
 logging.getLogger("httpx").setLevel(logging.WARNING)
@@ -107,9 +110,4 @@ class GitHubClient:
         self._handle_response(response)
 
         data = response.json()
-        # Handle the case where GitHub API returns Z for UTC, which Python's fromisoformat
-        # handles correctly in 3.11+, but just in case we let Pydantic handle it directly.
-        from pydantic import TypeAdapter
-
-        adapter = TypeAdapter(list[CommitRecord])
-        return adapter.validate_python(data)
+        return _commit_adapter.validate_python(data)
