@@ -1,21 +1,14 @@
 ============================= test session starts ==============================
-platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0 -- /app/.venv/bin/python
-cachedir: .pytest_cache
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0
 rootdir: /app
 configfile: pyproject.toml
 testpaths: tests
 plugins: mock-3.15.1, cov-7.1.0, anyio-4.13.0, httpx-0.36.2
-collecting ... collected 10 items / 1 deselected / 9 selected
+collected 15 items / 1 deselected / 14 selected
 
-tests/unit/test_github_client.py::test_get_repository_metadata_success PASSED [ 11%]
-tests/unit/test_github_client.py::test_get_recent_commits_success PASSED [ 22%]
-tests/unit/test_github_client.py::test_client_authentication_error PASSED [ 33%]
-tests/unit/test_github_client.py::test_client_rate_limit_error PASSED    [ 44%]
-tests/unit/test_github_client.py::test_client_not_found_error PASSED     [ 55%]
-tests/unit/test_github_client.py::test_client_other_error PASSED         [ 66%]
-tests/unit/test_models.py::test_repository_metadata_valid PASSED         [ 77%]
-tests/unit/test_models.py::test_repository_metadata_invalid_negative PASSED [ 88%]
-tests/unit/test_models.py::test_commit_record_valid PASSED               [100%]
+tests/unit/test_config.py .....                                          [ 35%]
+tests/unit/test_github_client.py ......                                  [ 78%]
+tests/unit/test_models.py ...                                            [100%]
 
 ================================ tests coverage ================================
 _______________ coverage: platform linux, python 3.12.13-final-0 _______________
@@ -23,14 +16,14 @@ _______________ coverage: platform linux, python 3.12.13-final-0 _______________
 Name                              Stmts   Miss  Cover   Missing
 ---------------------------------------------------------------
 src/__init__.py                       0      0   100%
-src/config.py                        11     11     0%   1-19
+src/config.py                        11      0   100%
 src/domain_models/__init__.py         3      0   100%
 src/domain_models/exceptions.py       4      0   100%
 src/domain_models/models.py          14      0   100%
 src/ingestion/__init__.py             2      0   100%
-src/ingestion/github_client.py       45      2    96%   47-48
+src/ingestion/github_client.py       48      2    96%   51-52
 ---------------------------------------------------------------
-TOTAL                                79     13    84%
-======================= 9 passed, 1 deselected in 0.65s ========================
+TOTAL                                82      2    98%
+======================= 14 passed, 1 deselected in 0.76s =======================
 /app/.venv/lib/python3.12/site-packages/coverage/inorout.py:561: CoverageWarning: Module dev_src was never imported. (module-not-imported); see https://coverage.readthedocs.io/en/7.13.5/messages.html#warning-module-not-imported
   self.warn(f"Module {pkg} was never imported.", slug="module-not-imported")

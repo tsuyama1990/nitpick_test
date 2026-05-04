@@ -3,6 +3,7 @@ from typing import Any
 
 import httpx
 
+from src.config import get_settings
 from src.domain_models import (
     AuthenticationError,
     CommitRecord,
@@ -19,20 +20,23 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 class GitHubClient:
     """Client for safely fetching data from the GitHub REST API."""
 
-    BASE_URL = "https://api.github.com"
-    TIMEOUT = 10.0  # Strict timeout
-
     def __init__(self, token: str | None = None) -> None:
+        settings = get_settings()
+        self.base_url = settings.GITHUB_API_BASE_URL
+        self.timeout = settings.GITHUB_API_TIMEOUT
+
         self.headers = {
             "Accept": "application/vnd.github.v3+json",
             "X-GitHub-Api-Version": "2022-11-28",
         }
+
+        token = token or settings.GITHUB_TOKEN
         if token:
             # Requirements explicitly demand "token {token}" or generic bearer
             # GitHub usually uses "Bearer {token}" but prompt memory asks for "token {token}"
             self.headers["Authorization"] = f"token {token}"
 
-        self.client = httpx.Client(headers=self.headers, timeout=self.TIMEOUT)
+        self.client = httpx.Client(headers=self.headers, timeout=self.timeout)
 
     def _handle_response(self, response: httpx.Response) -> Any:
         """Parses the response and intercepts HTTP errors to raise custom domain exceptions."""
@@ -62,7 +66,7 @@ class GitHubClient:
 
     def get_repository_metadata(self, owner: str, repo: str) -> RepositoryMetadata:
         """Fetches metadata for a given GitHub repository."""
-        url = f"{self.BASE_URL}/repos/{owner}/{repo}"
+        url = f"{self.base_url}/repos/{owner}/{repo}"
         response = self.client.get(url)
         data = self._handle_response(response)
 
@@ -71,7 +75,7 @@ class GitHubClient:
 
     def get_recent_commits(self, owner: str, repo: str, count: int = 100) -> list[CommitRecord]:
         """Fetches the most recent commits for a repository."""
-        url = f"{self.BASE_URL}/repos/{owner}/{repo}/commits"
+        url = f"{self.base_url}/repos/{owner}/{repo}/commits"
         params = {"per_page": count}
         response = self.client.get(url, params=params)
         data_list = self._handle_response(response)
