@@ -15,14 +15,14 @@ _______________ coverage: platform linux, python 3.12.13-final-0 _______________
 Name                              Stmts   Miss  Cover   Missing
 ---------------------------------------------------------------
 src/__init__.py                       0      0   100%
-src/config.py                         6      6     0%   1-11
+src/config.py                         8      8     0%   1-15
 src/domain_models/__init__.py         3      0   100%
 src/domain_models/exceptions.py       4      0   100%
 src/domain_models/models.py          14      0   100%
 src/ingestion/__init__.py             2      0   100%
 src/ingestion/github_client.py       45      2    96%   47-48
 ---------------------------------------------------------------
-TOTAL                                74      8    89%
-======================= 9 passed, 1 deselected in 0.95s ========================
+TOTAL                                76     10    87%
+======================= 9 passed, 1 deselected in 0.74s ========================
 /app/.venv/lib/python3.12/site-packages/coverage/inorout.py:561: CoverageWarning: Module dev_src was never imported. (module-not-imported); see https://coverage.readthedocs.io/en/7.13.5/messages.html#warning-module-not-imported
   self.warn(f"Module {pkg} was never imported.", slug="module-not-imported")
