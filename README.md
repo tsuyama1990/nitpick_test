@@ -4,9 +4,10 @@
 ![Python Version](https://img.shields.io/badge/python-3.12%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
+## Title & Overview
 A high-performance, strictly typed Proof of Concept (PoC) for analyzing GitHub repositories. This system ingests live data from the GitHub REST API, processes commit histories at lightning speed using Polars, and presents interactive visualizations via Streamlit, all while enforcing strict architectural boundaries and security best practices.
 
-## Key Features
+## Features
 
 *   **Live API Integration**: Connects directly to the GitHub REST API to fetch real-time repository metadata and commit histories.
 *   **High-Performance Aggregation**: Leverages `polars` to transform and aggregate thousands of commit records efficiently, calculating daily trends and identifying top contributors.
@@ -43,7 +44,7 @@ graph TD
 *   [`uv`](https://docs.astral.sh/uv/) (Extremely fast Python package installer and resolver)
 *   A GitHub Personal Access Token (for Live API access)
 
-## Installation & Setup
+## Installation
 
 1.  **Clone the repository:**
     ```bash
@@ -117,13 +118,13 @@ This project adheres to strict quality standards. Ensure you run the following c
 ├── pyproject.toml
 ├── src/
 │   ├── config.py
-│   ├── domain/        # Pydantic Models & Exceptions
+│   ├── domain_models/ # Pydantic Models & Exceptions
 │   ├── ingestion/     # GitHub API Client
 │   ├── processing/    # Polars Transformer & Cache
 │   └── presentation/  # Streamlit UI & Controller
 ├── tests/
 │   ├── unit/
-│   └── integration/
+│   └── e2e/
 └── tutorials/         # Marimo UAT notebooks
 ```
 
