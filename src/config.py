@@ -6,8 +6,13 @@ class Settings(BaseSettings):
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
-    github_token: str
+    github_token: str | None = None
 
 
-# Instantiate settings immediately to fail fast if required config is missing
-settings = Settings()  # type: ignore[call-arg]
+def get_settings() -> Settings:
+    """Lazy load settings and validate required configurations."""
+    settings_instance = Settings()
+    if not settings_instance.github_token:
+        msg = "GITHUB_TOKEN is missing or empty in environment configuration."
+        raise ValueError(msg)
+    return settings_instance

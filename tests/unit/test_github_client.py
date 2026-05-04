@@ -10,7 +10,10 @@ from src.domain_models.models import CommitRecord, RepositoryMetadata
 from src.ingestion.github_client import GithubClient
 
 
-def test_get_repository_metadata_success(httpx_mock: HTTPXMock) -> None:
+def test_get_repository_metadata_success(
+    httpx_mock: HTTPXMock, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("GITHUB_TOKEN", "dummy_token")
     client = GithubClient()
     httpx_mock.add_response(
         url="https://api.github.com/repos/streamlit/streamlit",
@@ -31,7 +34,10 @@ def test_get_repository_metadata_success(httpx_mock: HTTPXMock) -> None:
     assert result.open_issue_count == 5
 
 
-def test_get_repository_metadata_not_found(httpx_mock: HTTPXMock) -> None:
+def test_get_repository_metadata_not_found(
+    httpx_mock: HTTPXMock, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("GITHUB_TOKEN", "dummy_token")
     client = GithubClient()
     httpx_mock.add_response(
         url="https://api.github.com/repos/invalid/invalid",
@@ -42,7 +48,10 @@ def test_get_repository_metadata_not_found(httpx_mock: HTTPXMock) -> None:
         client.get_repository_metadata("invalid", "invalid")
 
 
-def test_get_repository_metadata_unauthorized(httpx_mock: HTTPXMock) -> None:
+def test_get_repository_metadata_unauthorized(
+    httpx_mock: HTTPXMock, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("GITHUB_TOKEN", "dummy_token")
     client = GithubClient()
     httpx_mock.add_response(
         url="https://api.github.com/repos/streamlit/streamlit",
@@ -54,7 +63,10 @@ def test_get_repository_metadata_unauthorized(httpx_mock: HTTPXMock) -> None:
     assert "dummy_token" not in str(exc_info.value)  # Ensure token isn't leaked
 
 
-def test_get_repository_metadata_rate_limit(httpx_mock: HTTPXMock) -> None:
+def test_get_repository_metadata_rate_limit(
+    httpx_mock: HTTPXMock, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("GITHUB_TOKEN", "dummy_token")
     client = GithubClient()
     httpx_mock.add_response(
         url="https://api.github.com/repos/streamlit/streamlit",
@@ -66,7 +78,22 @@ def test_get_repository_metadata_rate_limit(httpx_mock: HTTPXMock) -> None:
         client.get_repository_metadata("streamlit", "streamlit")
 
 
-def test_get_recent_commits_success(httpx_mock: HTTPXMock) -> None:
+def test_get_repository_metadata_rate_limit_429(
+    httpx_mock: HTTPXMock, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("GITHUB_TOKEN", "dummy_token")
+    client = GithubClient()
+    httpx_mock.add_response(
+        url="https://api.github.com/repos/streamlit/streamlit",
+        status_code=429,
+        json={"message": "Too Many Requests"},
+    )
+    with pytest.raises(RateLimitError):
+        client.get_repository_metadata("streamlit", "streamlit")
+
+
+def test_get_recent_commits_success(httpx_mock: HTTPXMock, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("GITHUB_TOKEN", "dummy_token")
     client = GithubClient()
     httpx_mock.add_response(
         url="https://api.github.com/repos/streamlit/streamlit/commits?per_page=2",

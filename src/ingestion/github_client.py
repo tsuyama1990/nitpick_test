@@ -3,7 +3,7 @@ from typing import Any
 
 import httpx
 
-from src.config import settings
+from src.config import get_settings
 from src.domain_models.exceptions import (
     AuthenticationError,
     RateLimitError,
@@ -17,8 +17,13 @@ class GithubClient:
 
     def __init__(self, timeout: float = 10.0) -> None:
         self.timeout = timeout
+
+    @property
+    def headers(self) -> dict[str, str]:
         # Securely pass the authorization token
-        self.headers = {
+        # Security Note: Ensure logging of request details explicitly excludes the Authorization header
+        settings = get_settings()
+        return {
             "Accept": "application/vnd.github+json",
             "Authorization": f"Bearer {settings.github_token}",
             "X-GitHub-Api-Version": "2022-11-28",
@@ -29,8 +34,11 @@ class GithubClient:
         if response.status_code == 404:
             msg = "Repository not found"
             raise RepositoryNotFoundError(msg)
+        if response.status_code == 429:
+            msg = "API rate limit exceeded"
+            raise RateLimitError(msg)
         if response.status_code in (401, 403):
-            # Check for rate limit specifically
+            # Check for rate limit specifically on 403
             if response.headers.get("X-RateLimit-Remaining") == "0":
                 msg = "API rate limit exceeded"
                 raise RateLimitError(msg)

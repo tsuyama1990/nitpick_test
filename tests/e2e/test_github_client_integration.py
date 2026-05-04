@@ -1,10 +1,14 @@
+import pytest
 from pytest_httpx import HTTPXMock
 
 from src.domain_models.models import CommitRecord, RepositoryMetadata
 from src.ingestion.github_client import GithubClient
 
 
-def test_github_client_integration_mocked(httpx_mock: HTTPXMock) -> None:
+def test_github_client_integration_mocked(
+    httpx_mock: HTTPXMock, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("GITHUB_TOKEN", "dummy_token")
     client = GithubClient()
 
     # Mocking metadata fetch
