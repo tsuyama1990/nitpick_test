@@ -50,7 +50,10 @@ class GitHubClient:
 
         if response.status_code in (401, 403):
             # 403 can also be rate limit, let's check for specific rate limit headers
-            if "rate limit" in response.text.lower() or response.headers.get("x-ratelimit-remaining") == "0":
+            if (
+                "rate limit" in response.text.lower()
+                or response.headers.get("x-ratelimit-remaining") == "0"
+            ):
                 msg = "GitHub API rate limit exceeded."
                 raise RateLimitError(msg)
             msg = "Authentication failed. Invalid or expired GitHub token."

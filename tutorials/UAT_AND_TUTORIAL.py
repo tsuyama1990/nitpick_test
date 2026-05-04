@@ -11,6 +11,7 @@ def __():
     from src.config import get_settings
     from src.domain_models.exceptions import AuthenticationError, RepositoryNotFoundError
     from src.ingestion.github_client import GitHubClient
+
     return AuthenticationError, GitHubClient, RepositoryNotFoundError, get_settings, mo
 
 
@@ -47,7 +48,7 @@ def __(GitHubClient, RepositoryNotFoundError, mo, settings):
             mo.output.append(mo.md(f"**SUCCESS**: Caught expected Exception: `{type(e).__name__}`"))
     else:
         mo.output.append(mo.md("**SKIPPED**: No GITHUB_TOKEN provided."))
-    return client2,
+    return (client2,)
 
 
 @app.cell
@@ -59,10 +60,12 @@ def __(AuthenticationError, GitHubClient, mo):
         mo.output.append(mo.md("FAILED: Exception not raised!"))
     except AuthenticationError as e:
         if "ghp_invalidtoken123" not in str(e):
-            mo.output.append(mo.md("**SUCCESS**: Caught `AuthenticationError` and token is NOT in message!"))
+            mo.output.append(
+                mo.md("**SUCCESS**: Caught `AuthenticationError` and token is NOT in message!")
+            )
         else:
             mo.output.append(mo.md("**FAILED**: Caught `AuthenticationError` but token leaked!"))
-    return client_invalid,
+    return (client_invalid,)
 
 
 if __name__ == "__main__":
