@@ -1,6 +1,4 @@
 import logging
-from datetime import datetime
-from typing import Any
 
 import httpx
 
@@ -87,18 +85,7 @@ class GitHubClient:
 
         self._handle_response(response)
 
-        data: dict[str, Any] = response.json()
-        owner_data = data.get("owner", {})
-        owner_name = owner_data.get("login", "") if isinstance(owner_data, dict) else ""
-
-        # Construct payload exactly matching the schema to satisfy extra="forbid"
-        return RepositoryMetadata(
-            owner=owner_name,
-            name=str(data.get("name", "")),
-            stars=int(data.get("stargazers_count", 0)),
-            forks=int(data.get("forks_count", 0)),
-            open_issues=int(data.get("open_issues_count", 0)),
-        )
+        return RepositoryMetadata.model_validate(response.json())
 
     def fetch_latest_commits(self, repo: str) -> list[CommitRecord]:
         """Fetch the latest commits for a given repository.
@@ -119,19 +106,10 @@ class GitHubClient:
 
         self._handle_response(response)
 
-        data: list[dict[str, Any]] = response.json()
-        commits = []
-        for item in data:
-            commit_data: dict[str, Any] = item.get("commit", {})
-            author_data: dict[str, Any] = commit_data.get("author", {})
+        data = response.json()
+        # Handle the case where GitHub API returns Z for UTC, which Python's fromisoformat
+        # handles correctly in 3.11+, but just in case we let Pydantic handle it directly.
+        from pydantic import TypeAdapter
 
-            date_str = str(author_data.get("date", "")).replace("Z", "+00:00")
-            commits.append(
-                CommitRecord(
-                    hash=str(item.get("sha", "")),
-                    author=str(author_data.get("name", "")),
-                    date=datetime.fromisoformat(date_str),
-                )
-            )
-
-        return commits
+        adapter = TypeAdapter(list[CommitRecord])
+        return adapter.validate_python(data)
