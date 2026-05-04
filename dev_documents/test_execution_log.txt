@@ -3,10 +3,10 @@ platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0
 rootdir: /app
 configfile: pytest.ini (WARNING: ignoring pytest config in pyproject.toml!)
 plugins: mock-3.15.1, cov-7.1.0, anyio-4.13.0, httpx-0.36.2
-collected 8 items / 1 deselected / 7 selected
+collected 12 items / 1 deselected / 11 selected
 
-tests/unit/test_config.py ..                                             [ 28%]
-tests/unit/test_github_client.py .....                                   [100%]
+tests/unit/test_config.py ..                                             [ 18%]
+tests/unit/test_github_client.py .........                               [100%]
 
 ================================ tests coverage ================================
 _______________ coverage: platform linux, python 3.12.13-final-0 _______________
@@ -19,7 +19,7 @@ src/domain_models/__init__.py         3      0   100%
 src/domain_models/exceptions.py       4      0   100%
 src/domain_models/models.py          14      0   100%
 src/ingestion/__init__.py             0      0   100%
-src/ingestion/github_client.py       54     11    80%   30-31, 43-45, 50-52, 71-73
+src/ingestion/github_client.py       67      0   100%
 ---------------------------------------------------------------
-TOTAL                                81     11    86%
-======================= 7 passed, 1 deselected in 0.78s ========================
+TOTAL                                94      0   100%
+======================= 11 passed, 1 deselected in 0.96s =======================

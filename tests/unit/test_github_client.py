@@ -1,9 +1,11 @@
+import httpx
 import pytest
 from pytest_httpx import HTTPXMock
 
 from src.domain_models import (
     AuthenticationError,
     CommitRecord,
+    GitHubAPIError,
     RateLimitError,
     RepositoryMetadata,
     RepositoryNotFoundError,
@@ -82,3 +84,40 @@ def test_rate_limit_error(client: GitHubClient, httpx_mock: HTTPXMock) -> None:
     )
     with pytest.raises(RateLimitError):
         client.fetch_repository_metadata("streamlit/streamlit")
+
+
+def test_rate_limit_error_403(client: GitHubClient, httpx_mock: HTTPXMock) -> None:
+    httpx_mock.add_response(
+        url="https://api.github.com/repos/streamlit/streamlit",
+        status_code=403,
+        text="Rate limit exceeded",
+    )
+    with pytest.raises(RateLimitError):
+        client.fetch_repository_metadata("streamlit/streamlit")
+
+
+def test_general_http_error(client: GitHubClient, httpx_mock: HTTPXMock) -> None:
+    httpx_mock.add_response(
+        url="https://api.github.com/repos/streamlit/streamlit",
+        status_code=500,
+    )
+    with pytest.raises(GitHubAPIError, match="GitHub API request failed"):
+        client.fetch_repository_metadata("streamlit/streamlit")
+
+
+def test_network_error_metadata(client: GitHubClient, httpx_mock: HTTPXMock) -> None:
+    httpx_mock.add_exception(
+        httpx.RequestError("Connection failed"),
+        url="https://api.github.com/repos/streamlit/streamlit",
+    )
+    with pytest.raises(GitHubAPIError, match="Network error while connecting to GitHub"):
+        client.fetch_repository_metadata("streamlit/streamlit")
+
+
+def test_network_error_commits(client: GitHubClient, httpx_mock: HTTPXMock) -> None:
+    httpx_mock.add_exception(
+        httpx.RequestError("Connection failed"),
+        url="https://api.github.com/repos/streamlit/streamlit/commits?per_page=100",
+    )
+    with pytest.raises(GitHubAPIError, match="Network error while connecting to GitHub"):
+        client.fetch_latest_commits("streamlit/streamlit")
