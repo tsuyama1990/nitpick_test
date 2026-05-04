@@ -47,6 +47,7 @@ class GitHubClient:
             "X-GitHub-Api-Version": "2022-11-28",
             "Authorization": f"token {self.token}",
         }
+        # Ensure no logging of self.headers anywhere else to prevent token leakage.
 
     def _handle_response(self, response: httpx.Response) -> None:
         """Handle standard HTTP errors from GitHub API."""

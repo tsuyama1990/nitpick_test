@@ -1,27 +1,28 @@
-from datetime import UTC, datetime
-
-import httpx
 import pytest
-import pytest_httpx
+import httpx
+try:
+    from datetime import UTC, datetime
+except ImportError:
+    from datetime import datetime, timezone  # noqa: F401
+    UTC = timezone.utc
 
+import pytest_httpx
 from src.domain_models import (
     AuthenticationError,
+    RateLimitError,
+    RepositoryNotFoundError,
+    RepositoryMetadata,
     CommitRecord,
     DomainError,
-    RateLimitError,
-    RepositoryMetadata,
-    RepositoryNotFoundError,
 )
 from src.ingestion.github_client import GitHubClient
-
 
 def test_github_client_missing_token() -> None:
     with pytest.raises(AuthenticationError, match="GitHub token must be provided."):
         GitHubClient(token="")
 
-
 def test_get_repository_metadata_success(httpx_mock: pytest_httpx.HTTPXMock) -> None:
-    client = GitHubClient(token="dummy_token")
+    client = GitHubClient(token="dummy_token")  # noqa: S106
 
     mock_response = {
         "name": "streamlit",
@@ -42,9 +43,8 @@ def test_get_repository_metadata_success(httpx_mock: pytest_httpx.HTTPXMock) -> 
     assert result.fork_count == 50
     assert result.open_issue_count == 10
 
-
 def test_get_recent_commits_success(httpx_mock: pytest_httpx.HTTPXMock) -> None:
-    client = GitHubClient(token="dummy_token")
+    client = GitHubClient(token="dummy_token")  # noqa: S106
 
     mock_response = [
         {
@@ -65,9 +65,8 @@ def test_get_recent_commits_success(httpx_mock: pytest_httpx.HTTPXMock) -> None:
     assert result[0].author_name == "John Doe"
     assert result[0].timestamp == datetime(2023, 10, 1, 12, 0, 0, tzinfo=UTC)
 
-
 def test_github_client_auth_error(httpx_mock: pytest_httpx.HTTPXMock) -> None:
-    client = GitHubClient(token="invalid_token")
+    client = GitHubClient(token="invalid_token")  # noqa: S106
 
     httpx_mock.add_response(
         url="https://api.github.com/repos/streamlit/streamlit",
@@ -82,9 +81,8 @@ def test_github_client_auth_error(httpx_mock: pytest_httpx.HTTPXMock) -> None:
     assert "invalid_token" not in str(exc_info.value)
     assert "401" in str(exc_info.value) or "unauthorized" in str(exc_info.value).lower()
 
-
 def test_github_client_rate_limit_error(httpx_mock: pytest_httpx.HTTPXMock) -> None:
-    client = GitHubClient(token="dummy_token")
+    client = GitHubClient(token="dummy_token")  # noqa: S106
 
     httpx_mock.add_response(
         url="https://api.github.com/repos/streamlit/streamlit",
@@ -95,9 +93,8 @@ def test_github_client_rate_limit_error(httpx_mock: pytest_httpx.HTTPXMock) -> N
     with pytest.raises(RateLimitError):
         client.get_repository_metadata("streamlit/streamlit")
 
-
 def test_github_client_forbidden_error(httpx_mock: pytest_httpx.HTTPXMock) -> None:
-    client = GitHubClient(token="dummy_token")
+    client = GitHubClient(token="dummy_token")  # noqa: S106
 
     httpx_mock.add_response(
         url="https://api.github.com/repos/streamlit/streamlit",
@@ -109,22 +106,18 @@ def test_github_client_forbidden_error(httpx_mock: pytest_httpx.HTTPXMock) -> No
     with pytest.raises(RateLimitError):
         client.get_repository_metadata("streamlit/streamlit")
 
-
 def test_github_client_not_found_error(httpx_mock: pytest_httpx.HTTPXMock) -> None:
-    client = GitHubClient(token="dummy_token")
+    client = GitHubClient(token="dummy_token")  # noqa: S106
 
     httpx_mock.add_response(
-        url="https://api.github.com/repos/invalid/repo",
-        status_code=404,
-        json={"message": "Not Found"},
+        url="https://api.github.com/repos/invalid/repo", status_code=404, json={"message": "Not Found"}
     )
 
     with pytest.raises(RepositoryNotFoundError):
         client.get_repository_metadata("invalid/repo")
 
-
 def test_github_client_general_error(httpx_mock: pytest_httpx.HTTPXMock) -> None:
-    client = GitHubClient(token="dummy_token")
+    client = GitHubClient(token="dummy_token")  # noqa: S106
 
     httpx_mock.add_response(
         url="https://api.github.com/repos/invalid/repo",
@@ -135,9 +128,8 @@ def test_github_client_general_error(httpx_mock: pytest_httpx.HTTPXMock) -> None
     with pytest.raises(DomainError):
         client.get_repository_metadata("invalid/repo")
 
-
 def test_github_client_request_error(httpx_mock: pytest_httpx.HTTPXMock) -> None:
-    client = GitHubClient(token="dummy_token")
+    client = GitHubClient(token="dummy_token")  # noqa: S106
 
     httpx_mock.add_exception(
         httpx.RequestError(
@@ -150,9 +142,8 @@ def test_github_client_request_error(httpx_mock: pytest_httpx.HTTPXMock) -> None
     with pytest.raises(DomainError):
         client.get_repository_metadata("invalid/repo")
 
-
 def test_github_client_commit_request_error(httpx_mock: pytest_httpx.HTTPXMock) -> None:
-    client = GitHubClient(token="dummy_token")
+    client = GitHubClient(token="dummy_token")  # noqa: S106
 
     httpx_mock.add_exception(
         httpx.RequestError(
@@ -165,9 +156,8 @@ def test_github_client_commit_request_error(httpx_mock: pytest_httpx.HTTPXMock) 
     with pytest.raises(DomainError):
         client.get_recent_commits("invalid/repo")
 
-
 def test_github_client_commit_response_format_error(httpx_mock: pytest_httpx.HTTPXMock) -> None:
-    client = GitHubClient(token="dummy_token")
+    client = GitHubClient(token="dummy_token")  # noqa: S106
 
     httpx_mock.add_response(
         url="https://api.github.com/repos/streamlit/streamlit/commits?per_page=100",

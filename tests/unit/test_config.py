@@ -7,7 +7,7 @@ from src.config import Settings, get_settings
 def test_settings_forbid_extra() -> None:
     with pytest.raises(ValueError, match="Extra inputs are not permitted"):
         # Mypy will complain, but we need to verify Pydantic behavior
-        Settings(github_token="dummy", UNKNOWN_VARIABLE="test")  # type: ignore[call-arg]
+        Settings(github_token="dummy", UNKNOWN_VARIABLE="test")
 
 
 def test_get_settings_singleton() -> None:

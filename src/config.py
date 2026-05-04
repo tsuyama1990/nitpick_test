@@ -1,3 +1,6 @@
+from typing import Any
+
+from pydantic import ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -14,6 +17,16 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env", env_file_encoding="utf-8", extra="forbid", case_sensitive=False
     )
+
+    def __init__(self, **data: Any) -> None:
+        try:
+            super().__init__(**data)
+        except ValidationError as exc:
+            # Detect extra field errors
+            if any(err["type"] == "extra_forbidden" for err in exc.errors()):
+                error_msg = ValueError("Extra inputs are not permitted")
+                raise error_msg from exc
+            raise
 
 
 _settings: Settings | None = None
