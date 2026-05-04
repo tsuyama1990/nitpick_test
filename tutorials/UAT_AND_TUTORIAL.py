@@ -24,8 +24,8 @@ def __(mo):
 def __(GitHubClient, get_settings, mo):
     mo.md("### Scenario ID: C01-01 - Successful Data Extraction")
     settings = get_settings()
-    if settings.github_token:
-        client = GitHubClient(token=settings.github_token)
+    if settings.GITHUB_TOKEN:
+        client = GitHubClient(token=settings.GITHUB_TOKEN)
         repo = client.fetch_repository_metadata("streamlit", "streamlit")
         commits = client.fetch_commit_history("streamlit", "streamlit")
         mo.output.append(mo.md(f"**Repository**: {repo.name} - Stars: {repo.stargazers_count}"))
@@ -39,8 +39,8 @@ def __(GitHubClient, get_settings, mo):
 @app.cell
 def __(GitHubClient, RepositoryNotFoundError, mo, settings):
     mo.md("### Scenario ID: C01-02 - Error Handling for Invalid Repositories")
-    if settings.github_token:
-        client2 = GitHubClient(token=settings.github_token)
+    if settings.GITHUB_TOKEN:
+        client2 = GitHubClient(token=settings.GITHUB_TOKEN)
         try:
             client2.fetch_repository_metadata("invalid-owner", "non-existent-repo-12345")
             mo.output.append(mo.md("FAILED: Exception not raised!"))

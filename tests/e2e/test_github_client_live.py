@@ -7,10 +7,10 @@ from src.ingestion.github_client import GitHubClient
 @pytest.mark.live
 def test_fetch_repository_metadata_live() -> None:
     settings = get_settings()
-    if not settings.github_token:
+    if not settings.GITHUB_TOKEN:
         pytest.skip("GITHUB_TOKEN not found in environment, skipping live test.")
 
-    client = GitHubClient(token=settings.github_token)
+    client = GitHubClient(token=settings.GITHUB_TOKEN)
     repo = client.fetch_repository_metadata("streamlit", "streamlit")
 
     assert repo.name == "streamlit"
@@ -22,10 +22,10 @@ def test_fetch_repository_metadata_live() -> None:
 @pytest.mark.live
 def test_fetch_commit_history_live() -> None:
     settings = get_settings()
-    if not settings.github_token:
+    if not settings.GITHUB_TOKEN:
         pytest.skip("GITHUB_TOKEN not found in environment, skipping live test.")
 
-    client = GitHubClient(token=settings.github_token)
+    client = GitHubClient(token=settings.GITHUB_TOKEN)
     commits = client.fetch_commit_history("streamlit", "streamlit")
 
     assert len(commits) > 0

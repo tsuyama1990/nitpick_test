@@ -103,10 +103,10 @@ def test_missing_token() -> None:
     from src.config import get_settings
 
     settings = get_settings()
-    original_token = settings.github_token
-    settings.github_token = None
+    original_token = settings.GITHUB_TOKEN
+    settings.GITHUB_TOKEN = None
     try:
         with pytest.raises(ValueError, match="GitHub Token is missing"):
             GitHubClient(token=None)
     finally:
-        settings.github_token = original_token
+        settings.GITHUB_TOKEN = original_token

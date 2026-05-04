@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     Application settings, loaded from environment variables and .env file.
     """
 
-    github_token: str | None = None
+    GITHUB_TOKEN: str | None = None
 
     model_config = SettingsConfigDict(
         env_file=".env",

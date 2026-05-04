@@ -27,7 +27,7 @@ class GitHubClient:
         """
         Initializes the client. Falls back to environment settings if token is not provided.
         """
-        self._token = token or get_settings().github_token
+        self._token = token or get_settings().GITHUB_TOKEN
         if not self._token:
             msg = "GitHub Token is missing. Please configure GITHUB_TOKEN."
             raise ValueError(msg)
@@ -35,7 +35,7 @@ class GitHubClient:
         self.client = httpx.Client(
             headers={
                 "Accept": "application/vnd.github.v3+json",
-                "Authorization": f"Bearer {self._token}",
+                "Authorization": f"token {self._token}",
                 "X-GitHub-Api-Version": "2022-11-28",
             },
             timeout=10.0,
