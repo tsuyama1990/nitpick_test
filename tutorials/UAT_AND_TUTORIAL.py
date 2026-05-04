@@ -78,7 +78,7 @@ def __(AuthenticationError, GithubClient):
         print("Success: Token was not leaked.")
     except Exception as e:
         print(f"Failed: Caught unexpected exception: {e}")
-    return invalid_client,
+    return (invalid_client,)
 
 
 if __name__ == "__main__":

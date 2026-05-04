@@ -14,6 +14,7 @@ from src.ingestion.github_client import GithubClient
 def client() -> GithubClient:
     return GithubClient(token="dummy_token")  # noqa: S106
 
+
 def test_fetch_repository_metadata_success(client: GithubClient, mocker: MockerFixture) -> None:
     mock_response = Response(
         200,
@@ -35,18 +36,14 @@ def test_fetch_repository_metadata_success(client: GithubClient, mocker: MockerF
     assert repo.fork_count == 50
     assert repo.open_issue_count == 10
 
+
 def test_fetch_commits_success(client: GithubClient, mocker: MockerFixture) -> None:
     mock_response = Response(
         200,
         json=[
             {
                 "sha": "abcdef",
-                "commit": {
-                    "author": {
-                        "name": "John Doe",
-                        "date": "2023-01-01T00:00:00Z"
-                    }
-                }
+                "commit": {"author": {"name": "John Doe", "date": "2023-01-01T00:00:00Z"}},
             }
         ],
     )
@@ -58,12 +55,14 @@ def test_fetch_commits_success(client: GithubClient, mocker: MockerFixture) -> N
     assert commits[0].sha == "abcdef"
     assert commits[0].author_name == "John Doe"
 
+
 def test_fetch_repository_metadata_404(client: GithubClient, mocker: MockerFixture) -> None:
     mock_response = Response(404)
     mocker.patch("httpx.Client.get", return_value=mock_response)
 
     with pytest.raises(RepositoryNotFoundError):
         client.fetch_repository_metadata("streamlit/invalid_repo")
+
 
 def test_fetch_repository_metadata_401(client: GithubClient, mocker: MockerFixture) -> None:
     mock_response = Response(401)
@@ -72,6 +71,7 @@ def test_fetch_repository_metadata_401(client: GithubClient, mocker: MockerFixtu
     with pytest.raises(AuthenticationError):
         client.fetch_repository_metadata("streamlit/streamlit")
 
+
 def test_fetch_repository_metadata_403(client: GithubClient, mocker: MockerFixture) -> None:
     mock_response = Response(403)
     mocker.patch("httpx.Client.get", return_value=mock_response)
@@ -79,12 +79,14 @@ def test_fetch_repository_metadata_403(client: GithubClient, mocker: MockerFixtu
     with pytest.raises(AuthenticationError):
         client.fetch_repository_metadata("streamlit/streamlit")
 
+
 def test_fetch_repository_metadata_429(client: GithubClient, mocker: MockerFixture) -> None:
     mock_response = Response(429)
     mocker.patch("httpx.Client.get", return_value=mock_response)
 
     with pytest.raises(RateLimitError):
         client.fetch_repository_metadata("streamlit/streamlit")
+
 
 def test_client_initialization_without_token() -> None:
     with pytest.raises(ValueError, match="GitHub token cannot be empty"):

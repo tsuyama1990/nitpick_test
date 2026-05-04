@@ -78,7 +78,7 @@ class GithubClient:
                             "name": author_data.get("name"),
                             "date": author_data.get("date"),
                         }
-                    }
+                    },
                 }
                 records.append(CommitRecord(**filtered_item))
 

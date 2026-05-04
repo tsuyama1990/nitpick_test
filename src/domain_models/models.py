@@ -12,16 +12,19 @@ class RepositoryMetadata(BaseModel):
 
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
 
+
 class CommitAuthor(BaseModel):
     name: str = Field(..., min_length=1)
     date: datetime
 
     model_config = ConfigDict(extra="forbid")
 
+
 class CommitDetail(BaseModel):
     author: CommitAuthor
 
     model_config = ConfigDict(extra="forbid")
+
 
 class CommitRecord(BaseModel):
     sha: str = Field(..., min_length=1)
