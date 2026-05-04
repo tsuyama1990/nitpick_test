@@ -55,10 +55,15 @@ class GitHubClient:
 
         data: dict[str, Any] = response.json()
         owner_data = data.get("owner", {})
-        if isinstance(owner_data, dict):
-            data["owner"] = owner_data.get("login", "")
+        owner_name = owner_data.get("login", "") if isinstance(owner_data, dict) else ""
 
-        return RepositoryMetadata(**data)
+        return RepositoryMetadata(
+            owner=owner_name,
+            name=data.get("name", ""),
+            stars=data.get("stargazers_count", 0),
+            forks=data.get("forks_count", 0),
+            open_issues=data.get("open_issues_count", 0),
+        )
 
     def fetch_latest_commits(self, repo: str) -> list[CommitRecord]:
         try:
@@ -77,7 +82,7 @@ class GitHubClient:
 
             commits.append(
                 CommitRecord(
-                    sha=item.get("sha", ""),
+                    hash=item.get("sha", ""),
                     author=author_data.get("name", ""),
                     date=datetime.fromisoformat(
                         str(author_data.get("date", "")).replace("Z", "+00:00")

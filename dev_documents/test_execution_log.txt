@@ -19,7 +19,7 @@ src/domain_models/__init__.py         3      0   100%
 src/domain_models/exceptions.py       4      0   100%
 src/domain_models/models.py          14      0   100%
 src/ingestion/__init__.py             0      0   100%
-src/ingestion/github_client.py       55     11    80%   30-31, 43-45, 50-52, 66-68
+src/ingestion/github_client.py       54     11    80%   30-31, 43-45, 50-52, 71-73
 ---------------------------------------------------------------
-TOTAL                                82     11    87%
-======================= 7 passed, 1 deselected in 0.65s ========================
+TOTAL                                81     11    86%
+======================= 7 passed, 1 deselected in 0.78s ========================

@@ -4,18 +4,18 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class RepositoryMetadata(BaseModel):
-    model_config = ConfigDict(extra="ignore")
+    model_config = ConfigDict(extra="forbid")
 
     owner: str
     name: str
-    stars: int = Field(ge=0, alias="stargazers_count")
-    forks: int = Field(ge=0, alias="forks_count")
-    open_issues: int = Field(ge=0, alias="open_issues_count")
+    stars: int = Field(ge=0)
+    forks: int = Field(ge=0)
+    open_issues: int = Field(ge=0)
 
 
 class CommitRecord(BaseModel):
-    model_config = ConfigDict(extra="ignore")
+    model_config = ConfigDict(extra="forbid")
 
-    hash: str = Field(alias="sha")
+    hash: str
     author: str
     date: datetime
