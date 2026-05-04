@@ -15,6 +15,11 @@ from src.domain_models import (
 from src.ingestion.github_client import GitHubClient
 
 
+def test_github_client_missing_token() -> None:
+    with pytest.raises(AuthenticationError, match="GitHub token must be provided."):
+        GitHubClient(token="")
+
+
 def test_get_repository_metadata_success(httpx_mock: pytest_httpx.HTTPXMock) -> None:
     client = GitHubClient(token="dummy_token")
 
@@ -144,6 +149,21 @@ def test_github_client_request_error(httpx_mock: pytest_httpx.HTTPXMock) -> None
 
     with pytest.raises(DomainError):
         client.get_repository_metadata("invalid/repo")
+
+
+def test_github_client_commit_request_error(httpx_mock: pytest_httpx.HTTPXMock) -> None:
+    client = GitHubClient(token="dummy_token")
+
+    httpx_mock.add_exception(
+        httpx.RequestError(
+            "Network error",
+            request=httpx.Request("GET", "https://api.github.com/repos/invalid/repo/commits"),
+        ),
+        url="https://api.github.com/repos/invalid/repo/commits?per_page=100",
+    )
+
+    with pytest.raises(DomainError):
+        client.get_recent_commits("invalid/repo")
 
 
 def test_github_client_commit_response_format_error(httpx_mock: pytest_httpx.HTTPXMock) -> None:

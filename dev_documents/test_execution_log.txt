@@ -4,10 +4,10 @@ rootdir: /app
 configfile: pyproject.toml
 testpaths: tests
 plugins: mock-3.15.1, cov-7.1.0, anyio-4.13.0, httpx-0.36.2
-collected 13 items / 2 deselected / 11 selected
+collected 15 items / 2 deselected / 13 selected
 
-tests/unit/test_config.py ..                                             [ 18%]
-tests/unit/test_github_client.py .........                               [100%]
+tests/unit/test_config.py ..                                             [ 15%]
+tests/unit/test_github_client.py ...........                             [100%]
 
 ================================ tests coverage ================================
 _______________ coverage: platform linux, python 3.12.13-final-0 _______________
@@ -15,14 +15,14 @@ _______________ coverage: platform linux, python 3.12.13-final-0 _______________
 Name                              Stmts   Miss  Cover   Missing
 ---------------------------------------------------------------
 src/__init__.py                       0      0   100%
-src/config.py                         9      0   100%
+src/config.py                        11      0   100%
 src/domain_models/__init__.py         3      0   100%
 src/domain_models/exceptions.py       4      0   100%
-src/domain_models/models.py          37      3    92%   47, 51, 55
+src/domain_models/models.py          37      3    92%   49, 53, 57
 src/ingestion/__init__.py             0      0   100%
-src/ingestion/github_client.py       53      3    94%   96-98
+src/ingestion/github_client.py       58      0   100%
 ---------------------------------------------------------------
-TOTAL                               106      6    94%
-======================= 11 passed, 2 deselected in 0.87s =======================
+TOTAL                               113      3    97%
+======================= 13 passed, 2 deselected in 0.90s =======================
 /app/.venv/lib/python3.12/site-packages/coverage/inorout.py:561: CoverageWarning: Module dev_src was never imported. (module-not-imported); see https://coverage.readthedocs.io/en/7.13.5/messages.html#warning-module-not-imported
   self.warn(f"Module {pkg} was never imported.", slug="module-not-imported")

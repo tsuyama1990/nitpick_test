@@ -11,7 +11,9 @@ class RepositoryMetadata(BaseModel):
     repo_name: str = Field(..., alias="name", description="The name of the repository")
     star_count: int = Field(..., alias="stargazers_count", ge=0, description="Number of stars")
     fork_count: int = Field(..., alias="forks_count", ge=0, description="Number of forks")
-    open_issue_count: int = Field(..., alias="open_issues_count", ge=0, description="Number of open issues")
+    open_issue_count: int = Field(
+        ..., alias="open_issues_count", ge=0, description="Number of open issues"
+    )
 
     model_config = ConfigDict(
         extra="ignore",

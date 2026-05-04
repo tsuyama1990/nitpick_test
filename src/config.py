@@ -7,6 +7,10 @@ class Settings(BaseSettings):
     # Target Project Secrets: GitHub Personal Access Token
     github_token: str | None = None
 
+    # API Configuration
+    github_base_url: str = "https://api.github.com"
+    github_api_timeout: float = 10.0
+
     model_config = SettingsConfigDict(
         env_file=".env", env_file_encoding="utf-8", extra="forbid", case_sensitive=False
     )

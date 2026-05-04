@@ -2,6 +2,7 @@ import logging
 
 import httpx
 
+from src.config import get_settings
 from src.domain_models import (
     AuthenticationError,
     CommitRecord,
@@ -19,17 +20,28 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 class GitHubClient:
     """Client for interacting with the GitHub REST API."""
 
-    BASE_URL = "https://api.github.com"
-
-    def __init__(self, token: str, timeout: float = 10.0) -> None:
+    def __init__(
+        self,
+        token: str | None = None,
+        base_url: str | None = None,
+        timeout: float | None = None,
+    ) -> None:
         """Initialize the client.
 
         Args:
-            token: GitHub Personal Access Token.
-            timeout: HTTP request timeout in seconds.
+            token: GitHub Personal Access Token. Defaults to config.
+            base_url: Base URL for the GitHub API. Defaults to config.
+            timeout: HTTP request timeout in seconds. Defaults to config.
         """
-        self.token = token
-        self.timeout = timeout
+        settings = get_settings()
+        self.token = token or settings.github_token
+        if not self.token:
+            auth_error = AuthenticationError("GitHub token must be provided.")
+            raise auth_error
+
+        self.base_url = base_url or settings.github_base_url
+        self.timeout = timeout if timeout is not None else settings.github_api_timeout
+
         self.headers = {
             "Accept": "application/vnd.github+json",
             "X-GitHub-Api-Version": "2022-11-28",
@@ -64,7 +76,7 @@ class GitHubClient:
         Returns:
             RepositoryMetadata object.
         """
-        url = f"{self.BASE_URL}/repos/{owner_repo}"
+        url = f"{self.base_url}/repos/{owner_repo}"
         with httpx.Client(timeout=self.timeout) as client:
             try:
                 response = client.get(url, headers=self.headers)
@@ -87,7 +99,7 @@ class GitHubClient:
         Returns:
             List of CommitRecord objects.
         """
-        url = f"{self.BASE_URL}/repos/{owner_repo}/commits"
+        url = f"{self.base_url}/repos/{owner_repo}/commits"
         params = {"per_page": limit}
 
         with httpx.Client(timeout=self.timeout) as client:
