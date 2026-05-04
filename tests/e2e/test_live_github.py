@@ -1,9 +1,9 @@
 import os
 
 import pytest
-from src.ingestion.github_client import GithubClient
 
 from src.config import get_config
+from src.ingestion.github_client import GithubClient
 
 
 @pytest.mark.live

@@ -9,10 +9,10 @@ def __():
     import os
 
     import marimo as mo
-    from src.ingestion.github_client import GithubClient
 
     from src.config import AppConfig
     from src.domain_models import AuthenticationError, RepositoryNotFoundError
+    from src.ingestion.github_client import GithubClient
 
     # Check if a real token is available
     real_token = os.environ.get("GITHUB_TOKEN")

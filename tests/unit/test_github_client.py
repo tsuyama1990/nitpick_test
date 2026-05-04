@@ -1,6 +1,5 @@
 import pytest
 from pytest_httpx import HTTPXMock
-from src.ingestion.github_client import GithubClient
 
 from src.config import AppConfig
 from src.domain_models import (
@@ -11,6 +10,7 @@ from src.domain_models import (
     RepositoryMetadata,
     RepositoryNotFoundError,
 )
+from src.ingestion.github_client import GithubClient
 
 
 @pytest.fixture
