@@ -42,6 +42,9 @@ class GithubClient:
             response = client.get(url, headers=self.headers)
             data = self._handle_response(response)
 
+            if not isinstance(data, dict):
+                raise GithubAPIError("Unexpected JSON format from GitHub API")
+
             # Extract only fields needed for strict validation
             owner_login = ""
             if "owner" in data and isinstance(data["owner"], dict) and "login" in data["owner"]:
@@ -55,7 +58,7 @@ class GithubClient:
                 "open_issues_count": data.get("open_issues_count"),
             }
 
-            return RepositoryMetadata(**filtered_data)
+            return RepositoryMetadata(**filtered_data) # type: ignore[arg-type]
 
     def fetch_commits(self, repo_name: str) -> list[CommitRecord]:
         url = f"{self.BASE_URL}/repos/{repo_name}/commits"
@@ -64,12 +67,17 @@ class GithubClient:
             response = client.get(url, headers=self.headers, params=params)
             data = self._handle_response(response)
 
+            if not isinstance(data, list):
+                raise GithubAPIError("Unexpected JSON format from GitHub API")
+
             records = []
             for item in data:
+                if not isinstance(item, dict):
+                    continue
                 # Extract only fields needed for strict validation
                 sha = item.get("sha")
                 commit_data = item.get("commit", {})
-                author_data = commit_data.get("author", {})
+                author_data = commit_data.get("author", {}) if isinstance(commit_data, dict) else {}
 
                 filtered_item = {
                     "sha": sha,
@@ -80,6 +88,6 @@ class GithubClient:
                         }
                     },
                 }
-                records.append(CommitRecord(**filtered_item))
+                records.append(CommitRecord(**filtered_item)) # type: ignore[arg-type]
 
             return records
