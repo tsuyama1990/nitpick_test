@@ -2,6 +2,10 @@ from datetime import datetime
 from typing import Any
 
 import httpx
+import logging
+
+# Securely configure httpx logger to prevent leaking headers
+logging.getLogger("httpx").setLevel(logging.WARNING)
 
 from src.config import get_settings
 from src.domain_models.exceptions import (
@@ -35,6 +39,7 @@ class GithubClient:
             msg = "Repository not found"
             raise RepositoryNotFoundError(msg)
         if response.status_code == 429:
+            # Explicitly handle HTTP 429 Rate Limit
             msg = "API rate limit exceeded"
             raise RateLimitError(msg)
         if response.status_code in (401, 403):

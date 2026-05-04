@@ -115,3 +115,27 @@ def test_get_recent_commits_success(httpx_mock: HTTPXMock, monkeypatch: pytest.M
     assert results[0].author_name == "Author One"
     assert results[1].commit_hash == "def5678"
     assert results[1].author_name == "Author Two"
+
+def test_get_repository_metadata_invalid_format(
+    httpx_mock: HTTPXMock, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("GITHUB_TOKEN", "dummy_token")
+    client = GithubClient()
+    httpx_mock.add_response(
+        url="https://api.github.com/repos/streamlit/streamlit",
+        json=["This is a list, not a dict"],
+    )
+    with pytest.raises(ValueError, match="Unexpected API response format for repository metadata"):
+        client.get_repository_metadata("streamlit", "streamlit")
+
+def test_get_recent_commits_invalid_format(
+    httpx_mock: HTTPXMock, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("GITHUB_TOKEN", "dummy_token")
+    client = GithubClient()
+    httpx_mock.add_response(
+        url="https://api.github.com/repos/streamlit/streamlit/commits?per_page=1",
+        json={"message": "This is a dict, not a list of commits"},
+    )
+    with pytest.raises(ValueError, match="Unexpected API response format for commits"):
+        client.get_recent_commits("streamlit", "streamlit", limit=1)

@@ -38,3 +38,15 @@ def test_github_client_integration_mocked(
     commits = client.get_recent_commits("streamlit", "streamlit", limit=1)
     assert len(commits) == 1
     assert isinstance(commits[0], CommitRecord)
+
+@pytest.mark.live
+def test_github_client_integration_live() -> None:
+    client = GithubClient()
+    metadata = client.get_repository_metadata("torvalds", "linux")
+    assert isinstance(metadata, RepositoryMetadata)
+    assert metadata.owner == "torvalds"
+    assert metadata.repo == "linux"
+
+    commits = client.get_recent_commits("torvalds", "linux", limit=2)
+    assert len(commits) == 2
+    assert isinstance(commits[0], CommitRecord)
