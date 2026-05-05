@@ -5,8 +5,6 @@ import polars as pl
 
 from src.domain_models import get_settings
 
-TTL_SECONDS = 3600
-
 
 def _get_cache_filepath(repo_name: str) -> Path:
     """Generate the local cache file path for a given repository name."""
@@ -43,7 +41,8 @@ def load_from_cache(repo_name: str) -> pl.DataFrame | None:
     try:
         # Check TTL
         mtime = cache_file.stat().st_mtime
-        if time.time() - mtime > TTL_SECONDS:
+        settings = get_settings()
+        if time.time() - mtime > settings.CACHE_TTL_SECONDS:
             return None
 
         return pl.read_parquet(cache_file)
