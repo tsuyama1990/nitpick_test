@@ -13,6 +13,7 @@ A high-performance, strictly typed Proof of Concept (PoC) for analyzing GitHub r
 *   **Intelligent Local Caching**: Implements a Time-to-Live (TTL) Parquet-based caching mechanism to drastically reduce API latency and completely prevent rate-limiting penalties.
 *   **Zero-Exposure Security**: Strictly enforces environment-variable-only credential management (`dotenv`), ensuring GitHub Personal Access Tokens are never hardcoded, leaked in logs, or exposed in the UI.
 *   **Robust Error Handling**: Domain-specific exceptions intercept API failures (e.g., 404 Not Found, 403 Rate Limit), translating them into user-friendly UI alerts without crashing the application.
+*   **Interactive UI**: A Streamlit dashboard that visualizes data gracefully.
 
 ## Architecture Overview
 
@@ -20,22 +21,6 @@ The system is built on a tiered architecture ensuring separation of concerns:
 1.  **Ingestion Layer**: Safely interacts with the GitHub API, parses JSON, and validates data using strict Pydantic models.
 2.  **Processing & Storage Layer**: Aggregates data using Polars and manages the local disk cache.
 3.  **Presentation Layer**: A lightweight Streamlit UI that orchestrates the backend and renders charts.
-
-```mermaid
-graph TD
-    User([User]) --> UI[Streamlit Web UI<br/>Presentation Layer]
-    UI --> AppLogic[Application Controller]
-    AppLogic --> Cache[Cache Manager<br/>Transformation & Storage]
-    Cache -- Cache Miss --> Transformer[Polars Transformer]
-    Transformer --> APIClient[GitHub API Client<br/>Ingestion Layer]
-    APIClient -- HTTP GET --> GitHubAPI((GitHub REST API))
-    GitHubAPI -- JSON Response --> APIClient
-    APIClient --> Transformer
-    Transformer -- Processed Data --> DiskCache[(Local Parquet/CSV Cache)]
-    DiskCache -- Read Cache --> Cache
-    Cache -- DataFrame --> AppLogic
-    AppLogic --> UI
-```
 
 ## Prerequisites
 
@@ -82,49 +67,24 @@ uv run streamlit run src/presentation/app.py
 To understand the system's inner workings and validate the data flow step-by-step:
 
 ```bash
-uv run marimo edit tutorials/UAT_AND_TUTORIAL.py
+uv run marimo edit tests/uat/test_ui.py
 ```
-
-## Development Workflow
-
-This project adheres to strict quality standards. Ensure you run the following commands before submitting code:
-
-*   **Run Linters & Formatting (Ruff)**:
-    ```bash
-    uv run ruff check .
-    uv run ruff format .
-    ```
-
-*   **Run Type Checking (Mypy)**:
-    ```bash
-    uv run mypy src tests
-    ```
-
-*   **Run Tests (Pytest)**:
-    ```bash
-    # Run isolated unit tests (Mocked API)
-    uv run pytest tests/unit
-
-    # Run full test suite with coverage
-    uv run pytest
-    ```
 
 ## Project Structure
 
 ```text
 .
-├── .env.example
 ├── pyproject.toml
 ├── src/
 │   ├── config.py
-│   ├── domain/        # Pydantic Models & Exceptions
+│   ├── domain_models/ # Pydantic Models & Exceptions
 │   ├── ingestion/     # GitHub API Client
 │   ├── processing/    # Polars Transformer & Cache
 │   └── presentation/  # Streamlit UI & Controller
 ├── tests/
 │   ├── unit/
-│   └── integration/
-└── tutorials/         # Marimo UAT notebooks
+│   ├── e2e/
+│   └── uat/           # Marimo UAT notebooks
 ```
 
 ## License
