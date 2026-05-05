@@ -1,0 +1,40 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0
+rootdir: /app
+configfile: pyproject.toml
+testpaths: tests
+plugins: mock-3.15.1, cov-7.1.0, anyio-4.13.0, httpx-0.36.2
+collected 31 items
+
+tests/e2e/test_controller.py ......                                      [ 19%]
+tests/unit/test_app.py ...                                               [ 29%]
+tests/unit/test_cache_manager.py .....                                   [ 45%]
+tests/unit/test_config.py .                                              [ 48%]
+tests/unit/test_github_client.py .......                                 [ 70%]
+tests/unit/test_models.py ......                                         [ 90%]
+tests/unit/test_transformer.py ...                                       [100%]
+
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Name                              Stmts   Miss  Cover   Missing
+---------------------------------------------------------------
+src/__init__.py                       0      0   100%
+src/config.py                         9      0   100%
+src/domain_models/__init__.py         4      0   100%
+src/domain_models/dashboard.py        8      0   100%
+src/domain_models/exceptions.py       3      0   100%
+src/domain_models/github.py          12      0   100%
+src/ingestion/__init__.py             0      0   100%
+src/ingestion/github_client.py       56      1    98%   23
+src/presentation/__init__.py          3      0   100%
+src/presentation/app.py              29      1    97%   50
+src/presentation/controller.py       33      0   100%
+src/processing/__init__.py            0      0   100%
+src/processing/cache_manager.py      46      6    87%   15, 36, 40-41, 60-61
+src/processing/transformer.py        21      2    90%   9-10
+---------------------------------------------------------------
+TOTAL                               224     10    96%
+============================== 31 passed in 5.42s ==============================
+/app/.venv/lib/python3.12/site-packages/coverage/inorout.py:561: CoverageWarning: Module dev_src was never imported. (module-not-imported); see https://coverage.readthedocs.io/en/7.13.5/messages.html#warning-module-not-imported
+  self.warn(f"Module {pkg} was never imported.", slug="module-not-imported")
