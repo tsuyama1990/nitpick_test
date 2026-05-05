@@ -22,6 +22,6 @@ src/domain_models/github.py        14      0   100%
 src/transformer.py                 21      3    86%   11, 30, 43
 -------------------------------------------------------------
 TOTAL                              75      9    88%
-============================== 5 passed in 0.97s ===============================
+============================== 5 passed in 1.01s ===============================
 /app/.venv/lib/python3.12/site-packages/coverage/inorout.py:561: CoverageWarning: Module dev_src was never imported. (module-not-imported); see https://coverage.readthedocs.io/en/7.13.5/messages.html#warning-module-not-imported
   self.warn(f"Module {pkg} was never imported.", slug="module-not-imported")
