@@ -4,13 +4,19 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "pydantic>=2.13.4",
+    "pydantic-settings>=2.14.0",
+    "python-dotenv>=1.2.2",
+]
 
 [dependency-groups]
 dev = [
+    "marimo>=0.23.5",
     "mypy>=1.20.2",
     "pytest>=9.0.3",
     "pytest-cov>=7.1.0",
+    "pytest-mock>=3.15.1",
     "ruff>=0.15.12",
 ]
 
@@ -34,6 +40,7 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = ["S101"]  # Allow assert in tests
+"tutorials/**/*.py" = ["N803", "N807", "B018", "T201", "S101", "S105", "S106", "PT017", "N999", "F821", "E402", "I001"]
 
 [tool.ruff.lint.mccabe]
 max-complexity = 10  # Exceeding this prompts function splitting (prevent AI long functions)
@@ -42,9 +49,10 @@ max-complexity = 10  # Exceeding this prompts function splitting (prevent AI lon
 suppress-dummy-args = true  # Arguments starting with _ do not require type hints
 
 [tool.pytest.ini_options]
-addopts = "--cov=dev_src --cov=src --cov-report=term-missing"
+addopts = "--cov=src --cov-report=term-missing"
 testpaths = ["tests"]
 
 [tool.mypy]
+exclude = ["tutorials/"]
 strict = true
 ignore_missing_imports = true

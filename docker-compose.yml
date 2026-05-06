@@ -1,0 +1,7 @@
+version: '3.8'
+
+services:
+  app:
+    environment:
+      - PORT=8501
+      - CACHE_TTL_SECONDS=3600
