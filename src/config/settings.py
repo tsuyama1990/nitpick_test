@@ -13,11 +13,16 @@ class AppConfig(BaseSettings):
             super().__init__(**kwargs)
         except Exception as exc:
             import pydantic
-            if isinstance(exc, pydantic.ValidationError) and any(err['type'] == 'extra_forbidden' for err in exc.errors()):
+
+            if isinstance(exc, pydantic.ValidationError) and any(
+                err["type"] == "extra_forbidden" for err in exc.errors()
+            ):
                 raise ValueError(str(exc)) from exc
             raise
 
+
 _settings = None
+
 
 def get_settings() -> AppConfig:
     global _settings  # noqa: PLW0603

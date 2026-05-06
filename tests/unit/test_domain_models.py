@@ -22,6 +22,7 @@ def test_repository_info_ignores_extra() -> None:
     assert repo.stargazers_count == 100
     assert not hasattr(repo, "extra_field")
 
+
 def test_commit_data_flattening() -> None:
     payload: dict[str, object] = {
         "sha": "abcdef123456",
@@ -35,6 +36,7 @@ def test_commit_data_flattening() -> None:
     assert commit.sha == "abcdef123456"
     assert commit.author_name == "John Doe"
     assert commit.date == datetime(2023, 10, 1, 12, 0, 0, tzinfo=UTC)
+
 
 def test_app_config_forbids_extra() -> None:
     with pytest.raises(ValueError, match="extra_forbidden"):
