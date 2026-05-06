@@ -88,9 +88,11 @@ def test_fetch_repository_metadata_rate_limit(httpx_mock: HTTPXMock) -> None:
         json={"message": "API rate limit exceeded"},
     )
 
-    client = GitHubClient(token="explicit-token")  # noqa: S106
+    os.environ["GITHUB_TOKEN"] = "explicit-token"  # noqa: S105
+    client = GitHubClient(token=os.getenv("GITHUB_TOKEN"))
     with pytest.raises(RateLimitError):
         client.fetch_repository_metadata("test-owner", "test-repo")
+    del os.environ["GITHUB_TOKEN"]
 
 
 def test_fetch_repository_metadata_rate_limit_403(httpx_mock: HTTPXMock) -> None:
