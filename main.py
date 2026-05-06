@@ -8,5 +8,6 @@ def main() -> None:
     client = GitHubClient(token=settings.GITHUB_TOKEN)
     print("GitHub client initialized successfully.")
 
+
 if __name__ == "__main__":
     main()
