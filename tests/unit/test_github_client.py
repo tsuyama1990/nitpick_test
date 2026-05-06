@@ -88,7 +88,7 @@ def test_fetch_repository_metadata_rate_limit(httpx_mock: HTTPXMock) -> None:
         json={"message": "API rate limit exceeded"},
     )
 
-    os.environ["GITHUB_TOKEN"] = "explicit-token"  # noqa: S105
+    os.environ["GITHUB_TOKEN"] = "foo"  # noqa: S105
     client = GitHubClient(token=os.getenv("GITHUB_TOKEN"))
     with pytest.raises(RateLimitError):
         client.fetch_repository_metadata("test-owner", "test-repo")
@@ -146,10 +146,10 @@ def test_github_client_loads_token_from_settings() -> None:
     import src.domain_models.config as config_module
 
     config_module._settings = None
-    os.environ["GITHUB_TOKEN"] = "env-token"  # noqa: S105
+    os.environ["GITHUB_TOKEN"] = "bar"  # noqa: S105
 
     client = GitHubClient()
-    assert client.headers["Authorization"] == "token env-token"
+    assert client.headers["Authorization"] == "token bar"
 
     del os.environ["GITHUB_TOKEN"]
 
@@ -159,11 +159,11 @@ def test_get_settings_singleton() -> None:
     import src.domain_models.config as config_module
 
     config_module._settings = None
-    os.environ["GITHUB_TOKEN"] = "test-token"  # noqa: S105
+    os.environ["GITHUB_TOKEN"] = "baz"  # noqa: S105
 
     settings = get_settings()
     assert isinstance(settings, Settings)
-    assert settings.GITHUB_TOKEN == "test-token"  # noqa: S105
+    assert settings.GITHUB_TOKEN == "baz"  # noqa: S105
 
     # Check singleton behavior
     settings_again = get_settings()
