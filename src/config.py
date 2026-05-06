@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     )
 
     GITHUB_TOKEN: str | None = None
+    GITHUB_API_BASE_URL: str = "https://api.github.com"
 
 
 _settings: Settings | None = None

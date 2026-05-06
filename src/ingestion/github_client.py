@@ -3,6 +3,7 @@ from typing import Any
 
 import httpx
 
+from src.config import get_settings
 from src.domain_models.exceptions import (
     AuthenticationError,
     GitHubAPIError,
@@ -20,10 +21,10 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 class GitHubClient:
     """A client to interact with the GitHub REST API."""
 
-    BASE_URL = "https://api.github.com"
     TIMEOUT = 10.0
 
     def __init__(self, token: str | None = None) -> None:
+        self.base_url = get_settings().GITHUB_API_BASE_URL
         self.headers = {"Accept": "application/vnd.github.v3+json"}
         if token:
             self.headers["Authorization"] = f"token {token}"
@@ -58,7 +59,7 @@ class GitHubClient:
 
     def get_repository_metadata(self, owner: str, repo: str) -> RepositoryMetadata:
         """Fetches the repository metadata."""
-        url = f"{self.BASE_URL}/repos/{owner}/{repo}"
+        url = f"{self.base_url}/repos/{owner}/{repo}"
         try:
             response = self.client.get(url)
             if response.is_error:
@@ -72,7 +73,7 @@ class GitHubClient:
 
     def get_commits(self, owner: str, repo: str, per_page: int = 100) -> list[CommitRecord]:
         """Fetches the commits for a repository."""
-        url = f"{self.BASE_URL}/repos/{owner}/{repo}/commits"
+        url = f"{self.base_url}/repos/{owner}/{repo}/commits"
         params = {"per_page": per_page}
         try:
             response = self.client.get(url, params=params)
