@@ -77,12 +77,29 @@ uv run streamlit run src/presentation/app.py
 *   Enter a repository name in the format `owner/repo` (e.g., `streamlit/streamlit` or `tiangolo/fastapi`).
 *   View the generated KPIs, commit trends, and top committer charts.
 
+### Using the API Client
+Currently, the ingestion layer is available to securely connect to GitHub and fetch typed data:
+
+```python
+from src.ingestion.github_client import GitHubClient
+
+client = GitHubClient()
+# Fetch repository metadata
+metadata = client.fetch_repository_metadata("streamlit", "streamlit")
+print(f"Stars: {metadata.star_count}")
+
+# Fetch commits
+commits = client.fetch_commit_history("streamlit", "streamlit")
+for commit in commits[:5]:
+    print(commit.commit_hash, commit.author_name)
+```
+
 ### Run the Interactive Tutorial
 
 To understand the system's inner workings and validate the data flow step-by-step:
 
 ```bash
-uv run marimo edit tutorials/UAT_AND_TUTORIAL.py
+uv run marimo edit tests/uat/test_github_client_uat.py
 ```
 
 ## Development Workflow
@@ -116,15 +133,11 @@ This project adheres to strict quality standards. Ensure you run the following c
 ├── .env.example
 ├── pyproject.toml
 ├── src/
-│   ├── config.py
-│   ├── domain/        # Pydantic Models & Exceptions
-│   ├── ingestion/     # GitHub API Client
-│   ├── processing/    # Polars Transformer & Cache
-│   └── presentation/  # Streamlit UI & Controller
-├── tests/
-│   ├── unit/
-│   └── integration/
-└── tutorials/         # Marimo UAT notebooks
+│   ├── domain_models/ # Pydantic Models, Exceptions, & Config
+│   └── ingestion/     # GitHub API Client
+└── tests/
+    ├── unit/          # Isolated Unit Tests
+    └── uat/           # Marimo UAT notebooks
 ```
 
 ## License
