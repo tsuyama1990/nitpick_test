@@ -1,116 +1,71 @@
-# GitHub Analytics Dashboard PoC
+# GitHub Analytics Dashboard
 
-![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
-![License](https://img.shields.io/badge/license-MIT-blue)
+## Overview
 
-A robust, strictly-typed Proof of Concept (PoC) for analyzing GitHub repositories. This dashboard seamlessly fetches real-time data from the GitHub REST API, processes the metrics using high-performance Polars DataFrames, and renders interactive visual insights via Streamlit, all while enforcing strict rate-limit caching and security best practices.
+The GitHub Analytics Dashboard is a simplified system for extracting and analyzing GitHub repository data, such as basic metrics (stars, forks) and commit histories. This foundation provides securely typed data ingestion tools designed to safely process complex and deeply nested payloads returned from the GitHub REST API.
 
-## Key Features
+## Features
 
-- **Live GitHub API Integration**: Securely connects to GitHub to fetch repository metrics (Stars, Forks, Issues) and recent commit histories without hardcoding credentials.
-- **High-Performance Data Processing**: Leverages Polars to aggregate commit timelines and identify top committers with blazing speed.
-- **Intelligent Local Caching**: Implements a Time-To-Live (TTL) Parquet-based caching mechanism to prevent exhausting API rate limits and ensure instantaneous UI updates on repeated queries.
-- **Strict Error Handling**: Gracefully intercepts network issues, 403 Forbidden limits, and 404 Not Found errors, ensuring no stack traces or sensitive data leak to the user interface.
-- **Zero-Config Web Dashboard**: A pure Streamlit presentation layer offering a clean, interactive user experience with line and bar charts.
+- **Strict Environment Configuration**: Ensures robust token management, preventing the application from initializing without necessary API secrets, and securely managing API limits.
+- **Robust Schema Validation**: Employs Pydantic models with `extra="ignore"` and pre-validators to seamlessly ingest and flatten complex, multi-level JSON payloads from GitHub APIs directly into manageable Python objects.
+- **Fail-Safe Design**: Strictly prevents loading arbitrary environmental properties into configurations.
 
-## Architecture Overview
+## Installation
 
-The system operates using a multi-tiered architecture with strict separation of concerns, heavily relying on Pydantic domain models for data validation at the boundaries.
+Ensure you have Python 3.12+ installed, along with `uv` for dependency management.
 
-```mermaid
-graph TD
-    User([User]) --> UI[Streamlit Web UI<br/>src/presentation]
-    UI --> Controller[Dashboard Controller<br/>src/services]
+```bash
+# Clone the repository
+# git clone <your-repo-url>
+# cd <your-repo-directory>
 
-    Controller -- 1. Check Cache --> Storage[Local Cache Storage<br/>src/storage]
-    Storage -. Cache Hit .-> Controller
+# Install all dependencies and setup the virtual environment
+uv sync
 
-    Controller -- 2. Cache Miss: Fetch --> APIClient[GitHub API Client<br/>src/ingestion]
-    APIClient -- HTTP GET --> GitHub[(GitHub REST API)]
-    GitHub -. JSON Data .-> APIClient
-
-    APIClient -- Raw Data --> Transformer[Data Transformer<br/>src/transformation]
-    Transformer -- Polars Processing --> AggregatedData[Aggregated Metrics]
-    AggregatedData --> Storage
-    Storage -. Save Parquet .-> Disk[(Local Disk)]
-    AggregatedData --> Controller
-
-    Controller --> UI
+# Setup your environment variables
+cp .env.example .env
 ```
-
-## Prerequisites
-
-- **Python**: 3.12 or higher.
-- **Package Manager**: [uv](https://github.com/astral-sh/uv) (strictly enforced for dependency management).
-- **Credentials**: A valid GitHub Personal Access Token (PAT).
-
-## Installation & Setup
-
-1. **Clone the repository**:
-   ```bash
-   git clone <repository_url>
-   cd <repository_directory>
-   ```
-
-2. **Sync Dependencies**:
-   Utilize `uv` to install the environment and requirements.
-   ```bash
-   uv sync
-   ```
-
-3. **Configure Environment Variables**:
-   Copy the example environment file and insert your GitHub token.
-   ```bash
-   cp .env.example .env
-   # Edit .env and add your GITHUB_TOKEN
-   ```
+Edit `.env` and add your `GITHUB_TOKEN`.
 
 ## Usage
 
-**Quick Start**:
-To launch the interactive dashboard, run the Streamlit application using `uv`:
+This project currently provides strict foundational domains and configuration validation utilities. Here is a brief snippet on how to access the typed settings and use the Domain models.
 
+```python
+from src.config.settings import get_settings
+from src.domain_models import RepositoryInfo, CommitData
+
+# Load and validate settings safely
+settings = get_settings()
+
+# Example JSON mapping (simulating GitHub API payload)
+repo_payload = {
+    "name": "streamlit",
+    "owner": "streamlit",
+    "stargazers_count": 30000,
+    "forks_count": 3000,
+    "open_issues_count": 250,
+    "ignore_this_extra_field": 1234
+}
+
+# The payload will automatically drop the unknown fields
+repo = RepositoryInfo(**repo_payload)
+print(f"Loaded Repository: {repo.name} with {repo.stargazers_count} stars")
+```
+
+For executing the UAT notebook and viewing interactive validation scenarios:
 ```bash
-uv run streamlit run src/presentation/app.py
+uv run marimo edit tutorials/UAT_AND_TUTORIAL.py
 ```
 
-Once the server starts, open the provided local URL in your browser. Enter a repository name in the `owner/repo` format (e.g., `streamlit/streamlit` or `tiangolo/fastapi`) and click "Analyze" to view the metrics and charts.
+## Structure
 
-## Development Workflow
-
-This project adheres to strict typing and linting standards. Use the following commands during development:
-
-- **Run Tests**: Execute the test suite with coverage reporting.
-  ```bash
-  uv run pytest
-  ```
-- **Run Linters**: Format and check the code using Ruff.
-  ```bash
-  uv run ruff format .
-  uv run ruff check .
-  ```
-- **Type Checking**: Enforce strict Mypy checks.
-  ```bash
-  uv run mypy .
-  ```
-
-## Project Structure
-
-```text
+```
 .
-├── src/
-│   ├── config/          # Pydantic Settings and env loading
-│   ├── domain_models/   # Core entities (Repository, Commit schemas)
-│   ├── ingestion/       # GitHub API HTTP Client
-│   ├── presentation/    # Streamlit UI App and Components
-│   ├── services/        # Dashboard Controller orchestrating logic
-│   └── storage/         # Local Parquet Caching Manager
-│   └── transformation/  # Polars Data Processing Engine
-├── tests/               # Pytest suites (Unit, E2E, UAT Marimo notebooks)
-├── .env.example         # Template for environment secrets
-└── pyproject.toml       # uv dependency and tool configuration
+├── .env.example        # Template for secrets
+├── src/                # Main application source
+│   ├── config/         # System settings and environment parsing
+│   └── domain_models/  # Pydantic schemas for typing GitHub JSON
+├── tests/              # Extensive validation suite for Unit testing
+└── tutorials/          # UAT and demo scripts
 ```
-
-## License
-
-MIT License.
