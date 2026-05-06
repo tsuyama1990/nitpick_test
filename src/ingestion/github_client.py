@@ -3,6 +3,7 @@ from typing import Any
 
 import httpx
 
+from src.domain_models.config import get_settings
 from src.domain_models.exceptions import (
     AuthenticationError,
     RateLimitError,
@@ -19,14 +20,18 @@ class GitHubClient:
     """Client for fetching data from the GitHub REST API."""
 
     def __init__(self, token: str | None = None) -> None:
+        settings = get_settings()
+        self.base_url = settings.GITHUB_API_BASE_URL
         self.headers: dict[str, str] = {
             "Accept": "application/vnd.github.v3+json",
             "User-Agent": "GitHub-Analysis-Dashboard",
         }
         if token:
             self.headers["Authorization"] = f"token {token}"
+        elif settings.GITHUB_TOKEN:
+            self.headers["Authorization"] = f"token {settings.GITHUB_TOKEN}"
 
-        self.client = httpx.Client(headers=self.headers, timeout=10.0)
+        self.client = httpx.Client(headers=self.headers, timeout=settings.HTTP_TIMEOUT)
 
     def _handle_response(self, response: httpx.Response) -> dict[str, Any] | list[dict[str, Any]]:
         if response.status_code == 429:
@@ -52,7 +57,7 @@ class GitHubClient:
 
     def fetch_repository_metadata(self, owner: str, repo: str) -> RepositoryMetadata:
         """Fetch metadata for a specific repository."""
-        url = f"https://api.github.com/repos/{owner}/{repo}"
+        url = f"{self.base_url}/repos/{owner}/{repo}"
         response = self.client.get(url)
         data = self._handle_response(response)
 
@@ -64,7 +69,7 @@ class GitHubClient:
 
     def fetch_commit_history(self, owner: str, repo: str) -> list[CommitRecord]:
         """Fetch the latest 100 commits for a specific repository."""
-        url = f"https://api.github.com/repos/{owner}/{repo}/commits"
+        url = f"{self.base_url}/repos/{owner}/{repo}/commits"
         response = self.client.get(url, params={"per_page": 100})
         data = self._handle_response(response)
 

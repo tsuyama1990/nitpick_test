@@ -140,6 +140,18 @@ def test_fetch_commit_history_type_error(httpx_mock: HTTPXMock) -> None:
         client.fetch_commit_history("test-owner", "test-repo")
 
 
+def test_github_client_loads_token_from_settings() -> None:
+    import src.domain_models.config as config_module
+
+    config_module._settings = None
+    os.environ["GITHUB_TOKEN"] = "env-token"  # noqa: S105
+
+    client = GitHubClient()
+    assert client.headers["Authorization"] == "token env-token"
+
+    del os.environ["GITHUB_TOKEN"]
+
+
 def test_get_settings_singleton() -> None:
     # Reset singleton to test initialization
     import src.domain_models.config as config_module
