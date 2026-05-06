@@ -2,6 +2,23 @@
 
 本ドキュメントは、GitHubリポジトリ分析ダッシュボードのPoCが要件定義（ALL_SPEC.md）を厳密に満たしているかを検証するためのE2Eテストシナリオ群です。開発サイクル完了後、自動または手動で以下のシナリオをすべてパスすることを確認してください。
 
+## Tutorial Strategy
+
+To ensure seamless verification and an exceptional user experience, these scenarios will be executed via an interactive Marimo notebook. The notebook serves a dual purpose: as an automated testing suite and as an onboarding tutorial for new developers.
+
+- **Mock Mode**: By default, the tutorial runs using mocked data and `pytest-httpx` simulated responses. This ensures CI/CD stability and allows users to explore the logic without needing a real GitHub API key.
+- **Real Mode**: Users can provide a `.env` file with a valid `GITHUB_TOKEN` to execute the `@pytest.mark.live` scenarios, hitting the live GitHub REST API for real-time validation.
+
+## Tutorial Plan
+
+A **SINGLE** Marimo Text/Python file named `tutorials/UAT_AND_TUTORIAL.py` will be created. It will contain all scenarios (Quick Start + Advanced) in one cohesive document, utilizing Marimo's reactive cells for step-by-step verification and exploration of the system's capabilities.
+
+## Tutorial Validation
+
+Validation involves executing the Marimo notebook and ensuring all cells run successfully without errors, properly displaying the mocked (or real) data transformations and UI component simulations.
+
+---
+
 ## Scenario 1: 正常系フルサイクルとキャッシュ挙動の厳格検証 (Strict Happy Path & Caching)
 
 **目的**: アプリケーションが正常に動作し、かつキャッシュ機構がAPIのレートリミット保護として確実に機能していることを確認する。
