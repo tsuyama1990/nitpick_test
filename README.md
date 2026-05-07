@@ -13,30 +13,11 @@ A robust, strictly-typed Proof of Concept (PoC) for analyzing GitHub repositorie
 - **Strict Error Handling**: Gracefully intercepts network issues, 403 Forbidden limits, and 404 Not Found errors, ensuring no stack traces or sensitive data leak to the user interface.
 - **Zero-Config Web Dashboard**: A pure Streamlit presentation layer offering a clean, interactive user experience with line and bar charts.
 
-## Architecture Overview
+## Architecture & Design Rationale
 
 The system operates using a multi-tiered architecture with strict separation of concerns, heavily relying on Pydantic domain models for data validation at the boundaries.
 
-```mermaid
-graph TD
-    User([User]) --> UI[Streamlit Web UI<br/>src/presentation]
-    UI --> Controller[Dashboard Controller<br/>src/services]
-
-    Controller -- 1. Check Cache --> Storage[Local Cache Storage<br/>src/storage]
-    Storage -. Cache Hit .-> Controller
-
-    Controller -- 2. Cache Miss: Fetch --> APIClient[GitHub API Client<br/>src/ingestion]
-    APIClient -- HTTP GET --> GitHub[(GitHub REST API)]
-    GitHub -. JSON Data .-> APIClient
-
-    APIClient -- Raw Data --> Transformer[Data Transformer<br/>src/transformation]
-    Transformer -- Polars Processing --> AggregatedData[Aggregated Metrics]
-    AggregatedData --> Storage
-    Storage -. Save Parquet .-> Disk[(Local Disk)]
-    AggregatedData --> Controller
-
-    Controller --> UI
-```
+For massive third-party API payloads like GitHub's, Pydantic's `extra="ignore"` constraint is intentionally employed to safely drop extraneous API fields while strictly typing the minimal required data format for internal routing. By decoupling these definitions from downstream processors, we establish a robust root-cause awareness of system limitations and security boundaries.
 
 ## Prerequisites
 
@@ -103,10 +84,9 @@ This project adheres to strict typing and linting standards. Use the following c
 │   ├── domain_models/   # Core entities (Repository, Commit schemas)
 │   ├── ingestion/       # GitHub API HTTP Client
 │   ├── presentation/    # Streamlit UI App and Components
-│   ├── services/        # Dashboard Controller orchestrating logic
-│   └── storage/         # Local Parquet Caching Manager
+│   ├── storage/         # Local Parquet Caching Manager
 │   └── transformation/  # Polars Data Processing Engine
-├── tests/               # Pytest suites (Unit, E2E, UAT Marimo notebooks)
+├── tests/               # Pytest suites
 ├── .env.example         # Template for environment secrets
 └── pyproject.toml       # uv dependency and tool configuration
 ```

@@ -1,0 +1,51 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0
+rootdir: /app
+configfile: pyproject.toml
+testpaths: tests
+plugins: mock-3.15.1, cov-7.1.0, anyio-4.13.0, httpx-0.36.2
+collected 28 items
+
+tests/unit/test_cache.py ....                                            [ 14%]
+tests/unit/test_client.py .......s.                                      [ 46%]
+tests/unit/test_config.py ....                                           [ 60%]
+tests/unit/test_controller.py ....                                       [ 75%]
+tests/unit/test_domain_models.py .....                                   [ 92%]
+tests/unit/test_transformation.py ..                                     [100%]
+
+=============================== warnings summary ===============================
+tests/unit/test_client.py:88
+  /app/tests/unit/test_client.py:88: PytestUnknownMarkWarning: Unknown pytest.mark.live - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.live
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Name                                Stmts   Miss  Cover   Missing
+-----------------------------------------------------------------
+src/__init__.py                         0      0   100%
+src/config/__init__.py                  2      0   100%
+src/config/settings.py                  9      0   100%
+src/domain_models/__init__.py           2      0   100%
+src/domain_models/github.py            18      0   100%
+src/ingestion/__init__.py               2      0   100%
+src/ingestion/client.py                50      0   100%
+src/presentation/__init__.py            3      0   100%
+src/presentation/app.py                46     42     9%   7-61, 64
+src/presentation/controller.py         32      0   100%
+src/storage/__init__.py                 2      0   100%
+src/storage/cache.py                   34      1    97%   18
+src/transformation/__init__.py          2      0   100%
+src/transformation/processor.py        16      0   100%
+tests/__init__.py                       0      0   100%
+tests/unit/__init__.py                  0      0   100%
+tests/unit/test_cache.py               40      0   100%
+tests/unit/test_client.py              58      3    95%   94-96
+tests/unit/test_config.py              22      0   100%
+tests/unit/test_controller.py          60      0   100%
+tests/unit/test_domain_models.py       24      0   100%
+tests/unit/test_transformation.py      26      0   100%
+-----------------------------------------------------------------
+TOTAL                                 448     46    90%
+=================== 27 passed, 1 skipped, 1 warning in 2.13s ===================
