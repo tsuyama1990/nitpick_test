@@ -5,6 +5,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class AppConfig(BaseSettings):
     GITHUB_TOKEN: str
+    CACHE_TTL_SECONDS: int = 3600
+    GITHUB_API_URL: str = "https://api.github.com"
 
     model_config = SettingsConfigDict(env_file=".env", extra="forbid")
 

@@ -38,5 +38,5 @@ def test_app_config_loads_from_env_file(tmp_path: Path, monkeypatch: pytest.Monk
         model_config = AppConfig.model_config.copy()
         model_config["env_file"] = str(env_file)
 
-    config = TestConfig()  # type: ignore[call-arg]
+    config = TestConfig(CACHE_TTL_SECONDS=3600, GITHUB_API_URL="https://api.github.com")  # type: ignore[call-arg]
     assert config.GITHUB_TOKEN == "secret_from_file"  # noqa: S105

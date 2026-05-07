@@ -16,10 +16,12 @@ Name                              Stmts   Miss  Cover   Missing
 ---------------------------------------------------------------
 src/__init__.py                       0      0   100%
 src/config/__init__.py                0      0   100%
-src/config/settings.py               18      0   100%
+src/config/settings.py               20      0   100%
 src/domain_models/__init__.py         3      0   100%
 src/domain_models/commit.py          17      1    94%   26
 src/domain_models/repository.py       8      0   100%
+src/services/__init__.py              0      0   100%
+src/services/github.py               19     19     0%   1-55
 ---------------------------------------------------------------
-TOTAL                                46      1    98%
-============================== 6 passed in 0.45s ===============================
+TOTAL                                67     20    70%
+============================== 6 passed in 0.48s ===============================

@@ -40,4 +40,9 @@ def test_commit_data_flattening() -> None:
 
 def test_app_config_forbids_extra() -> None:
     with pytest.raises(ValueError, match="extra_forbidden"):
-        AppConfig(GITHUB_TOKEN="dummy_token", UNKNOWN_VAR="test")  # noqa: S106
+        AppConfig(
+            GITHUB_TOKEN="dummy_token",  # noqa: S106
+            CACHE_TTL_SECONDS=3600,
+            GITHUB_API_URL="https://api.github.com",
+            UNKNOWN_VAR="test",
+        )

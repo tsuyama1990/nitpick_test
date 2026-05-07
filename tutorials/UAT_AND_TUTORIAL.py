@@ -60,11 +60,16 @@ def __(AppConfig, os, settings_module):
     os.environ["GITHUB_TOKEN"] = "test_token"
     settings_module._settings = None
 
-    config = AppConfig()
+    config = AppConfig()  # type: ignore[call-arg]
     assert config.GITHUB_TOKEN == "test_token"
 
     try:
-        AppConfig(GITHUB_TOKEN="test_token", INVALID="extra")  # type: ignore[call-arg]
+        AppConfig(
+            GITHUB_TOKEN="test_token",
+            CACHE_TTL_SECONDS=3600,
+            GITHUB_API_URL="https://api.github.com",
+            INVALID="extra",
+        )  # type: ignore[call-arg]
         _msg2 = "Should have raised ValueError for extra_forbidden"
         raise AssertionError(_msg2)
     except ValueError as e:

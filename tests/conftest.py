@@ -1,5 +1,3 @@
-import sys
-from pathlib import Path
-
-# Add project root to sys.path to resolve module imports
-sys.path.insert(0, str(Path(__file__).parent.parent))
+# Although editable install is preferred, ensuring tests always
+# find src locally on a strict auditor is safe, however, removing sys.path manipulation
+# and relying on pytest configuring pythonpath or editable install.
