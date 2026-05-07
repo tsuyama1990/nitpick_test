@@ -65,12 +65,10 @@ Remove any `TODO`, `FIXME`, empty functions, `pass`, `...`, or fake log outputs.
 
 ## 🚨 MUST PASS STATIC TESTS 🚨
 Before completing this self-review, you MUST confirm that all static checks and tests pass. This is non-negotiable.
+If you modify even a single character of code—whether manually to fix a bug or via ruff format—you MUST restart the entire sequence from Step 1. Do not skip any steps.
 1. **Tests & Coverage**: Run `pytest` and verify the coverage reports.
 2. **Linting & Formatting**: Run `ruff check .` and `ruff format .`.
 3. **Type Checking**: Run `mypy .`.
 
-**CRITICAL LOOP RULE**: If you modify even a *single line of code* during this self-critic phase (either manually or via auto-format), you MUST restart the entire static validation sequence from the beginning before raising the PR.
-
-**FINAL ACTION**:
-If you found ANY of the above issues, **FIX THE CODE NOW** using your file editing tools, re-run your tests, and confirm they pass.
-Once you are 100% confident your code is perfect, reply confirming that the Final Self-Critic review is complete and the code is finalized.
+**LAST STEP**:
+Only when all four checks pass consecutively without any code modifications being made during the process, you are authorized to proceed. Once this "zero-modification" state is achieved, automatically open the Pull Request (or perform the final merge tool call) and report that the Final Self-Critic review is successfully completed.
