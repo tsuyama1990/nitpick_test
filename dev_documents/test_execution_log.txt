@@ -42,4 +42,4 @@ tests/unit/test_domain_models.py       24      0   100%
 tests/unit/test_transformation.py      26      0   100%
 -----------------------------------------------------------------
 TOTAL                                 448     49    89%
-======================= 27 passed, 1 deselected in 2.16s =======================
+======================= 27 passed, 1 deselected in 2.26s =======================
