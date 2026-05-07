@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-def test_uat() -> None:
+def run_scenario() -> None:
     client = GitHubClient()
     repo_info = client.fetch_repository_info("streamlit", "streamlit")
     commits = client.fetch_recent_commits("streamlit", "streamlit", limit=5)
@@ -18,6 +18,6 @@ def test_uat() -> None:
 
 if __name__ == "__main__":
     if os.environ.get("GITHUB_TOKEN"):
-        test_uat()
+        run_scenario()
     else:
-        logger.info("Skip UAT, GITHUB_TOKEN not provided")
+        logger.info("Skip UAT script execution, GITHUB_TOKEN not provided")
