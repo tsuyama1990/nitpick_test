@@ -9,13 +9,16 @@ from src.transformation.processor import DataTransformer
 
 logger = logging.getLogger(__name__)
 
+
 class DashboardController:
     def __init__(self) -> None:
         self.client = GitHubClient()
         self.transformer = DataTransformer()
         self.cache = CacheStorage()
 
-    def get_dashboard_data(self, owner: str, repo: str) -> tuple[Repository | None, pl.DataFrame | None, pl.DataFrame | None, str | None]:
+    def get_dashboard_data(
+        self, owner: str, repo: str
+    ) -> tuple[Repository | None, pl.DataFrame | None, pl.DataFrame | None, str | None]:
         """
         Orchestrates fetching repository data and commits.
         Returns: (Repository, commits_by_date, top_committers, error_message)

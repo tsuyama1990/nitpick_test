@@ -25,7 +25,9 @@ def main() -> None:
 
         with st.spinner("Fetching data..."):
             controller = DashboardController()
-            repo_info, commits_by_date, top_committers, error = controller.get_dashboard_data(owner, repo)
+            repo_info, commits_by_date, top_committers, error = controller.get_dashboard_data(
+                owner, repo
+            )
 
             if error:
                 st.error(f"Error fetching data: {error}")
@@ -59,6 +61,7 @@ def main() -> None:
                 st.bar_chart(df_users)
             else:
                 st.info("No top committers found.")
+
 
 if __name__ == "__main__":
     main()

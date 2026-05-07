@@ -77,7 +77,9 @@ def test_controller_repo_error(mock_dependencies: tuple[MagicMock, MagicMock, Ma
     assert repo is None
 
 
-def test_controller_commits_error(mock_dependencies: tuple[MagicMock, MagicMock, MagicMock]) -> None:
+def test_controller_commits_error(
+    mock_dependencies: tuple[MagicMock, MagicMock, MagicMock],
+) -> None:
     MockClient, MockTransformer, MockCache = mock_dependencies
     mock_client_instance = MockClient.return_value
     mock_client_instance.get_repository_info.return_value = Repository(

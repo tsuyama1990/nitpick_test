@@ -15,7 +15,9 @@ class CacheStorage:
         ttl_seconds: int = 3600,
     ) -> None:
         if cache_dir is None:
-            cache_dir = os.getenv("CACHE_DIR", str(pathlib.Path.cwd() / ".cache" / "github_dashboard"))
+            cache_dir = os.getenv(
+                "CACHE_DIR", str(pathlib.Path.cwd() / ".cache" / "github_dashboard")
+            )
         self.cache_dir = pathlib.Path(cache_dir)
         self.ttl_seconds = ttl_seconds
         self.cache_dir.mkdir(parents=True, exist_ok=True)
