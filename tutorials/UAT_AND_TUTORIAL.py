@@ -63,19 +63,15 @@ def __(AppConfig, os, settings_module):
     config = AppConfig()  # type: ignore[call-arg]
     assert config.GITHUB_TOKEN == "test_token"
 
-    try:
-        AppConfig(
-            GITHUB_TOKEN="test_token",
-            CACHE_TTL_SECONDS=3600,
-            GITHUB_API_URL="https://api.github.com",
-            INVALID="extra",
-        )  # type: ignore[call-arg]
-        _msg2 = "Should have raised ValueError for extra_forbidden"
-        raise AssertionError(_msg2)
-    except ValueError as e:
-        assert "extra_forbidden" in str(e)
-        print("UAT-C01-01 (Valid Token & Extra Forbidden): Passed")
-    return (config,)
+    config_extra = AppConfig(
+        GITHUB_TOKEN="test_token",
+        CACHE_TTL_SECONDS=3600,
+        GITHUB_API_URL="https://api.github.com",
+        INVALID="extra",
+    )  # type: ignore[call-arg]
+    assert config_extra.GITHUB_TOKEN == "test_token"
+    print("UAT-C01-01 (Valid Token & Extra Variables Ignored): Passed")
+    return config, config_extra
 
 
 @app.cell

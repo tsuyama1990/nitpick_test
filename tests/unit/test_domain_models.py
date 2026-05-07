@@ -1,7 +1,5 @@
 from datetime import UTC, datetime
 
-import pytest
-
 from src.config.settings import AppConfig
 from src.domain_models.commit import CommitData
 from src.domain_models.repository import RepositoryInfo
@@ -38,11 +36,11 @@ def test_commit_data_flattening() -> None:
     assert commit.date == datetime(2023, 10, 1, 12, 0, 0, tzinfo=UTC)
 
 
-def test_app_config_forbids_extra() -> None:
-    with pytest.raises(ValueError, match="extra_forbidden"):
-        AppConfig(
-            GITHUB_TOKEN="dummy_token",  # noqa: S106
-            CACHE_TTL_SECONDS=3600,
-            GITHUB_API_URL="https://api.github.com",
-            UNKNOWN_VAR="test",
-        )
+def test_app_config_ignores_extra() -> None:
+    config = AppConfig(
+        GITHUB_TOKEN="dummy_token",  # noqa: S106
+        CACHE_TTL_SECONDS=3600,
+        GITHUB_API_URL="https://api.github.com",
+        UNKNOWN_VAR="test",
+    )  # type: ignore[call-arg]
+    assert config.GITHUB_TOKEN == "dummy_token"  # noqa: S105
