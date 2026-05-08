@@ -8,3 +8,11 @@ logs/
 .nitpick/worktrees/
 .coverage
 __pycache__/
+.env
+.env.local
+.nitpick/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
