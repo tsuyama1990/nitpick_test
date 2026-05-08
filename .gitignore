@@ -1,10 +1,31 @@
-# AC-CDD Configuration
+# Secrets & environment
 .env
+.env.local
+
+# System State
 .nitpick/
-.nitpick/project_state_local.json
-dev_documents/project_state.json
-dev_documents/project_state_local.json
-logs/
-.nitpick/worktrees/
-.coverage
+
+# Cache / temporary data
+.cache/
+*.parquet
+*.csv
+
+# Notebook state
+.marimo/
+
+# Python artefacts
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+
+# OS artefacts
+.DS_Store
