@@ -1,0 +1,27 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0
+rootdir: /app
+configfile: pyproject.toml
+testpaths: tests
+plugins: mock-3.15.1, cov-7.1.0, anyio-4.13.0, httpx-0.36.2
+collected 15 items
+
+tests/unit/test_ingestion.py ....                                        [ 26%]
+tests/unit/test_transformation_storage.py ....                           [ 53%]
+tests/unit/test_visualization.py .......                                 [100%]
+
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Name                            Stmts   Miss  Cover   Missing
+-------------------------------------------------------------
+src/domain_models/__init__.py       0      0   100%
+src/domain_models/config.py         9      3    67%   19-21
+src/domain_models/github.py        16      0   100%
+src/ingestion.py                   51      9    82%   46-47, 54-55, 62-66
+src/storage.py                     26      1    96%   13
+src/transformation.py              15      0   100%
+src/visualization.py               54      1    98%   92
+-------------------------------------------------------------
+TOTAL                             171     14    92%
+============================== 15 passed in 3.77s ==============================
