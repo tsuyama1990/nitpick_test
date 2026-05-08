@@ -1,0 +1,36 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0
+rootdir: /app
+configfile: pyproject.toml
+testpaths: tests
+plugins: cov-7.1.0, anyio-4.13.0, httpx-0.36.2
+collected 30 items / 2 deselected / 28 selected
+
+tests/e2e/test_dashboard.py .                                            [  3%]
+tests/unit/test_app.py ...........                                       [ 42%]
+tests/unit/test_cache.py ...                                             [ 53%]
+tests/unit/test_controller.py ..                                         [ 60%]
+tests/unit/test_github_client.py .......                                 [ 85%]
+tests/unit/test_metrics.py ....                                          [100%]
+
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Name                             Stmts   Miss  Cover   Missing
+--------------------------------------------------------------
+src/__init__.py                      0      0   100%
+src/domain_models/__init__.py        3      0   100%
+src/domain_models/config.py          9      0   100%
+src/domain_models/manifest.py       40      3    92%   39, 56, 58
+src/ingestion/__init__.py            2      0   100%
+src/ingestion/github_client.py      33      0   100%
+src/presentation/__init__.py         2      0   100%
+src/presentation/app.py             61     31    49%   43-64, 72-94, 98
+src/presentation/controller.py      47      0   100%
+src/storage/__init__.py              2      0   100%
+src/storage/cache.py                28      0   100%
+src/transformation/__init__.py       2      0   100%
+src/transformation/metrics.py       13      0   100%
+--------------------------------------------------------------
+TOTAL                              242     34    86%
+======================= 28 passed, 2 deselected in 2.12s =======================

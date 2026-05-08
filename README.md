@@ -20,7 +20,7 @@ The system operates using a multi-tiered architecture with strict separation of 
 ```mermaid
 graph TD
     User([User]) --> UI[Streamlit Web UI<br/>src/presentation]
-    UI --> Controller[Dashboard Controller<br/>src/services]
+    UI --> Controller[Dashboard Controller<br/>src/presentation]
 
     Controller -- 1. Check Cache --> Storage[Local Cache Storage<br/>src/storage]
     Storage -. Cache Hit .-> Controller
@@ -37,6 +37,11 @@ graph TD
 
     Controller --> UI
 ```
+
+## Architecture & Design Rationale
+
+- **Pydantic Strict Validation**: We use `extra="forbid"` on our domain schemas to strictly enforce types and ensure the application drops unverified payload bloat from GitHub before validating via a flattening `@model_validator`.
+- **Presentation Logic Organization**: `controller.py` coordinates transformations and IO internally alongside the `app.py` UI logic in the `src/presentation/` package, exposing clean entrypoints to avoid circular dependencies.
 
 ## Prerequisites
 
@@ -99,14 +104,13 @@ This project adheres to strict typing and linting standards. Use the following c
 ```text
 .
 ├── src/
-│   ├── config/          # Pydantic Settings and env loading
-│   ├── domain_models/   # Core entities (Repository, Commit schemas)
+│   ├── domain_models/   # Core entities (Repository, Commit schemas and Env config)
 │   ├── ingestion/       # GitHub API HTTP Client
-│   ├── presentation/    # Streamlit UI App and Components
-│   ├── services/        # Dashboard Controller orchestrating logic
+│   ├── presentation/    # Streamlit UI App and Dashboard Controller
 │   └── storage/         # Local Parquet Caching Manager
 │   └── transformation/  # Polars Data Processing Engine
-├── tests/               # Pytest suites (Unit, E2E, UAT Marimo notebooks)
+├── tests/               # Pytest suites (Unit, E2E)
+├── tutorials/           # UAT Marimo notebooks
 ├── .env.example         # Template for environment secrets
 └── pyproject.toml       # uv dependency and tool configuration
 ```
