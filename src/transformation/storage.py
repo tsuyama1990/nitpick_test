@@ -4,7 +4,7 @@ import time
 
 import polars as pl
 
-CACHE_TTL_SECONDS = 3600  # 1 hour
+from src.domain_models.config import get_settings
 
 
 def _get_cache_dir() -> pathlib.Path:
@@ -28,7 +28,8 @@ def load_from_cache(key: str) -> pl.DataFrame | None:
 
     # Check TTL
     file_mtime = cache_path.stat().st_mtime
-    if time.time() - file_mtime > CACHE_TTL_SECONDS:
+    settings = get_settings()
+    if time.time() - file_mtime > settings.CACHE_TTL_SECONDS:
         return None
 
     return pl.read_parquet(cache_path)

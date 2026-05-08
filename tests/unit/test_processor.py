@@ -1,4 +1,3 @@
-
 from src.domain_models.github import CommitDetail
 from src.transformation.processor import process_commits_per_committer, process_commits_per_day
 
