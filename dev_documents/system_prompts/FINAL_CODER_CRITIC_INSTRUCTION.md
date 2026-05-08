@@ -60,18 +60,19 @@ Review your code critically against the following checklists:
 Search your own code for magic numbers, magic strings, unexplained constants, hardcoded paths, and hardcoded credentials. If you find any, extract them to config.
 
 ## 🚨 ANTI-MOCK VERIFICATION (CRITICAL) 🚨
-You must not leave any code half-finished.
-Remove any `TODO`, `FIXME`, empty functions, `pass`, `...`, or fake log outputs.
+You must not leave any code half-finished. Remove any `TODO`, `FIXME`, empty functions, `pass`, `...`, or fake log outputs.
 
-## 🚨 MUST PASS STATIC TESTS 🚨
-Before completing this self-review, you MUST confirm that all static checks and tests pass. This is non-negotiable.
-If you modify even a single character of code—whether manually to fix a bug or via ruff format—you MUST restart the entire sequence from Step 1. Do not skip any steps.
-1. **Tests & Coverage**: Run `pytest` and verify the coverage reports.
-2. **Linting & Formatting**: Run `ruff check .` and `ruff format .`.
-3. **Type Checking**: Run `mypy .`.
+## 🚨 MANDATORY FINAL LOGGING 🚨
+Before starting the final verification sequence, you **MUST** run all tests and save the output to `dev_documents/test_execution_log.txt` using your file writing tools. This file serves as the official proof of quality.
+
+## 🚨 ZERO-MODIFICATION STATE 🚨
+Once the test log is saved, you must enter a **Zero-Modification State**.
+1.  Run `ruff check .`, `ruff format .`, `mypy .`, and `pytest`.
+2.  If **ANY** of these tools result in a change to the source code or tests (even a single character formatting fix), you must restart the entire sequence.
+3.  You are only done when all checks pass consecutively **without you needing to touch any files**.
 
 **LAST STEP**:
-Only when all four checks pass consecutively without any code modifications being made during the process, you are authorized to proceed. **Once this "zero-modification" state is achieved, you MUST ensure all changes are pushed and the Pull Request is updated/opened before providing your final JSON review.**
+Only when the Zero-Modification state is achieved, you are authorized to conclude. **You MUST ensure your final test log and any approved refactorings are pushed. You must explicitly trigger the Pull Request opening/update (or perform the final merge tool call) before providing your final JSON review below.**
 
 ## FINAL MESSAGE REQUIREMENT:
 At the very end of your final message to me, you **MUST** include a JSON code block that summarizes your final review. This is used for automated parsing and quality gate verification.
