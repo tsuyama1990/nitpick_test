@@ -6,11 +6,12 @@ import httpx
 from src.domain_models.config import get_settings
 from src.domain_models.github import CommitInfo, RepoInfo
 
-logging.getLogger('httpx').setLevel(logging.WARNING)
+logging.getLogger("httpx").setLevel(logging.WARNING)
 
 ERR_403 = "403 Forbidden"
 ERR_404 = "404 Not Found"
 ERR_429 = "429 Too Many Requests"
+
 
 def get_repo_info(owner: str, repo: str) -> RepoInfo:
     settings = get_settings()
@@ -29,6 +30,7 @@ def get_repo_info(owner: str, repo: str) -> RepoInfo:
 
         data: dict[str, Any] = response.json()
         return RepoInfo(**data)
+
 
 def get_commits(owner: str, repo: str) -> list[CommitInfo]:
     settings = get_settings()

@@ -12,7 +12,9 @@ from src.transformation.processor import (
 
 def main() -> None:
     st.title("GitHub Repository Analytics Dashboard")
-    st.write("This PoC dashboard displays basic metrics and commit trends for a given GitHub repository.")
+    st.write(
+        "This PoC dashboard displays basic metrics and commit trends for a given GitHub repository."
+    )
 
     repo_input = st.text_input("Enter Repository (owner/repo)", value="streamlit/streamlit")
 
@@ -67,6 +69,7 @@ def main() -> None:
             st.error("Configuration error. Check your environment variables.")
         except Exception:
             st.error("An unexpected error occurred.")
+
 
 if __name__ == "__main__":
     main()
