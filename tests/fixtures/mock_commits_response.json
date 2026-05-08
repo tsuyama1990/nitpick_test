@@ -1,0 +1,29 @@
+[
+  {
+    "sha": "123456",
+    "commit": {
+      "committer": {
+        "name": "Mock User A",
+        "date": "2023-01-01T10:00:00Z"
+      }
+    }
+  },
+  {
+    "sha": "789012",
+    "commit": {
+      "committer": {
+        "name": "Mock User A",
+        "date": "2023-01-02T10:00:00Z"
+      }
+    }
+  },
+  {
+    "sha": "345678",
+    "commit": {
+      "committer": {
+        "name": "Mock User B",
+        "date": "2023-01-02T12:00:00Z"
+      }
+    }
+  }
+]
