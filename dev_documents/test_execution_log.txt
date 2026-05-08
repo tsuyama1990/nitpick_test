@@ -21,14 +21,14 @@ _______________ coverage: platform linux, python 3.12.13-final-0 _______________
 
 Name                            Stmts   Miss  Cover   Missing
 -------------------------------------------------------------
-src/app.py                         52      3    94%   21, 26, 66
+src/app.py                         53      3    94%   30, 36, 82
 src/cache.py                       31      0   100%
-src/config.py                      25      1    96%   29
+src/config.py                      25      1    96%   38
 src/dashboard_service.py           27      0   100%
 src/domain_models/__init__.py       2      0   100%
 src/domain_models/github.py        11      0   100%
-src/github_client.py               61      2    97%   87-88
+src/github_client.py               61      2    97%   106-107
 src/metrics.py                     17      0   100%
 -------------------------------------------------------------
-TOTAL                             226      6    97%
-======================= 25 passed, 1 deselected in 4.19s =======================
+TOTAL                             227      6    97%
+======================= 25 passed, 1 deselected in 4.26s =======================
