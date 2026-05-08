@@ -1,3 +1,9 @@
+"""Application configuration module.
+
+This module manages the application's configuration by loading variables from the
+environment or a `.env` file into a strictly typed Pydantic `BaseSettings` model.
+"""
+
 from typing import Any
 
 import pydantic
@@ -5,6 +11,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    """Strictly typed settings model for the application."""
+
     GITHUB_TOKEN: str
     GITHUB_API_URL: str = "https://api.github.com"
     HTTP_TIMEOUT: float = 10.0
@@ -20,6 +28,7 @@ class Settings(BaseSettings):
     )
 
     def __init__(self, **data: Any) -> None:
+        """Initialize settings and handle specific validation errors."""
         try:
             super().__init__(**data)
         except pydantic.ValidationError as exc:
@@ -33,6 +42,7 @@ _settings: Settings | None = None
 
 
 def get_settings() -> Settings:
+    """Get the application settings (Singleton pattern)."""
     global _settings  # noqa: PLW0603
     if _settings is None:
         _settings = Settings()

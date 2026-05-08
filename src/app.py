@@ -1,4 +1,10 @@
+"""Streamlit web application entry point.
+
+This module provides the web user interface for the GitHub Analytics Dashboard.
+"""
+
 import re
+from typing import Any
 
 import streamlit as st
 
@@ -6,7 +12,8 @@ from src.dashboard_service import DashboardService
 from src.github_client import AuthError, NotFoundError, RateLimitError
 
 
-def render_metrics(metrics: dict[str, int]) -> None:
+def render_metrics(metrics: dict[str, Any]) -> None:
+    """Render the high-level repository metrics as Streamlit KPI components."""
     st.subheader("Repository Metrics")
     col1, col2, col3 = st.columns(3)
     col1.metric("Stars", metrics.get("stargazers_count", 0))
@@ -15,12 +22,15 @@ def render_metrics(metrics: dict[str, int]) -> None:
 
 
 def render_charts(service: DashboardService, owner: str, repo: str) -> None:
+    """Fetch and render the commit activity and top committer charts."""
     df_date, df_top = service.get_commit_data(owner, repo)
+
     st.subheader("Commit Activity (Last 100 Commits)")
     if not df_date.is_empty():
         st.line_chart(df_date.to_pandas().set_index("date"))
     else:
         st.info("No commit data found.")
+
     st.subheader("Top 5 Committers")
     if not df_top.is_empty():
         st.bar_chart(df_top.to_pandas().set_index("name"))
@@ -29,23 +39,29 @@ def render_charts(service: DashboardService, owner: str, repo: str) -> None:
 
 
 def main() -> None:
+    """Main execution function for the Streamlit application."""
     st.set_page_config(page_title="GitHub Analytics", layout="wide")
     st.title("GitHub Repository Analytics PoC")
+
     try:
         service = DashboardService()
     except Exception as e:
         st.error(f"Failed to initialize service: {e}")
         return
+
     repo_input = st.text_input(
         "Enter repository (owner/repo):", value="", placeholder="e.g., streamlit/streamlit"
     )
+
     if st.button("Analyze"):
         if not repo_input:
             st.warning("Please enter a repository name.")
             return
+
         if not re.match(r"^[^/]+/[^/]+$", repo_input):
             st.warning("Please enter the repository in the format 'owner/repo'.")
             return
+
         owner, repo = repo_input.split("/")
         with st.spinner(f"Fetching data for {repo_input}..."):
             try:
