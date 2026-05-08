@@ -71,4 +71,17 @@ If you modify even a single character of code—whether manually to fix a bug or
 3. **Type Checking**: Run `mypy .`.
 
 **LAST STEP**:
-Only when all four checks pass consecutively without any code modifications being made during the process, you are authorized to proceed. Once this "zero-modification" state is achieved, automatically open the Pull Request (or perform the final merge tool call) and report that the Final Self-Critic review is successfully completed.
+Only when all four checks pass consecutively without any code modifications being made during the process, you are authorized to proceed. **Once this "zero-modification" state is achieved, you MUST ensure all changes are pushed and the Pull Request is updated/opened before providing your final JSON review.**
+
+## FINAL MESSAGE REQUIREMENT:
+At the very end of your final message to me, you **MUST** include a JSON code block that summarizes your final review. This is used for automated parsing and quality gate verification.
+
+```json
+{
+  "is_approved": true or false,
+  "vulnerabilities": ["List of identified vulnerabilities or issues", ...],
+  "suggestions": ["List of suggestions for improvement", ...]
+}
+```
+
+Ensure `vulnerabilities` and `suggestions` are empty lists `[]` if there are none. Set `is_approved` to `true` ONLY if there are no vulnerabilities.
