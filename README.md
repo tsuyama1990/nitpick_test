@@ -1,116 +1,57 @@
-# GitHub Analytics Dashboard PoC
+# GitHub Analytics Dashboard
 
-![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
-![License](https://img.shields.io/badge/license-MIT-blue)
+## Title & Overview
+GitHub Analytics Dashboard is a simple, lightweight Streamlit application designed to fetch, transform, and visualize key metrics from any public GitHub repository. It quickly provides insights into a repository's health by displaying its basic statistics (Stars, Forks, Open Issues) alongside a visual history of daily commits and the most active committers.
 
-A robust, strictly-typed Proof of Concept (PoC) for analyzing GitHub repositories. This dashboard seamlessly fetches real-time data from the GitHub REST API, processes the metrics using high-performance Polars DataFrames, and renders interactive visual insights via Streamlit, all while enforcing strict rate-limit caching and security best practices.
+This application acts as a Proof of Concept (PoC) for data ingestion from the GitHub REST API, utilizing Polars for high-performance data transformation and PyArrow for local parquet file caching to respect API rate limits.
 
-## Key Features
+## Features
+- **Live GitHub API Integration:** Fetches real-time repository metadata and recent commit history.
+- **Fast Data Transformation:** Leverages Polars to calculate daily commit frequencies and identify top committers.
+- **Smart Caching:** Avoids rate-limiting and speeds up repeated queries by caching processed data to local Parquet files.
+- **Interactive UI:** Built on Streamlit, providing an easy-to-use search bar and clear, responsive visualizations.
+- **Secure Configuration:** Ensures personal access tokens are securely loaded via `.env` files and never hardcoded.
 
-- **Live GitHub API Integration**: Securely connects to GitHub to fetch repository metrics (Stars, Forks, Issues) and recent commit histories without hardcoding credentials.
-- **High-Performance Data Processing**: Leverages Polars to aggregate commit timelines and identify top committers with blazing speed.
-- **Intelligent Local Caching**: Implements a Time-To-Live (TTL) Parquet-based caching mechanism to prevent exhausting API rate limits and ensure instantaneous UI updates on repeated queries.
-- **Strict Error Handling**: Gracefully intercepts network issues, 403 Forbidden limits, and 404 Not Found errors, ensuring no stack traces or sensitive data leak to the user interface.
-- **Zero-Config Web Dashboard**: A pure Streamlit presentation layer offering a clean, interactive user experience with line and bar charts.
+## Architecture & Design Rationale
+- **Schema Validation with Pydantic:** We use Pydantic models with `extra="ignore"` to safely ingest massive payloads from the GitHub API while explicitly typing only the required fields. This prevents validation errors from unexpected new fields added by GitHub in the future.
+- **Singleton Settings:** Configuration is loaded lazily using a singleton pattern via `pydantic-settings`, ensuring environment variables (like `GITHUB_TOKEN`) are parsed exactly once upon startup.
+- **Local Caching Strategy:** Processed dataframes are serialized using PyArrow into Parquet format. Before fetching new data, the app checks the modification time (`st_mtime`) of the cached files. If the files exist and are within the TTL (Time-To-Live, e.g., 1 hour), the app skips the external API calls, reducing latency and saving API quota.
 
-## Architecture Overview
+## Installation
+Ensure you have Python 3.12+ installed. The project uses `uv` for dependency management.
 
-The system operates using a multi-tiered architecture with strict separation of concerns, heavily relying on Pydantic domain models for data validation at the boundaries.
-
-```mermaid
-graph TD
-    User([User]) --> UI[Streamlit Web UI<br/>src/presentation]
-    UI --> Controller[Dashboard Controller<br/>src/services]
-
-    Controller -- 1. Check Cache --> Storage[Local Cache Storage<br/>src/storage]
-    Storage -. Cache Hit .-> Controller
-
-    Controller -- 2. Cache Miss: Fetch --> APIClient[GitHub API Client<br/>src/ingestion]
-    APIClient -- HTTP GET --> GitHub[(GitHub REST API)]
-    GitHub -. JSON Data .-> APIClient
-
-    APIClient -- Raw Data --> Transformer[Data Transformer<br/>src/transformation]
-    Transformer -- Polars Processing --> AggregatedData[Aggregated Metrics]
-    AggregatedData --> Storage
-    Storage -. Save Parquet .-> Disk[(Local Disk)]
-    AggregatedData --> Controller
-
-    Controller --> UI
-```
-
-## Prerequisites
-
-- **Python**: 3.12 or higher.
-- **Package Manager**: [uv](https://github.com/astral-sh/uv) (strictly enforced for dependency management).
-- **Credentials**: A valid GitHub Personal Access Token (PAT).
-
-## Installation & Setup
-
-1. **Clone the repository**:
-   ```bash
-   git clone <repository_url>
-   cd <repository_directory>
-   ```
-
-2. **Sync Dependencies**:
-   Utilize `uv` to install the environment and requirements.
+1. Clone the repository and navigate to the project root.
+2. Sync the dependencies using `uv`:
    ```bash
    uv sync
    ```
-
-3. **Configure Environment Variables**:
-   Copy the example environment file and insert your GitHub token.
+3. Copy the `.env.example` file to create your local `.env` configuration:
    ```bash
    cp .env.example .env
-   # Edit .env and add your GITHUB_TOKEN
+   ```
+4. Open the `.env` file and insert your GitHub Personal Access Token:
+   ```env
+   GITHUB_TOKEN=ghp_your_personal_access_token_here
    ```
 
 ## Usage
-
-**Quick Start**:
-To launch the interactive dashboard, run the Streamlit application using `uv`:
+To start the Streamlit dashboard, run the following command from the project root:
 
 ```bash
 uv run streamlit run src/presentation/app.py
 ```
 
-Once the server starts, open the provided local URL in your browser. Enter a repository name in the `owner/repo` format (e.g., `streamlit/streamlit` or `tiangolo/fastapi`) and click "Analyze" to view the metrics and charts.
+Once the application launches in your browser:
+1. Navigate to the sidebar on the left.
+2. Enter the target repository in the format `owner/repo` (e.g., `streamlit/streamlit`).
+3. Click **Fetch Data** to retrieve and visualize the repository analytics.
 
-## Development Workflow
-
-This project adheres to strict typing and linting standards. Use the following commands during development:
-
-- **Run Tests**: Execute the test suite with coverage reporting.
-  ```bash
-  uv run pytest
-  ```
-- **Run Linters**: Format and check the code using Ruff.
-  ```bash
-  uv run ruff format .
-  uv run ruff check .
-  ```
-- **Type Checking**: Enforce strict Mypy checks.
-  ```bash
-  uv run mypy .
-  ```
-
-## Project Structure
-
-```text
-.
-├── src/
-│   ├── config/          # Pydantic Settings and env loading
-│   ├── domain_models/   # Core entities (Repository, Commit schemas)
-│   ├── ingestion/       # GitHub API HTTP Client
-│   ├── presentation/    # Streamlit UI App and Components
-│   ├── services/        # Dashboard Controller orchestrating logic
-│   └── storage/         # Local Parquet Caching Manager
-│   └── transformation/  # Polars Data Processing Engine
-├── tests/               # Pytest suites (Unit, E2E, UAT Marimo notebooks)
-├── .env.example         # Template for environment secrets
-└── pyproject.toml       # uv dependency and tool configuration
+### Testing the Application
+This project maintains >85% test coverage. You can run the test suite (excluding live API calls to prevent CI hangs) using:
+```bash
+uv run pytest
 ```
-
-## License
-
-MIT License.
+To run the live integration tests, ensure your `.env` file is set up and execute:
+```bash
+uv run pytest -m live
+```
