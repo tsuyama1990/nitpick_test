@@ -26,6 +26,8 @@ def mock_settings() -> Generator[MagicMock, None, None]:
         mock_instance.HTTP_TIMEOUT = 10.0
         mock_instance.CACHE_TTL_SECONDS = 3600
         mock_instance.CACHE_DIR = None
+        mock_instance.CACHE_FILE_SUFFIX = ".parquet"
+        mock_instance.CACHE_KEY_SEPARATOR = "_"
         mock_settings_class.return_value = mock_instance
         yield mock_instance
 
@@ -49,7 +51,7 @@ def test_dashboard_service_e2e_mocked(httpx_mock: HTTPXMock, mock_settings: Magi
 
 
 @pytest.mark.live
-def test_dashboard_service_e2e_live() -> None:
+def test_dashboard_service_e2e_live(mock_settings: MagicMock) -> None:
     s = DashboardService()
     try:
         m = s.get_repo_metrics("tiangolo", "fastapi")

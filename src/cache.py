@@ -20,8 +20,8 @@ class ParquetCache:
         self.cache_dir.mkdir(parents=True, exist_ok=True)
 
     def _get_file_path(self, key: str) -> pathlib.Path:
-        safe_key = key.replace("/", "_")
-        return self.cache_dir / f"{safe_key}.parquet"
+        safe_key = key.replace("/", self.settings.CACHE_KEY_SEPARATOR)
+        return self.cache_dir / f"{safe_key}{self.settings.CACHE_FILE_SUFFIX}"
 
     def is_valid(self, key: str) -> bool:
         file_path = self._get_file_path(key)

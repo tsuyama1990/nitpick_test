@@ -14,6 +14,8 @@ def cache(tmp_path: pathlib.Path) -> ParquetCache:
     os.environ["CACHE_DIR"] = str(tmp_path)
     # also set other settings for the test
     os.environ["GITHUB_TOKEN"] = "dummy"  # noqa: S105
+    os.environ["CACHE_FILE_SUFFIX"] = ".parquet"
+    os.environ["CACHE_KEY_SEPARATOR"] = "_"
     return ParquetCache(ttl_seconds=1)
 
 

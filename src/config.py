@@ -10,6 +10,8 @@ class Settings(BaseSettings):
     HTTP_TIMEOUT: float = 10.0
     CACHE_TTL_SECONDS: int = 3600
     CACHE_DIR: str | None = None
+    CACHE_FILE_SUFFIX: str = ".parquet"
+    CACHE_KEY_SEPARATOR: str = "_"
 
     model_config = SettingsConfigDict(
         env_file=".env",

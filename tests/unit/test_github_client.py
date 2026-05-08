@@ -24,6 +24,8 @@ def mock_settings() -> Generator[MagicMock, None, None]:
         mock_instance.HTTP_TIMEOUT = 10.0
         mock_instance.CACHE_TTL_SECONDS = 3600
         mock_instance.CACHE_DIR = None
+        mock_instance.CACHE_FILE_SUFFIX = ".parquet"
+        mock_instance.CACHE_KEY_SEPARATOR = "_"
         mock_settings_class.return_value = mock_instance
         yield mock_instance
 
