@@ -1,16 +1,20 @@
-import os
 import pathlib
 import time
 
 import polars as pl
 
+from src.config import get_settings
+
 
 class ParquetCache:
-    def __init__(self, ttl_seconds: int = 3600) -> None:
-        self.ttl_seconds = ttl_seconds
-        cache_dir_env = os.getenv("CACHE_DIR")
-        if cache_dir_env:
-            self.cache_dir = pathlib.Path(cache_dir_env)
+    def __init__(self, ttl_seconds: int | None = None) -> None:
+        self.settings = get_settings()
+        self.ttl_seconds = (
+            ttl_seconds if ttl_seconds is not None else self.settings.CACHE_TTL_SECONDS
+        )
+
+        if self.settings.CACHE_DIR:
+            self.cache_dir = pathlib.Path(self.settings.CACHE_DIR)
         else:
             self.cache_dir = pathlib.Path.cwd() / ".cache" / "github_poc"
         self.cache_dir.mkdir(parents=True, exist_ok=True)

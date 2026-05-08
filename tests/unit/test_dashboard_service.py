@@ -4,14 +4,28 @@ from unittest.mock import MagicMock, patch
 import polars as pl
 import pytest
 
+import src.config
 from src.dashboard_service import DashboardService
+
+
+@pytest.fixture(autouse=True)
+def _reset_singleton() -> Generator[None, None, None]:
+    src.config._settings = None
+    yield
+    src.config._settings = None
 
 
 @pytest.fixture
 def mock_settings() -> Generator[MagicMock, None, None]:
-    with patch("src.github_client.get_settings") as mock_get_settings:
-        mock_get_settings.return_value.GITHUB_TOKEN = "dummy"  # noqa: S105
-        yield mock_get_settings
+    with patch("src.config.Settings") as mock_settings_class:
+        mock_instance = MagicMock()
+        mock_instance.GITHUB_TOKEN = "dummy"  # noqa: S105
+        mock_instance.GITHUB_API_URL = "https://api.github.com"
+        mock_instance.HTTP_TIMEOUT = 10.0
+        mock_instance.CACHE_TTL_SECONDS = 3600
+        mock_instance.CACHE_DIR = None
+        mock_settings_class.return_value = mock_instance
+        yield mock_instance
 
 
 def test_get_repo_metrics(mock_settings: MagicMock) -> None:

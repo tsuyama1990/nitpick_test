@@ -6,6 +6,11 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     GITHUB_TOKEN: str
+    GITHUB_API_URL: str = "https://api.github.com"
+    HTTP_TIMEOUT: float = 10.0
+    CACHE_TTL_SECONDS: int = 3600
+    CACHE_DIR: str | None = None
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
