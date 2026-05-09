@@ -78,6 +78,7 @@ def test_github_commit_invalid_author_type() -> None:
     with pytest.raises(TypeError):
         GitHubCommit(**data)  # type: ignore[arg-type]
 
+
 def test_github_repository_owner_string() -> None:
     data: dict[str, Any] = {
         "owner": "justastring",

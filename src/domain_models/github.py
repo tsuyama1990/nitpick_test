@@ -39,8 +39,6 @@ class GitHubRepository(StrictBaseModel):
         data = dict(data)
         if "owner" in data and isinstance(data["owner"], dict) and "login" in data["owner"]:
             data["owner"] = data["owner"]["login"]
-        elif "owner" in data and isinstance(data["owner"], str):
-            pass  # already string, keep it
 
         # Delegate the rest to the base class stripping method
         return cls._strip_extra(data)

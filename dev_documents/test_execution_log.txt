@@ -18,12 +18,12 @@ Name                                   Stmts   Miss  Cover   Missing
 --------------------------------------------------------------------
 src/domain_models/__init__.py              3      0   100%
 src/domain_models/config.py               10      3    70%   16-18
-src/domain_models/github.py               44      2    95%   36-37
+src/domain_models/github.py               42      2    95%   36-37
 src/storage/__init__.py                    2      0   100%
 src/storage/cache_manager.py              30      0   100%
 src/transformation/__init__.py             2      0   100%
 src/transformation/data_processor.py      19      0   100%
 src/transformation/exceptions.py           1      0   100%
 --------------------------------------------------------------------
-TOTAL                                    111      5    95%
-============================== 18 passed in 1.04s ==============================
+TOTAL                                    109      5    95%
+============================== 18 passed in 1.03s ==============================
