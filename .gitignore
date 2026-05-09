@@ -1,5 +1,18 @@
 # AC-CDD Configuration
 .env
+.env.local
+.marimo/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+venv/
+env/
+.DS_Store
 .nitpick/
 .nitpick/project_state_local.json
 dev_documents/project_state.json
