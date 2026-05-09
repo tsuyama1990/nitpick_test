@@ -42,17 +42,4 @@ You must follow the architectural hierarchy in your reasoning process:
 7. **Production Gate (Self-Review)**:
    - Ensure the code is something you would be proud to put into a mission-critical, high-scale production environment.
 
-Start by stating your final refinement plan: "The Audit has passed. I have reviewed the system architecture and all cycle specs, and I'm ready to perform the final polish..."
-
-## FINAL MESSAGE REQUIREMENT:
-At the very end of your final message to me, you **MUST** include a JSON code block that summarizes your review. This is used for automated parsing.
-
-```json
-{
-  "is_approved": true or false,
-  "vulnerabilities": ["List of identified vulnerabilities or issues", ...],
-  "suggestions": ["List of suggestions for improvement", ...]
-}
-```
-
-Ensure `vulnerabilities` and `suggestions` are empty lists `[]` if there are none. Set `is_approved` to `true` ONLY if there are no vulnerabilities.
+Confirm your plan in your thinking process and start refactoring. **You must ensure your changes are pushed to the Pull Request branch before concluding.**
