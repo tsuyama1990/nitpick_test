@@ -20,9 +20,9 @@ src/clients/__init__.py              0      0   100%
 src/clients/github_client.py        42      7    83%   32-33, 47-48, 63-65
 src/domain_models/__init__.py        0      0   100%
 src/domain_models/config.py         12      3    75%   25-27
-src/domain_models/github.py         43      2    95%   25, 55
+src/domain_models/github.py         41      2    95%   25, 54
 src/services/__init__.py             0      0   100%
 src/services/data_processor.py      55      3    95%   59, 74, 82
 --------------------------------------------------------------
-TOTAL                              190     18    91%
-============================== 12 passed in 7.56s ==============================
+TOTAL                              188     18    90%
+============================= 12 passed in 11.34s ==============================
