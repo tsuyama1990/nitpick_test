@@ -21,6 +21,6 @@ src/domain_models/github.py        42      0   100%
 src/github_client.py               47      4    91%   50-51, 62-63
 -------------------------------------------------------------
 TOTAL                             101      7    93%
-======================= 10 passed, 2 deselected in 0.70s =======================
+======================= 10 passed, 2 deselected in 0.73s =======================
 /app/.venv/lib/python3.12/site-packages/coverage/inorout.py:561: CoverageWarning: Module dev_src was never imported. (module-not-imported); see https://coverage.readthedocs.io/en/7.13.5/messages.html#warning-module-not-imported
   self.warn(f"Module {pkg} was never imported.", slug="module-not-imported")
