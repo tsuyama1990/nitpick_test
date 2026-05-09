@@ -55,6 +55,7 @@ def __(AppTest, pytest):
     def test_live_happy_path_and_cache() -> None:
         """Scenario 1: Happy Path & Caching (Live)"""
         import os
+
         from dotenv import load_dotenv
 
         load_dotenv()

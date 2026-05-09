@@ -1,11 +1,13 @@
+import pathlib
+from collections.abc import Generator
+from unittest.mock import patch
+
 import pytest
 from pytest_httpx import HTTPXMock
 from streamlit.testing.v1 import AppTest
 
 from src.domain_models.config import Settings
-import pathlib
-from collections.abc import Generator
-from unittest.mock import patch
+
 
 @pytest.fixture(autouse=True)
 def mock_settings(tmp_path: pathlib.Path) -> Generator[Settings, None, None]:
