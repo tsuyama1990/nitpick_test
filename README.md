@@ -99,13 +99,8 @@ This project adheres to strict typing and linting standards. Use the following c
 ```text
 .
 ├── src/
-│   ├── config/          # Pydantic Settings and env loading
-│   ├── domain_models/   # Core entities (Repository, Commit schemas)
-│   ├── ingestion/       # GitHub API HTTP Client
-│   ├── presentation/    # Streamlit UI App and Components
-│   ├── services/        # Dashboard Controller orchestrating logic
-│   └── storage/         # Local Parquet Caching Manager
-│   └── transformation/  # Polars Data Processing Engine
+│   ├── domain_models/   # Core entities (Repository, Commit schemas), Pydantic Settings and env loading
+│   ├── github_client.py # GitHub API HTTP Client
 ├── tests/               # Pytest suites (Unit, E2E, UAT Marimo notebooks)
 ├── .env.example         # Template for environment secrets
 └── pyproject.toml       # uv dependency and tool configuration
