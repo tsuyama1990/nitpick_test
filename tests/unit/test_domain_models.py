@@ -5,7 +5,7 @@ import pytest
 from pydantic import ValidationError
 
 from src.domain_models.config import Settings
-from src.domain_models.github import GitHubCommit, GitHubRepository
+from src.domain_models.github import GitHubCommit, GitHubRepository, StrictBaseModel
 
 
 def test_settings_forbid_extra() -> None:
@@ -14,6 +14,15 @@ def test_settings_forbid_extra() -> None:
 
     # Check if any error is of type 'extra_forbidden'
     assert any(err["type"] == "extra_forbidden" for err in exc_info.value.errors())
+
+
+def test_strict_base_model_invalid_type() -> None:
+    data = "not a dict"
+    with pytest.raises(TypeError):
+        StrictBaseModel._strip_extra(data)
+
+    with pytest.raises(TypeError):
+        GitHubRepository(**data)  # type: ignore[arg-type]
 
 
 def test_github_repository_valid() -> None:
@@ -68,3 +77,14 @@ def test_github_commit_invalid_author_type() -> None:
     data = "invalid_data"
     with pytest.raises(TypeError):
         GitHubCommit(**data)  # type: ignore[arg-type]
+
+def test_github_repository_owner_string() -> None:
+    data: dict[str, Any] = {
+        "owner": "justastring",
+        "name": "streamlit",
+        "stargazers_count": 100,
+        "forks_count": 50,
+        "open_issues_count": 10,
+    }
+    repo = GitHubRepository(**data)
+    assert repo.owner == "justastring"
