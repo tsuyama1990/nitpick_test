@@ -4,9 +4,13 @@ import time
 
 import polars as pl
 
+from src.domain_models.config import get_settings
+
 
 class CacheManager:
-    def __init__(self, cache_dir_name: str = "app_name", ttl_seconds: int = 3600) -> None:
+    def __init__(self, cache_dir_name: str | None = None, ttl_seconds: int = 3600) -> None:
+        if cache_dir_name is None:
+            cache_dir_name = get_settings().CACHE_DIR_NAME
         cache_base = os.getenv("CACHE_DIR", str(pathlib.Path.cwd() / ".cache" / cache_dir_name))
         self.cache_dir = pathlib.Path(cache_base)
         self.cache_dir.mkdir(parents=True, exist_ok=True)

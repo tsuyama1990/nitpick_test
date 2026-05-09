@@ -15,7 +15,11 @@ def cache_dir(tmp_path: Path) -> Path:
 
 @pytest.fixture
 def cache_manager(cache_dir: Path) -> CacheManager:
-    with patch("os.getenv", return_value=str(cache_dir)):
+    with (
+        patch("os.getenv", return_value=str(cache_dir)),
+        patch("src.storage.cache_manager.get_settings") as mock_get_settings,
+    ):
+        mock_get_settings.return_value.CACHE_DIR_NAME = "app_name"
         return CacheManager(ttl_seconds=60)
 
 
