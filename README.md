@@ -71,7 +71,7 @@ graph TD
 To launch the interactive dashboard, run the Streamlit application using `uv`:
 
 ```bash
-uv run streamlit run src/presentation/app.py
+uv run streamlit run src/app.py
 ```
 
 Once the server starts, open the provided local URL in your browser. Enter a repository name in the `owner/repo` format (e.g., `streamlit/streamlit` or `tiangolo/fastapi`) and click "Analyze" to view the metrics and charts.
@@ -99,16 +99,13 @@ This project adheres to strict typing and linting standards. Use the following c
 ```text
 .
 ├── src/
-│   ├── config/          # Pydantic Settings and env loading
-│   ├── domain_models/   # Core entities (Repository, Commit schemas)
-│   ├── ingestion/       # GitHub API HTTP Client
-│   ├── presentation/    # Streamlit UI App and Components
-│   ├── services/        # Dashboard Controller orchestrating logic
-│   └── storage/         # Local Parquet Caching Manager
-│   └── transformation/  # Polars Data Processing Engine
-├── tests/               # Pytest suites (Unit, E2E, UAT Marimo notebooks)
-├── .env.example         # Template for environment secrets
-└── pyproject.toml       # uv dependency and tool configuration
+│   ├── app.py             # Streamlit UI App and Components
+│   ├── domain_models/     # Core entities (Repository, Commit schemas, Config)
+│   ├── clients/           # GitHub API HTTP Client
+│   └── services/          # Dashboard Controller orchestrating logic & Polars processing
+├── tests/                 # Pytest suites (Unit, UAT Marimo notebooks)
+├── .env.example           # Template for environment secrets
+└── pyproject.toml         # uv dependency and tool configuration
 ```
 
 ## License
