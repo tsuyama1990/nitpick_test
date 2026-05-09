@@ -4,13 +4,24 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "httpx>=0.28.1",
+    "polars>=1.40.1",
+    "pyarrow>=24.0.0",
+    "pydantic>=2.13.4",
+    "pydantic-settings>=2.14.1",
+    "python-dotenv>=1.2.2",
+    "streamlit>=1.57.0",
+]
 
 [dependency-groups]
 dev = [
+    "marimo>=0.23.5",
     "mypy>=1.20.2",
     "pytest>=9.0.3",
     "pytest-cov>=7.1.0",
+    "pytest-httpx>=0.36.2",
+    "pytest-mock>=3.15.1",
     "ruff>=0.15.12",
 ]
 
@@ -27,13 +38,14 @@ select = [
 ]
 
 ignore = [
-    "ANN101", "ANN002", "ANN003", "ANN001", "ANN401", "ARG001", "ARG005",
+    "ANN002", "ANN003", "ANN001", "ANN401", "ARG001", "ARG005",
     "PLR2004", "E501", "TRY003", "D", "ANN201", "N806", "PLC0415", "BLE001",
     "PT019", "RUF003", "ARG002", "RUF043", "RUF059", "PLR0913", "ANN202"
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = ["S101"]  # Allow assert in tests
+"tests/uat/**/*.py" = ["N803", "N807", "B018", "T201", "S101", "S105", "S106", "PT017", "N999", "F821", "PLR0915"]
 
 [tool.ruff.lint.mccabe]
 max-complexity = 10  # Exceeding this prompts function splitting (prevent AI long functions)
@@ -42,9 +54,13 @@ max-complexity = 10  # Exceeding this prompts function splitting (prevent AI lon
 suppress-dummy-args = true  # Arguments starting with _ do not require type hints
 
 [tool.pytest.ini_options]
-addopts = "--cov=dev_src --cov=src --cov-report=term-missing"
-testpaths = ["tests"]
+addopts = "--cov=src --cov-report=term-missing"
+testpaths = ["tests", "tests/uat"]
+markers = ["live: marks tests as requiring real API calls"]
+pythonpath = ["."]
 
 [tool.mypy]
 strict = true
 ignore_missing_imports = true
+explicit_package_bases = true
+exclude = ["(?x)(tests/uat/.*)"]
