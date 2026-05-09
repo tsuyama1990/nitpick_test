@@ -3,6 +3,7 @@ import marimo
 __generated_with = "0.23.5"
 app = marimo.App()
 
+
 @app.cell
 def __():
     import sys
@@ -14,6 +15,7 @@ def __():
     import pytest
     from pytest_httpx import HTTPXMock
     from streamlit.testing.v1 import AppTest
+
     return AppTest, HTTPXMock, Path, pytest, sys
 
 
@@ -46,7 +48,8 @@ def __(AppTest, HTTPXMock):
         at.button[0].click().run()
         assert not at.exception
         assert any("Authentication error" in str(e.value) for e in at.error)
-    return test_mocked_error_handling,
+
+    return (test_mocked_error_handling,)
 
 
 @app.cell
@@ -78,7 +81,8 @@ def __(AppTest, pytest):
         # A second run with the same repo should use cache.
         # We can't strictly assert the network didn't fire from Streamlit's side,
         # but the processor's unit tests handle the cache hit verification.
-    return test_live_happy_path_and_cache,
+
+    return (test_live_happy_path_and_cache,)
 
 
 if __name__ == "__main__":

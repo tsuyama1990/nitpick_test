@@ -24,8 +24,7 @@ class RepoInfo(BaseModel):
         if not isinstance(data, dict):
             return data
         # Strip unknown keys to forbid extra fields securely
-        allowed_keys = set(cls.model_fields.keys())
-        return {k: v for k, v in data.items() if k in allowed_keys}
+        return {k: v for k, v in data.items() if k in cls.model_fields}
 
     @model_validator(mode="before")
     @classmethod
@@ -68,8 +67,7 @@ class CommitInfo(BaseModel):
                 if "date" in author_data:
                     res["date"] = author_data["date"]
 
-        allowed_keys = set(cls.model_fields.keys())
-        return {k: v for k, v in res.items() if k in allowed_keys}
+        return {k: v for k, v in res.items() if k in cls.model_fields}
 
     @model_validator(mode="before")
     @classmethod
