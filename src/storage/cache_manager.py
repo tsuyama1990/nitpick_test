@@ -1,3 +1,4 @@
+import contextlib
 import os
 import pathlib
 import time
@@ -35,8 +36,6 @@ class CacheManager:
         # Check TTL
         file_age = time.time() - path.stat().st_mtime
         if file_age > self.ttl_seconds:
-            import contextlib
-
             # Optionally remove the expired file
             with contextlib.suppress(OSError):
                 path.unlink()
