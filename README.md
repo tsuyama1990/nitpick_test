@@ -8,11 +8,12 @@ A modern, high-performance Proof-of-Concept (PoC) dashboard for analysing GitHub
 
 ## Key Features
 
-- **Automated Data Ingestion:** Seamlessly connects to the GitHub REST API with robust error handling and strict rate limit protection.
-- **High-Performance Aggregation:** Leverages `Polars` for zero-copy, lightning-fast tabular data transformations.
-- **Zero-Config Local Caching:** Implements an intelligent, Time-To-Live (TTL) based local Parquet file cache to drastically reduce API latency and respect network constraints.
-- **Interactive Visualisations:** Provides a clean, responsive web interface using `Streamlit` to display core repository KPIs and interactive charts of developer activity over time.
-- **Type-Safe Architecture:** Built with strict `Pydantic` domain models and rigorous MyPy static typing, ensuring data integrity from network response to frontend rendering.
+- **Type-Safe Architecture:** Built with strict `Pydantic` domain models and rigorous MyPy static typing, ensuring data integrity.
+- **Robust Configuration:** Securely loads environment variables (like `GITHUB_TOKEN`) with built-in validation using `pydantic-settings`.
+- *(Coming Soon) Automated Data Ingestion:* Connect to the GitHub REST API with robust error handling and strict rate limit protection.
+- *(Coming Soon) High-Performance Aggregation:* Leverage `Polars` for zero-copy, lightning-fast tabular data transformations.
+- *(Coming Soon) Zero-Config Local Caching:* Implement an intelligent, Time-To-Live (TTL) based local Parquet file cache to drastically reduce API latency.
+- *(Coming Soon) Interactive Visualisations:* Provide a clean, responsive web interface using `Streamlit` to display core repository KPIs and interactive charts.
 
 ## Architecture Overview
 
@@ -86,13 +87,15 @@ graph TD
 
 **Quick Start:**
 
-To launch the interactive dashboard, run the Streamlit application via `uv`:
+*The Streamlit application is currently under development.*
+
+To verify the core configuration and domain schemas, you can execute the User Acceptance Tests (UAT) suite:
 
 ```bash
-uv run streamlit run src/app.py
+uv run python tests/uat/UAT_AND_TUTORIAL.py
 ```
 
-Once the server starts, open your browser to `http://localhost:8501`. Enter a repository name in the format `owner/repo` (e.g., `streamlit/streamlit`) and click the analyze button to view the dashboard.
+This will run interactive scenarios verifying that environment configurations are loaded securely and JSON payloads are strictly validated.
 
 ## Development Workflow
 
@@ -123,14 +126,10 @@ This project adheres to strict code quality standards.
 ├── pyproject.toml       # Dependency and linter configuration
 ├── README.md            # Project documentation
 ├── src/
-│   ├── app.py           # Streamlit frontend application
-│   ├── config.py        # Pydantic-based configuration management
-│   ├── domain/          # Pydantic schemas and custom exceptions
-│   ├── ingestion/       # GitHub API client
-│   └── processing/      # Orchestrator, Polars transformations, and Cache
+│   └── domain_models/   # Pydantic schemas, configs, and custom exceptions
 └── tests/
     ├── uat/             # Marimo notebooks for UAT and tutorials
-    └── ...              # Unit and integration tests
+    └── test_domain.py   # Unit tests for domain components
 ```
 
 ## License
