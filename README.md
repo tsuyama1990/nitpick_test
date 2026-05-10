@@ -86,13 +86,13 @@ graph TD
 
 **Quick Start:**
 
-To launch the interactive dashboard, run the Streamlit application via `uv`:
+To verify configuration loading via the interactive Python shell:
 
-```bash
-uv run streamlit run src/app.py
+```python
+from src.config import get_settings
+settings = get_settings()
+print(settings.GITHUB_TOKEN)
 ```
-
-Once the server starts, open your browser to `http://localhost:8501`. Enter a repository name in the format `owner/repo` (e.g., `streamlit/streamlit`) and click the analyze button to view the dashboard.
 
 ## Development Workflow
 
@@ -123,11 +123,8 @@ This project adheres to strict code quality standards.
 ├── pyproject.toml       # Dependency and linter configuration
 ├── README.md            # Project documentation
 ├── src/
-│   ├── app.py           # Streamlit frontend application
 │   ├── config.py        # Pydantic-based configuration management
-│   ├── domain/          # Pydantic schemas and custom exceptions
-│   ├── ingestion/       # GitHub API client
-│   └── processing/      # Orchestrator, Polars transformations, and Cache
+│   └── domain_models/   # Pydantic schemas and custom exceptions
 └── tests/
     ├── uat/             # Marimo notebooks for UAT and tutorials
     └── ...              # Unit and integration tests
