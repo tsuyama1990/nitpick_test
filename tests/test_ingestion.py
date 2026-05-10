@@ -1,17 +1,20 @@
 import pytest
 from pytest_httpx import HTTPXMock
 
+from src.domain_models.config import get_settings
 from src.domain_models.exceptions import RateLimitExceededError, RepositoryNotFoundError
 from src.ingestion.github_client import GitHubClient
 
 
 @pytest.fixture
 def github_client() -> GitHubClient:
-    return GitHubClient(token="dummy_test_token")  # noqa: S106
+    settings = get_settings()
+    return GitHubClient(token=settings.GITHUB_TOKEN)
 
 
 def test_github_client_headers(github_client: GitHubClient) -> None:
-    assert github_client.client.headers["Authorization"] == "Bearer dummy_test_token"
+    settings = get_settings()
+    assert github_client.client.headers["Authorization"] == f"Bearer {settings.GITHUB_TOKEN}"
     assert github_client.client.headers["Accept"] == "application/vnd.github.v3+json"
     assert github_client.client.base_url == "https://api.github.com/"
 

@@ -17,22 +17,24 @@ def __():
     from pytest_httpx import HTTPXMock
     from pytest_httpx._httpx_mock import _HTTPXMockOptions
 
+    from src.domain_models.config import get_settings
     from src.domain_models.exceptions import RepositoryNotFoundError
     from src.ingestion.github_client import GitHubClient
 
     # We must patch httpx client with httpx_mock for our mock UAT tests
-    return HTTPXMock, GitHubClient, RepositoryNotFoundError, _HTTPXMockOptions
+    return HTTPXMock, GitHubClient, RepositoryNotFoundError, _HTTPXMockOptions, get_settings
 
 
 @app.cell
-def __(HTTPXMock, GitHubClient, _HTTPXMockOptions):
+def __(HTTPXMock, GitHubClient, _HTTPXMockOptions, get_settings):
     import httpx
 
     # Initialize the HTTPXMock directly
     httpx_mock = HTTPXMock(options=_HTTPXMockOptions())
 
     # GIVEN
-    client = GitHubClient(token="mock_token")
+    settings = get_settings()
+    client = GitHubClient(token=settings.GITHUB_TOKEN)
     mock_response = {
         "stargazers_count": 100,
         "forks_count": 50,
