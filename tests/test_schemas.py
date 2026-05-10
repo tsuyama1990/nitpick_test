@@ -3,7 +3,7 @@ from datetime import UTC, datetime
 import pytest
 from pydantic import ValidationError
 
-from src.domain.schemas import Commit, CommitAuthor, CommitInfo, RepositoryMetrics
+from src.domain_models.schemas import Commit, CommitAuthor, CommitInfo, RepositoryMetrics
 
 
 def test_repository_metrics_valid() -> None:

@@ -2,7 +2,7 @@ from typing import Any
 
 import httpx
 
-from src.domain.exceptions import RateLimitExceededError, RepositoryNotFoundError
+from src.domain_models.exceptions import RateLimitExceededError, RepositoryNotFoundError
 
 
 class GitHubClient:

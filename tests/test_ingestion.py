@@ -1,7 +1,7 @@
 import pytest
 from pytest_httpx import HTTPXMock
 
-from src.domain.exceptions import RateLimitExceededError, RepositoryNotFoundError
+from src.domain_models.exceptions import RateLimitExceededError, RepositoryNotFoundError
 from src.ingestion.github_client import GitHubClient
 
 
@@ -75,7 +75,7 @@ def test_get_recent_commits_not_found(github_client: GitHubClient, httpx_mock: H
 
 @pytest.mark.skip(reason="Live API test")
 def test_live_github_api() -> None:
-    from src.config import get_settings
+    from src.domain_models.config import get_settings
 
     settings = get_settings()
     client = GitHubClient(token=settings.GITHUB_TOKEN)

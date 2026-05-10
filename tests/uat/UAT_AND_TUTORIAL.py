@@ -17,7 +17,7 @@ def __():
     from pytest_httpx import HTTPXMock
     from pytest_httpx._httpx_mock import _HTTPXMockOptions
 
-    from src.domain.exceptions import RepositoryNotFoundError
+    from src.domain_models.exceptions import RepositoryNotFoundError
     from src.ingestion.github_client import GitHubClient
 
     # We must patch httpx client with httpx_mock for our mock UAT tests
