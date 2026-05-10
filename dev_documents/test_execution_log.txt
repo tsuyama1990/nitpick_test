@@ -7,7 +7,7 @@ plugins: mock-3.15.1, cov-7.1.0, anyio-4.13.0, httpx-0.36.2
 collected 8 items
 
 tests/e2e/test_github_api_e2e.py s                                       [ 12%]
-tests/test_domain.py .......                                             [100%]
+tests/unit/test_domain.py .......                                        [100%]
 
 ================================ tests coverage ================================
 _______________ coverage: platform linux, python 3.12.13-final-0 _______________
@@ -21,4 +21,4 @@ src/domain_models/exceptions.py       3      0   100%
 src/domain_models/schemas.py         26      0   100%
 ---------------------------------------------------------------
 TOTAL                                40      0   100%
-========================= 7 passed, 1 skipped in 1.45s =========================
+========================= 7 passed, 1 skipped in 0.48s =========================

@@ -17,7 +17,7 @@ class StrictModel(BaseModel):
         if not isinstance(data, dict):
             return data
 
-        allowed_keys = set(cls.model_fields.keys())
+        allowed_keys = cls.model_fields.keys()
         return {k: v for k, v in data.items() if k in allowed_keys}
 
     @model_validator(mode="before")
