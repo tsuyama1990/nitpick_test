@@ -49,6 +49,15 @@ def test_get_repo_info_403(httpx_mock: HTTPXMock, mock_settings: None) -> None:
         client.get_repo_info("test-owner", "test-repo")
 
 
+def test_get_repo_info_429(httpx_mock: HTTPXMock, mock_settings: None) -> None:
+    httpx_mock.add_response(
+        url="https://api.github.com/repos/test-owner/test-repo", status_code=429
+    )
+    client = GitHubClient()
+    with pytest.raises(GitHubAPIError, match="Rate limit exceeded \\(429\\)."):
+        client.get_repo_info("test-owner", "test-repo")
+
+
 def test_get_recent_commits_success(httpx_mock: HTTPXMock, mock_settings: None) -> None:
     httpx_mock.add_response(
         url="https://api.github.com/repos/test-owner/test-repo/commits?per_page=100",

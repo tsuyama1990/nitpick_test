@@ -25,6 +25,9 @@ class GitHubClient:
 
     def _handle_response(self, response: httpx.Response) -> None:
         """Handles HTTP response status codes."""
+        if response.status_code == 429:
+            msg = "Rate limit exceeded (429)."
+            raise GitHubAPIError(msg)
         if response.status_code == 403:
             msg = "Rate limit exceeded or access forbidden."
             raise GitHubAPIError(msg)
