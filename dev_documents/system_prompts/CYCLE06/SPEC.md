@@ -15,7 +15,7 @@ The Streamlit application will run directly on the host OS. A typical `streamlit
 **MANDATORY INSTRUCTION:** Testing a Streamlit application programmatically can be fragile.
 - While Streamlit's `AppTest` framework exists, it frequently struggles with mocking complex asynchronous or multithreaded backend services like `httpx`.
 - You **MUST** instruct the Coder to prioritize testing the Streamlit UI logic using a User Acceptance Testing (UAT) approach executed via a Marimo notebook (`tests/uat/UAT_AND_TUTORIAL.py`). This notebook will programmatically invoke the service layer and verify the data structures *before* they are passed to the Streamlit rendering functions, serving as an executable specification of the UI's data requirements.
-- If `AppTest` is used for basic component rendering verification, `unittest.mock.patch` MUST be applied to the `GitHubAnalyticsService.get_dashboard_data` method to return static mock data, strictly preventing the UI tests from executing real network calls.
+- If `AppTest` is used for basic component rendering verification, `unittest.mock.patch` may fail to intercept module-level imports due to Streamlit's dynamic background thread execution. You MUST rely on fixtures like `pytest-httpx`'s `HTTPXMock` to intercept the underlying network calls directly, ensuring that UI tests are strictly prevented from executing real network calls against the live API.
 
 ## System Architecture
 The file structure adds the main Streamlit application entry point and the Marimo UAT notebook. The files explicitly marked in bold represent the targets for creation during this cycle.
@@ -62,5 +62,5 @@ The `tests/uat/UAT_AND_TUTORIAL.py` Marimo notebook must be designed as an inter
 ## Test Strategy
 
 ### Unit / UAT Testing Approach
-- **Streamlit Component Testing (Optional but Recommended):** Use `streamlit.testing.v1.AppTest.from_file("src/app.py")`. Mock the `get_service()` function to return a mock service that yields static data. Run the app (`at.run()`), simulate inputting text, and assert that `at.error` is empty and `at.line_chart` exists.
+- **Streamlit Component Testing (Optional but Recommended):** Use `streamlit.testing.v1.AppTest.from_file("src/app.py")`. Use `httpx_mock` to mock the API responses underneath the service layer. Run the app (`at.run()`), simulate inputting text, and assert that `at.error` is empty and `at.line_chart` exists.
 - **Marimo UAT Development (Mandatory):** Create `tests/uat/UAT_AND_TUTORIAL.py`. Implement cells that document the scenarios defined in `USER_TEST_SCENARIO.md`. Create a cell that acts as a "Mock Mode" pipeline, simulating the exact inputs `app.py` receives, executing the underlying service functions using mock data, and asserting the output shapes and values using standard Python `assert` statements. This ensures the application logic is verifiable without requiring a browser or the Streamlit server to be running.
