@@ -78,5 +78,7 @@ Before completing this self-review, you MUST confirm that all static checks and 
 3. 🔁 You MUST start over and run `ruff check .`, `mypy .`, and `pytest` again to ensure the modified files did not introduce new issues.
 
 **FINAL ACTION**:
-If you found ANY of the above issues, **FIX THE CODE NOW** using your file editing tools, re-run your tests, and confirm they pass.
-Once you are 100% confident your code is perfect, reply confirming that the Self-Critic review is complete and the code is ready for the external Auditor.
+1. **Save Evidence**: Save your final test logs to `dev_documents/test_execution_log.txt`.
+2. **Finalize Code**: If you found ANY of the above issues, **FIX THE CODE NOW** using your file editing tools, re-run your tests, and confirm they pass.
+3. **Trigger Delivery**: You MUST call `finalize_session` (or `open_pr`) to push your final refined code and the test log to the PR. This is a MANDATORY checkpoint.
+4. **Confirm**: Once the PR is updated and you are 100% confident your code is perfect, reply confirming that the Self-Critic review is complete and the code is ready for the external Auditor.

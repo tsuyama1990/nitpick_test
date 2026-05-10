@@ -42,4 +42,6 @@ You must follow the architectural hierarchy in your reasoning process:
 7. **Production Gate (Self-Review)**:
    - Ensure the code is something you would be proud to put into a mission-critical, high-scale production environment.
 
-Confirm your plan in your thinking process and start refactoring. **You must ensure your changes are pushed to the Pull Request branch before concluding.**
+**FINAL ACTION**:
+Once you are 100% confident, you MUST call `finalize_session` (or `open_pr`) to update the PR with your final refactored code and the updated `SPEC.md`. This is a MANDATORY checkpoint before you conclude.
+Once the PR is updated, confirm that the Final Refactoring is complete.

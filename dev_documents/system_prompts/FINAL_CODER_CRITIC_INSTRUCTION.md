@@ -72,7 +72,9 @@ Once the test log is saved, you must enter a **Zero-Modification State**.
 3.  You are only done when all checks pass consecutively **without you needing to touch any files**.
 
 **LAST STEP**:
-Only when the Zero-Modification state is achieved, you are authorized to conclude. **You MUST ensure your final test log and any approved refactorings are pushed. You must explicitly trigger the Pull Request opening/update (or perform the final merge tool call) before providing your final JSON review below.**
+Only when the Zero-Modification state is achieved, you are authorized to conclude. **You MUST ensure your final test log and any approved refactorings are pushed.**
+You MUST explicitly call `finalize_session` (or `open_pr`) to update the PR with your final polished work and the `dev_documents/test_execution_log.txt` evidence. 
+Only after the PR is updated should you provide your final JSON review below.
 
 ## FINAL MESSAGE REQUIREMENT:
 At the very end of your final message to me, you **MUST** include a JSON code block that summarizes your final review. This is used for automated parsing and quality gate verification.
