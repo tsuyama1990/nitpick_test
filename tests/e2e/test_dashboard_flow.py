@@ -19,8 +19,8 @@ def test_dashboard_controller_e2e(mock_settings: Settings, httpx_mock: HTTPXMock
         json=[
             {"commit": {"author": {"name": "UserA", "date": "2023-10-01T10:00:00Z"}}},
             {"commit": {"author": {"name": "UserA", "date": "2023-10-01T11:00:00Z"}}},
-            {"commit": {"author": {"name": "UserB", "date": "2023-10-02T10:00:00Z"}}}
-        ]
+            {"commit": {"author": {"name": "UserB", "date": "2023-10-02T10:00:00Z"}}},
+        ],
     )
     os.environ["CACHE_DIR"] = tempfile.mkdtemp()
     controller = DashboardController()
@@ -36,6 +36,9 @@ def test_dashboard_controller_e2e(mock_settings: Settings, httpx_mock: HTTPXMock
 
     assert len(data2.daily_commits) == 2
     assert httpx_mock.get_requests()[0].url == "https://api.github.com/repos/test/repo"
-    assert httpx_mock.get_requests()[1].url == "https://api.github.com/repos/test/repo/commits?per_page=100"
+    assert (
+        httpx_mock.get_requests()[1].url
+        == "https://api.github.com/repos/test/repo/commits?per_page=100"
+    )
     # Exact length should be 2 because the second run uses the cache manager
     assert len(httpx_mock.get_requests()) == 2

@@ -1,4 +1,3 @@
-
 import pytest
 from pytest_mock import MockerFixture
 
@@ -8,6 +7,6 @@ from src.config.settings import Settings
 @pytest.fixture
 def mock_settings(mocker: MockerFixture) -> Settings:
     # Patch the singleton accessor to return a settings instance with a dummy token
-    settings = Settings(GITHUB_TOKEN="dummy") # noqa: S106
+    settings = Settings(GITHUB_TOKEN="dummy")  # noqa: S106
     mocker.patch("src.ingestion.github_client.get_settings", return_value=settings)
     return settings

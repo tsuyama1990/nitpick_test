@@ -35,7 +35,9 @@ class DashboardController:
             self.cache_manager.save_json(owner, repo, "metrics", metrics.model_dump())
 
         # 2. Check Cache for Transformed Commit Data
-        if self.cache_manager.is_valid(owner, repo, "daily_commits") and self.cache_manager.is_valid(owner, repo, "top_committers"):
+        if self.cache_manager.is_valid(
+            owner, repo, "daily_commits"
+        ) and self.cache_manager.is_valid(owner, repo, "top_committers"):
             daily_commits = self.cache_manager.load_dataframe(owner, repo, "daily_commits")
             top_committers = self.cache_manager.load_dataframe(owner, repo, "top_committers")
         else:
@@ -58,7 +60,5 @@ class DashboardController:
             self.cache_manager.save_dataframe(owner, repo, "top_committers", top_committers)
 
         return DashboardData(
-            metrics=metrics,
-            daily_commits=daily_commits,
-            top_committers=top_committers
+            metrics=metrics, daily_commits=daily_commits, top_committers=top_committers
         )

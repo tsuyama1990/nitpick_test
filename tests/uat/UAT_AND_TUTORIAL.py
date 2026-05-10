@@ -3,6 +3,7 @@ import marimo
 __generated_with = "0.23.5"
 app = marimo.App()
 
+
 @app.cell
 def __():
     import os
@@ -39,6 +40,7 @@ def __():
         sys,
     )
 
+
 @app.cell
 def __(DashboardController, HTTPXMock, os):
     def test_e2e_mocked_cache_flow():
@@ -53,18 +55,19 @@ def __(DashboardController, HTTPXMock, os):
 
         httpx_mock.add_response(
             url="https://api.github.com/repos/test/repo",
-            json={"stargazers_count": 1000, "forks_count": 500, "open_issues_count": 20}
+            json={"stargazers_count": 1000, "forks_count": 500, "open_issues_count": 20},
         )
         httpx_mock.add_response(
             url="https://api.github.com/repos/test/repo/commits?per_page=100",
             json=[
                 {"commit": {"author": {"name": "UserA", "date": "2023-10-01T10:00:00Z"}}},
                 {"commit": {"author": {"name": "UserA", "date": "2023-10-01T11:00:00Z"}}},
-                {"commit": {"author": {"name": "UserB", "date": "2023-10-02T10:00:00Z"}}}
-            ]
+                {"commit": {"author": {"name": "UserB", "date": "2023-10-02T10:00:00Z"}}},
+            ],
         )
 
         import tempfile
+
         # Force a unique cache dir for testing
         os.environ["CACHE_DIR"] = tempfile.mkdtemp()
 
@@ -87,7 +90,7 @@ def __(DashboardController, HTTPXMock, os):
         print("Second request successful. Cache hit confirmed.")
 
     test_e2e_mocked_cache_flow()
-    return test_e2e_mocked_cache_flow,
+    return (test_e2e_mocked_cache_flow,)
 
 
 if __name__ == "__main__":

@@ -10,7 +10,10 @@ def commits_to_dataframe(commits: list[dict[str, str | pl.Datetime]]) -> pl.Data
 
     # Cast date string to proper datetime, then extract just the Date
     return df.with_columns(
-        pl.col("date").str.strptime(pl.Datetime, format="%Y-%m-%dT%H:%M:%SZ").cast(pl.Date).alias("date")
+        pl.col("date")
+        .str.strptime(pl.Datetime, format="%Y-%m-%dT%H:%M:%SZ")
+        .cast(pl.Date)
+        .alias("date")
     )
 
 
@@ -19,11 +22,7 @@ def aggregate_daily_commits(df: pl.DataFrame) -> pl.DataFrame:
     if df.is_empty():
         return pl.DataFrame(schema={"date": pl.Date, "commit_count": pl.UInt32})
 
-    return (
-        df.group_by("date")
-        .agg(pl.len().alias("commit_count"))
-        .sort("date")
-    )
+    return df.group_by("date").agg(pl.len().alias("commit_count")).sort("date")
 
 
 def aggregate_top_committers(df: pl.DataFrame, top_n: int = 5) -> pl.DataFrame:

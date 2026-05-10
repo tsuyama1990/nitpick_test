@@ -12,14 +12,19 @@ load_dotenv()
 # Setup pure logger
 logger = logging.getLogger(__name__)
 
+
 def main() -> None:
     st.set_page_config(page_title="GitHub Analytics", layout="wide")
     st.title("GitHub Repository Analytics PoC")
-    st.write("Enter a repository in `owner/repo` format to view real-time metrics and commit trends.")
+    st.write(
+        "Enter a repository in `owner/repo` format to view real-time metrics and commit trends."
+    )
 
     # We use a form to prevent API calls on every keystroke
     with st.form("repo_input_form"):
-        repo_input = st.text_input("Repository (e.g., streamlit/streamlit)", placeholder="owner/repo")
+        repo_input = st.text_input(
+            "Repository (e.g., streamlit/streamlit)", placeholder="owner/repo"
+        )
         submitted = st.form_submit_button("Analyze")
 
     if submitted:
@@ -78,6 +83,7 @@ def main() -> None:
             # Catch unexpected errors to prevent stack trace leak
             logger.exception("An unexpected error occurred.")
             st.error("An unexpected internal error occurred. Please try again later.")
+
 
 if __name__ == "__main__":
     main()
