@@ -17,21 +17,21 @@ Name                                   Stmts   Miss  Cover   Missing
 --------------------------------------------------------------------
 src/__init__.py                            0      0   100%
 src/config/__init__.py                     0      0   100%
-src/config/settings.py                     9      3    67%   15-17
+src/config/settings.py                    10      3    70%   16-18
 src/domain_models/__init__.py              2      0   100%
 src/domain_models/repository.py           45      2    96%   18, 49
 src/ingestion/__init__.py                  0      0   100%
-src/ingestion/github_client.py            52      8    85%   34-35, 43-44, 56-57, 71-72
+src/ingestion/github_client.py            55     11    80%   34-35, 42-47, 59-60, 74-75
 src/services/__init__.py                   0      0   100%
 src/services/dashboard_controller.py      32      0   100%
 src/storage/__init__.py                    0      0   100%
 src/storage/cache.py                      48      4    92%   43-44, 57-58
 src/transformation/__init__.py             0      0   100%
 src/transformation/metrics.py             14      3    79%   7, 23, 31
-tests/conftest.py                          8      0   100%
+tests/conftest.py                          9      0   100%
 tests/e2e/test_dashboard_flow.py          19      0   100%
 tests/unit/test_github_client.py          30      0   100%
 tests/unit/test_transformation.py         26      0   100%
 --------------------------------------------------------------------
-TOTAL                                    285     20    93%
-============================== 8 passed in 0.97s ===============================
+TOTAL                                    290     23    92%
+============================== 8 passed in 0.95s ===============================

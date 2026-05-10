@@ -39,6 +39,9 @@ class GitHubAPIClient:
         if response.status_code == 404:
             msg = "Repository not found. Please check the owner/repo name."
             raise GitHubAPIError(msg)
+        if response.status_code == 429:
+            msg = "Rate limit exceeded (429)."
+            raise GitHubAPIError(msg)
 
         msg = f"GitHub API error: {response.status_code} - {response.text}"
         raise GitHubAPIError(msg)

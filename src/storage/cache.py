@@ -1,17 +1,17 @@
 import json
-import os
 import pathlib
 import time
 from typing import Any
 
 import polars as pl
 
+from src.config.settings import get_settings
+
 
 class CacheManager:
-    def __init__(self, cache_dir_name: str = ".cache/app_data", ttl_seconds: int = 3600) -> None:
-        # Fallback to local .cache if env var not set, preventing absolute path /tmp usage
-        default_cache_dir = pathlib.Path.cwd() / cache_dir_name
-        self.cache_dir = pathlib.Path(os.getenv("CACHE_DIR", default_cache_dir))
+    def __init__(self, ttl_seconds: int = 3600) -> None:
+        settings = get_settings()
+        self.cache_dir = pathlib.Path.cwd() / settings.CACHE_DIR
         self.ttl_seconds = ttl_seconds
 
         # Ensure cache directory exists
