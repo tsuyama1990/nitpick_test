@@ -17,7 +17,9 @@ class CacheManager:
         # Ensure cache directory exists
         self.cache_dir.mkdir(parents=True, exist_ok=True)
 
-    def _get_file_path(self, owner: str, repo: str, data_type: str, extension: str = "parquet") -> pathlib.Path:
+    def _get_file_path(
+        self, owner: str, repo: str, data_type: str, extension: str = "parquet"
+    ) -> pathlib.Path:
         filename = f"{owner}_{repo}_{data_type}.{extension}".replace("/", "_")
         return self.cache_dir / filename
 

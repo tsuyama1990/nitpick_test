@@ -1,6 +1,3 @@
-import os
-import tempfile
-
 from pytest_httpx import HTTPXMock
 
 from src.config.settings import Settings

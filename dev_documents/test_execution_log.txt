@@ -25,13 +25,13 @@ src/ingestion/github_client.py            55     11    80%   34-35, 42-47, 61-62
 src/services/__init__.py                   0      0   100%
 src/services/dashboard_controller.py      32      0   100%
 src/storage/__init__.py                    0      0   100%
-src/storage/cache.py                      45      4    91%   49-50, 63-64
+src/storage/cache.py                      45      4    91%   51-52, 65-66
 src/transformation/__init__.py             0      0   100%
 src/transformation/metrics.py             14      3    79%   7, 23, 31
 tests/conftest.py                         10      0   100%
-tests/e2e/test_dashboard_flow.py          18      0   100%
+tests/e2e/test_dashboard_flow.py          16      0   100%
 tests/unit/test_github_client.py          30      0   100%
 tests/unit/test_transformation.py         26      0   100%
 --------------------------------------------------------------------
-TOTAL                                    287     23    92%
-============================== 8 passed in 0.99s ===============================
+TOTAL                                    285     23    92%
+============================== 8 passed in 0.96s ===============================
