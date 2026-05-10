@@ -32,7 +32,7 @@ class RepoMetrics(BaseModel):
             extracted.pop("open_issues_count", None)
 
         # Remove extra keys that we don't care about to satisfy extra="forbid"
-        allowed_keys = {"stars", "forks", "open_issues"}
+        allowed_keys = cls.model_fields.keys()
         return {k: v for k, v in extracted.items() if k in allowed_keys}
 
 
@@ -60,5 +60,5 @@ class Commit(BaseModel):
                 if "name" in author:
                     extracted["author_name"] = author["name"]
 
-        allowed_keys = {"date", "author_name"}
+        allowed_keys = cls.model_fields.keys()
         return {k: v for k, v in extracted.items() if k in allowed_keys}

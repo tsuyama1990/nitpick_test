@@ -22,7 +22,6 @@ def test_dashboard_controller_e2e(mock_settings: Settings, httpx_mock: HTTPXMock
             {"commit": {"author": {"name": "UserB", "date": "2023-10-02T10:00:00Z"}}},
         ],
     )
-    os.environ["CACHE_DIR"] = tempfile.mkdtemp()
     controller = DashboardController()
 
     data1 = controller.get_dashboard_data("test", "repo")

@@ -46,36 +46,34 @@ class GitHubAPIClient:
         msg = f"GitHub API error: {response.status_code} - {response.text}"
         raise GitHubAPIError(msg)
 
-    def fetch_repo_metrics(self, owner: str, repo: str) -> RepoMetrics:
-        url = f"{self.base_url}/repos/{owner}/{repo}"
-
-        with httpx.Client(headers=self.headers) as client:
-            response = client.get(url)
-            self._handle_response_errors(response)
-
-            data = response.json()
-            # type checking is handled by pydantic
-            if not isinstance(data, dict):
-                msg = "Expected dictionary response from GitHub API"
-                raise TypeError(msg)
-
-            return RepoMetrics(**data)
-
-    def fetch_recent_commits(self, owner: str, repo: str) -> list[Commit]:
-        url = f"{self.base_url}/repos/{owner}/{repo}/commits"
-        params = {"per_page": 100}
-
+    def _get(self, url: str, params: dict[str, str | int] | None = None) -> httpx.Response:
         with httpx.Client(headers=self.headers) as client:
             response = client.get(url, params=params)
             self._handle_response_errors(response)
+            return response
 
-            data = response.json()
-            if not isinstance(data, list):
-                msg = "Expected list response from GitHub API"
-                raise TypeError(msg)
+    def fetch_repo_metrics(self, owner: str, repo: str) -> RepoMetrics:
+        url = f"{self.base_url}/repos/{owner}/{repo}"
+        response = self._get(url)
+        data = response.json()
 
-            commits = []
-            for item in data:
-                commits.append(Commit(**item))
+        if not isinstance(data, dict):
+            msg = "Expected dictionary response from GitHub API"
+            raise TypeError(msg)
 
-            return commits
+        return RepoMetrics(**data)
+
+    def fetch_recent_commits(self, owner: str, repo: str) -> list[Commit]:
+        url = f"{self.base_url}/repos/{owner}/{repo}/commits"
+        response = self._get(url, params={"per_page": 100})
+        data = response.json()
+
+        if not isinstance(data, list):
+            msg = "Expected list response from GitHub API"
+            raise TypeError(msg)
+
+        commits = []
+        for item in data:
+            commits.append(Commit(**item))
+
+        return commits
