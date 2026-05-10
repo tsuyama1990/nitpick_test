@@ -1,0 +1,37 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0
+rootdir: /app
+configfile: pyproject.toml
+testpaths: tests, tests/uat
+plugins: mock-3.15.1, cov-7.1.0, anyio-4.13.0, httpx-0.36.2
+collected 8 items
+
+tests/e2e/test_dashboard_flow.py .                                       [ 12%]
+tests/unit/test_github_client.py ....                                    [ 62%]
+tests/unit/test_transformation.py ...                                    [100%]
+
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Name                                   Stmts   Miss  Cover   Missing
+--------------------------------------------------------------------
+src/__init__.py                            0      0   100%
+src/config/__init__.py                     0      0   100%
+src/config/settings.py                    10      3    70%   16-18
+src/domain_models/__init__.py              2      0   100%
+src/domain_models/repository.py           45      2    96%   18, 49
+src/ingestion/__init__.py                  0      0   100%
+src/ingestion/github_client.py            55     11    80%   34-35, 42-47, 61-62, 72-73
+src/services/__init__.py                   0      0   100%
+src/services/dashboard_controller.py      32      0   100%
+src/storage/__init__.py                    0      0   100%
+src/storage/cache.py                      45      4    91%   51-52, 65-66
+src/transformation/__init__.py             0      0   100%
+src/transformation/metrics.py             14      3    79%   7, 23, 31
+tests/conftest.py                         10      0   100%
+tests/e2e/test_dashboard_flow.py          16      0   100%
+tests/unit/test_github_client.py          30      0   100%
+tests/unit/test_transformation.py         26      0   100%
+--------------------------------------------------------------------
+TOTAL                                    285     23    92%
+============================== 8 passed in 0.96s ===============================
