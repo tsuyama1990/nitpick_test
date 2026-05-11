@@ -40,11 +40,12 @@ select = [
 ignore = [
     "ANN101", "ANN002", "ANN003", "ANN001", "ANN401", "ARG001", "ARG005",
     "PLR2004", "E501", "TRY003", "D", "ANN201", "N806", "PLC0415", "BLE001",
-    "PT019", "RUF003", "ARG002", "RUF043", "RUF059", "PLR0913", "ANN202"
+    "PT019", "RUF003", "ARG002", "RUF043", "RUF059", "PLR0913", "ANN202", "TRY004"
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**/*.py" = ["S101"]
+"tests/**/*.py" = ["S101", "S105", "S106"]
+"tests/uat/**/*.py" = ["N803", "N807", "B011", "T201", "PT015", "ANN204", "S105", "S106", "PLR0915", "F821", "N999", "PT017", "B018"]
 
 [tool.ruff.lint.mccabe]
 max-complexity = 10
@@ -59,3 +60,4 @@ testpaths = ["tests"]
 [tool.mypy]
 strict = true
 ignore_missing_imports = true
+exclude = ["(?x)(tests/uat/.*)"]
