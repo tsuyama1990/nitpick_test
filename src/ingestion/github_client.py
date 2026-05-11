@@ -13,7 +13,7 @@ from src.domain_models.exceptions import (
 class GitHubClient:
     def __init__(self) -> None:
         self.settings = get_settings()
-        self.base_url = "https://api.github.com"
+        self.base_url = self.settings.GITHUB_API_BASE_URL
         self.headers = {
             "Accept": "application/vnd.github.v3+json",
             "Authorization": f"Bearer {self.settings.GITHUB_TOKEN}",
