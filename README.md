@@ -8,11 +8,11 @@ A modern, high-performance Proof-of-Concept (PoC) dashboard for analysing GitHub
 
 ## Key Features
 
-- **Automated Data Ingestion:** Seamlessly connects to the GitHub REST API with robust error handling and strict rate limit protection.
-- **High-Performance Aggregation:** Leverages `Polars` for zero-copy, lightning-fast tabular data transformations.
-- **Zero-Config Local Caching:** Implements an intelligent, Time-To-Live (TTL) based local Parquet file cache to drastically reduce API latency and respect network constraints.
-- **Interactive Visualisations:** Provides a clean, responsive web interface using `Streamlit` to display core repository KPIs and interactive charts of developer activity over time.
-- **Type-Safe Architecture:** Built with strict `Pydantic` domain models and rigorous MyPy static typing, ensuring data integrity from network response to frontend rendering.
+- **Automated Data Ingestion:** Seamlessly connects to the GitHub REST API with robust error handling and strict rate limit protection. (Available now)
+- **High-Performance Aggregation:** Leverages `Polars` for zero-copy, lightning-fast tabular data transformations. (Upcoming)
+- **Zero-Config Local Caching:** Implements an intelligent, Time-To-Live (TTL) based local Parquet file cache to drastically reduce API latency and respect network constraints. (Upcoming)
+- **Interactive Visualisations:** Provides a clean, responsive web interface using `Streamlit` to display core repository KPIs and interactive charts of developer activity over time. (Upcoming)
+- **Type-Safe Architecture:** Built with strict `Pydantic` domain models and rigorous MyPy static typing, ensuring data integrity from network response to frontend rendering. (Available now)
 
 ## Architecture Overview
 
@@ -84,15 +84,21 @@ graph TD
 
 ## Usage
 
-**Quick Start:**
+**Quick Start (Using the API Client Programmatically):**
 
-To launch the interactive dashboard, run the Streamlit application via `uv`:
+The Streamlit UI is currently under development. To use the API client:
 
-```bash
-uv run streamlit run src/app.py
+```python
+from src.domain_models.config import get_settings
+from src.ingestion.github_client import GitHubClient
+
+settings = get_settings()
+
+with GitHubClient(token=settings.github_token) as client:
+    # Fetch repository metrics
+    metrics = client.get_repository_metrics("streamlit", "streamlit")
+    print(metrics)
 ```
-
-Once the server starts, open your browser to `http://localhost:8501`. Enter a repository name in the format `owner/repo` (e.g., `streamlit/streamlit`) and click the analyze button to view the dashboard.
 
 ## Development Workflow
 
@@ -123,11 +129,10 @@ This project adheres to strict code quality standards.
 ├── pyproject.toml       # Dependency and linter configuration
 ├── README.md            # Project documentation
 ├── src/
-│   ├── app.py           # Streamlit frontend application
-│   ├── config.py        # Pydantic-based configuration management
-│   ├── domain/          # Pydantic schemas and custom exceptions
+│   ├── app.py           # (Upcoming) Streamlit frontend application
+│   ├── domain_models/   # Pydantic schemas and custom exceptions
 │   ├── ingestion/       # GitHub API client
-│   └── processing/      # Orchestrator, Polars transformations, and Cache
+│   └── processing/      # (Upcoming) Orchestrator, Polars transformations, and Cache
 └── tests/
     ├── uat/             # Marimo notebooks for UAT and tutorials
     └── ...              # Unit and integration tests
