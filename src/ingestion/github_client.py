@@ -14,9 +14,9 @@ class GitHubClient:
             "Authorization": f"Bearer {settings.github_token}",
         }
         self.client = httpx.Client(
-            base_url="https://api.github.com",
+            base_url=settings.github_api_base_url,
             headers=headers,
-            timeout=10.0,
+            timeout=settings.request_timeout,
         )
 
     def _handle_response(self, response: httpx.Response) -> None:

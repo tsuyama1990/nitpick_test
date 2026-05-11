@@ -74,7 +74,8 @@ def __(GitHubClient, HTTPXMock, RepositoryNotFoundError):
 
     try:
         client.get_repository_metrics("invalid-owner", "invalid-repo")
-        assert False, "Should have raised RepositoryNotFoundError"
+        msg = "Should have raised RepositoryNotFoundError"
+        raise AssertionError(msg)
     except RepositoryNotFoundError:
         print("UAT-C02-02: Successfully caught RepositoryNotFoundError")
 
