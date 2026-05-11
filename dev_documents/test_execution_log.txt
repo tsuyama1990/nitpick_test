@@ -17,7 +17,7 @@ src/__init__.py                       0      0   100%
 src/domain_models/__init__.py         3      0   100%
 src/domain_models/config.py           9      1    89%   18
 src/domain_models/exceptions.py       3      0   100%
-src/domain_models/schemas.py         26      1    96%   15
+src/domain_models/schemas.py         33      1    97%   24
 ---------------------------------------------------------------
-TOTAL                                41      2    95%
-============================== 6 passed in 0.51s ===============================
+TOTAL                                48      2    96%
+============================== 6 passed in 0.47s ===============================
