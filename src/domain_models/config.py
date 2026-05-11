@@ -1,3 +1,4 @@
+import os
 from functools import lru_cache
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -6,7 +7,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     GITHUB_TOKEN: str
 
-    model_config = SettingsConfigDict(env_file=".env", extra="forbid")
+    model_config = SettingsConfigDict(env_file=os.getenv("ENV_FILE", ".env"), extra="forbid")
 
 
 @lru_cache
