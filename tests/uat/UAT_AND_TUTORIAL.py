@@ -20,9 +20,9 @@ def __(project_root, sys):
     import pytest
     from httpx import Request, Response
     from pytest_httpx import HTTPXMock
-    from src.ingestion.github_client import GitHubClient
 
     from src.domain_models.exceptions import RateLimitExceededError, RepositoryNotFoundError
+    from src.ingestion.github_client import GitHubClient
 
     return (
         pytest,
