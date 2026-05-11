@@ -34,3 +34,10 @@ def test_settings_missing_token() -> None:
 
         with pytest.raises(ValidationError):
             get_settings()
+
+
+def test_settings_default_commit_limit() -> None:
+    """Test Settings initializes correctly with the default commit limit."""
+    with patch.dict(os.environ, {"GITHUB_TOKEN": "dummy_token"}, clear=True):
+        settings = Settings()  # type: ignore[call-arg]
+        assert settings.DEFAULT_COMMIT_LIMIT == 100

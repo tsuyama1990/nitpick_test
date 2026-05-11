@@ -6,6 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     GITHUB_TOKEN: str
+    DEFAULT_COMMIT_LIMIT: int = 100
 
     model_config = SettingsConfigDict(env_file=os.getenv("ENV_FILE", ".env"), extra="forbid")
 

@@ -53,9 +53,12 @@ class GitHubClient:
                 raise GitHubAnalyticsError(msg)
             return result
 
-    def get_recent_commits(self, owner: str, repo: str, limit: int = 100) -> list[dict[str, Any]]:
+    def get_recent_commits(
+        self, owner: str, repo: str, limit: int | None = None
+    ) -> list[dict[str, Any]]:
+        actual_limit = limit if limit is not None else self.settings.DEFAULT_COMMIT_LIMIT
         url = f"{self.base_url}/repos/{owner}/{repo}/commits"
-        params = {"per_page": limit}
+        params = {"per_page": actual_limit}
         with httpx.Client(headers=self.headers) as client:
             response = client.get(url, params=params)
             result = self._handle_response(response)

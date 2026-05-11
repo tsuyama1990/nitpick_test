@@ -45,7 +45,7 @@ The file structure for this cycle introduces the core directories and the initia
 ## Design Architecture
 This cycle is deeply rooted in Domain-Driven Design principles, specifically relying on Pydantic to enforce data integrity at the system boundaries.
 
-The central component is `src/config.py`, which defines the application's configuration contract. The `Settings` class inherits from `pydantic_settings.BaseSettings`. Its primary invariant is the existence of the `GITHUB_TOKEN` string. It uses `SettingsConfigDict(env_file=".env", extra="forbid")` to ensure that it only loads expected variables and strictly fails if unexpected variables are injected, preventing configuration drift. A singleton function, `get_settings()`, will provide lazy evaluation and globally accessible, cached configuration instances.
+The central component is `src/domain_models/config.py`, which defines the application's configuration contract. The `Settings` class inherits from `pydantic_settings.BaseSettings`. Its primary invariant is the existence of the `GITHUB_TOKEN` string. It also configures `DEFAULT_COMMIT_LIMIT` (default 100) to externalize previously hardcoded magic numbers for fetching GitHub commits. It uses `SettingsConfigDict(env_file=os.getenv("ENV_FILE", ".env"), extra="forbid")` to ensure that it only loads expected variables securely without hardcoded paths, and strictly fails if unexpected variables are injected, preventing configuration drift. A singleton function, `get_settings()`, will provide lazy evaluation and globally accessible, cached configuration instances.
 
 The domain concepts are defined in `src/domain/schemas.py`. These models represent the expected shape of the data retrieved from GitHub.
 - `RepositoryMetrics` acts as the container for KPI data. It strictly requires `stargazers_count` (integer), `forks_count` (integer), and `open_issues_count` (integer).
@@ -60,7 +60,7 @@ Furthermore, `src/domain/exceptions.py` establishes the vocabulary for error han
 GITHUB_TOKEN=`.
 3. **Implement Domain Exceptions:** Create `src/domain/exceptions.py`. Define `GitHubAnalyticsError` inheriting from Python's built-in `Exception`. Define `RepositoryNotFoundError` and `RateLimitExceededError` inheriting from `GitHubAnalyticsError`. Ensure they accept informative string messages upon initialization.
 4. **Implement Pydantic Schemas:** Create `src/domain/schemas.py`. Import necessary types (`datetime` from `datetime`, `BaseModel`, `ConfigDict` from `pydantic`). Define the models `RepositoryMetrics`, `CommitAuthor`, `CommitData`, and `CommitItem` precisely as described in the Design Architecture. Ensure correct typing for every field to leverage mypy's strict checks.
-5. **Implement Configuration Management:** Create `src/config.py`. Import `BaseSettings`, `SettingsConfigDict` from `pydantic_settings`. Define the `Settings` class with the `GITHUB_TOKEN` attribute. Implement the `get_settings` function using `functools.lru_cache` to ensure the settings are only parsed once during the application's lifecycle, providing a robust singleton pattern.
+5. **Implement Configuration Management:** Create `src/domain_models/config.py`. Import `BaseSettings`, `SettingsConfigDict` from `pydantic_settings`. Define the `Settings` class with the `GITHUB_TOKEN` attribute and `DEFAULT_COMMIT_LIMIT=100`. Implement the `get_settings` function using `functools.lru_cache` to ensure the settings are only parsed once during the application's lifecycle, providing a robust singleton pattern.
 
 ## Test Strategy
 

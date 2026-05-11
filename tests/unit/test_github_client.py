@@ -92,3 +92,13 @@ def test_handle_response_completely_invalid_json(httpx_mock: HTTPXMock) -> None:
     client = GitHubClient()
     with pytest.raises(GitHubAnalyticsError, match="Unexpected JSON response format"):
         client.get_repository_metrics("owner", "repo")
+
+
+def test_get_recent_commits_fallback_limit(httpx_mock: HTTPXMock) -> None:
+    httpx_mock.add_response(
+        url="https://api.github.com/repos/owner/repo/commits?per_page=100",
+        json=[{"sha": "1"}],
+    )
+    client = GitHubClient()
+    commits = client.get_recent_commits("owner", "repo")
+    assert len(commits) == 1
