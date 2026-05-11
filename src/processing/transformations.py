@@ -2,6 +2,7 @@ from typing import Any
 
 import polars as pl
 
+from src.domain_models.config import config
 from src.domain_models.schemas import CommitItem
 
 
@@ -33,7 +34,9 @@ def aggregate_commits_by_date(raw_commits: list[dict[str, Any]]) -> pl.DataFrame
     )
 
 
-def get_top_committers(raw_commits: list[dict[str, Any]], top_n: int = 5) -> pl.DataFrame:
+def get_top_committers(
+    raw_commits: list[dict[str, Any]], top_n: int = config.default_top_n
+) -> pl.DataFrame:
     """Gets top committers with deterministic sorting."""
     validated_data = []
     for commit in raw_commits:
