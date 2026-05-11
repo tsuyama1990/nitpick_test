@@ -8,3 +8,38 @@ logs/
 .nitpick/worktrees/
 .coverage
 __pycache__/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pytest & Coverage
+.pytest_cache/
+.coverage
+coverage.xml
+
+# MyPy & Ruff
+.mypy_cache/
+.ruff_cache/
+
+# Virtual Environments
+.venv/
+venv/
+env/
+
+# Environment Variables
+.env
+.env.local
+
+# Build & Metadata
+*.egg-info/
+
+# Notebooks
+.marimo/
+
+# macOS
+.DS_Store
+
+# Caches
+.cache/
