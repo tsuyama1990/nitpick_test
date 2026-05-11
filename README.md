@@ -35,6 +35,11 @@ You can run the User Acceptance Tests (UAT) to see the application's configurati
 uv run python tests/uat/UAT_AND_TUTORIAL.py
 ```
 
+## Architecture & Design Rationale
+- **Domain-Driven Design**: By leveraging strictly validated Pydantic models at the very boundaries of the application, we proactively defend the system against malformed data and unexpected schema changes from upstream APIs.
+- **Fail-Fast Configuration**: `pydantic-settings` is utilized to mandate the existence of critical environment variables (like `GITHUB_TOKEN`). The application safely crashes during initialization rather than failing unpredictably mid-execution.
+- **Cache-Optimized Strip Filtering**: To manage the massive data payloads from GitHub, unknown keys are stripped proactively *before* instantiation via a pre-validator that utilizes a module-level cached key set. This ensures O(1) attribute lookup and preserves CPU cycles.
+
 ## Structure
 ```text
 .

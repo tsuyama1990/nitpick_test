@@ -5,6 +5,11 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    """
+    Application settings loaded from the environment.
+    Strictly forbids extra inputs to prevent configuration drift.
+    """
+
     GITHUB_TOKEN: str
 
     model_config = SettingsConfigDict(
@@ -15,4 +20,5 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
+    """Provides a cached singleton instance of Settings."""
     return Settings()  # type: ignore[call-arg]

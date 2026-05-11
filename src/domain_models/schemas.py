@@ -7,6 +7,12 @@ _ALLOWED_KEYS_CACHE: dict[str, set[str]] = {}
 
 
 class StrictBaseModel(BaseModel):
+    """
+    Base Pydantic model enforcing strict extra key rejection.
+    It automatically filters out unknown keys matching the model's schema
+    prior to validation to handle vast external API payloads safely.
+    """
+
     model_config = ConfigDict(extra="forbid")
 
     @classmethod
@@ -30,19 +36,27 @@ class StrictBaseModel(BaseModel):
 
 
 class RepositoryMetrics(StrictBaseModel):
+    """Container for the repository's primary Key Performance Indicators (KPIs)."""
+
     stargazers_count: int
     forks_count: int
     open_issues_count: int
 
 
 class CommitAuthor(StrictBaseModel):
+    """Represents the author of a specific commit, matching GitHub's nested author payload."""
+
     name: str
     date: datetime
 
 
 class CommitData(StrictBaseModel):
+    """Represents the inner commit payload containing the author."""
+
     author: CommitAuthor
 
 
 class CommitItem(StrictBaseModel):
+    """Root object representing a single commit item in the API array."""
+
     commit: CommitData
