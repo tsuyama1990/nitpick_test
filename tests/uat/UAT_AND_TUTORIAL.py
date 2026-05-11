@@ -12,6 +12,7 @@ def __():
     sys.path.append(str(Path(__file__).parent.parent.parent))
 
     import polars as pl
+
     from src.processing.transformations import aggregate_commits_by_date, get_top_committers
 
     return aggregate_commits_by_date, get_top_committers, pl
