@@ -1,8 +1,5 @@
 import os
-from functools import lru_cache
-
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
 
 class Settings(BaseSettings):
     github_token: str
@@ -15,7 +12,11 @@ class Settings(BaseSettings):
         extra="forbid",
     )
 
+os.environ["GITHUB_TOKEN"] = "test"
+os.environ["RANDOM_VAR"] = "hello"
 
-@lru_cache
-def get_settings() -> Settings:
-    return Settings()  # type: ignore[call-arg]
+try:
+    s = Settings()
+    print("Success")
+except Exception as e:
+    print(e)
