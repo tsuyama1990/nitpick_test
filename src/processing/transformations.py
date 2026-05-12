@@ -6,8 +6,8 @@ from src.domain_models.config import config
 from src.domain_models.schemas import CommitItem
 
 
-def aggregate_commits_by_date(raw_commits: list[dict[str, Any]]) -> pl.DataFrame:
-    """Aggregates commit counts by date."""
+def _extract_valid_commits(raw_commits: list[dict[str, Any]]) -> list[dict[str, str]]:
+    """Validates raw GitHub payloads and extracts flat commit attributes."""
     validated_data = []
     for commit in raw_commits:
         stripped = CommitItem._strip_extra(commit)
@@ -18,6 +18,19 @@ def aggregate_commits_by_date(raw_commits: list[dict[str, Any]]) -> pl.DataFrame
                 "name": item.commit.author.name,
             }
         )
+    return validated_data
+
+
+def aggregate_commits_by_date(raw_commits: list[dict[str, Any]]) -> pl.DataFrame:
+    """Aggregates commit counts by date.
+
+    Args:
+        raw_commits: A list of raw GitHub commit dictionaries.
+
+    Returns:
+        A Polars DataFrame with 'date' and 'commit_count' columns.
+    """
+    validated_data = _extract_valid_commits(raw_commits)
 
     if not validated_data:
         return pl.DataFrame(
@@ -37,16 +50,16 @@ def aggregate_commits_by_date(raw_commits: list[dict[str, Any]]) -> pl.DataFrame
 def get_top_committers(
     raw_commits: list[dict[str, Any]], top_n: int = config.default_top_n
 ) -> pl.DataFrame:
-    """Gets top committers with deterministic sorting."""
-    validated_data = []
-    for commit in raw_commits:
-        stripped = CommitItem._strip_extra(commit)
-        item = CommitItem(**stripped)
-        validated_data.append(
-            {
-                "name": item.commit.author.name,
-            }
-        )
+    """Gets top committers with deterministic sorting.
+
+    Args:
+        raw_commits: A list of raw GitHub commit dictionaries.
+        top_n: The number of top committers to return.
+
+    Returns:
+        A Polars DataFrame with 'name' and 'commit_count' columns.
+    """
+    validated_data = _extract_valid_commits(raw_commits)
 
     if not validated_data:
         return pl.DataFrame(

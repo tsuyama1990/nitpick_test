@@ -77,3 +77,15 @@ def test_pydantic_validation_integration() -> None:
 
     with pytest.raises(ValidationError):
         get_top_committers(malformed)
+
+
+def test_strip_extra_edge_cases() -> None:
+    import pytest
+
+    from src.domain_models.schemas import CommitItem
+
+    with pytest.raises(TypeError):
+        CommitItem._strip_extra("not a dict")  # type: ignore[arg-type]
+
+    assert CommitItem._strip_extra({"commit": "not a dict"}) == {}
+    assert CommitItem._strip_extra({"commit": {"author": "not a dict"}}) == {"commit": {}}
