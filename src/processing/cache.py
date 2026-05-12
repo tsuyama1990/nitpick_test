@@ -7,10 +7,14 @@ import polars as pl
 class LocalCache:
     """A local file-system caching layer for Polars DataFrames using Parquet."""
 
-    def __init__(self, cache_dir: str | Path, ttl_seconds: int = 3600) -> None:
+    def __init__(self, cache_dir: str | Path | None = None, ttl_seconds: int | None = None) -> None:
         """Initialize the LocalCache with a directory and TTL."""
-        self.cache_dir = Path(cache_dir)
-        self.ttl_seconds = ttl_seconds
+        from src.config import get_settings
+
+        settings = get_settings()
+
+        self.cache_dir = Path(cache_dir if cache_dir is not None else settings.cache_dir)
+        self.ttl_seconds = ttl_seconds if ttl_seconds is not None else settings.cache_ttl
         self.cache_dir.mkdir(parents=True, exist_ok=True)
 
     def set(self, key: str, df: pl.DataFrame) -> None:

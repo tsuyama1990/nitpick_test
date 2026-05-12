@@ -36,7 +36,10 @@ def test_cache_miss_file_not_found(tmp_path: Path) -> None:
 
 def test_cache_expiration_ttl_check(tmp_path: Path) -> None:
     """Verify retrieval returns None for an expired file based on TTL."""
-    ttl = 3600
+    from src.config import get_settings
+
+    settings = get_settings()
+    ttl = settings.cache_ttl
     cache = LocalCache(cache_dir=tmp_path, ttl_seconds=ttl)
     df = pl.DataFrame({"a": [1]})
 

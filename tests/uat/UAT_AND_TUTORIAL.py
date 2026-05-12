@@ -19,9 +19,10 @@ def _():
 
     import polars as pl
 
+    from src.config import get_settings
     from src.processing.cache import LocalCache
 
-    return LocalCache, Path, os, pl, sys, time
+    return LocalCache, Path, get_settings, os, pl, sys, time
 
 
 if __name__ == "__main__":
@@ -29,9 +30,10 @@ if __name__ == "__main__":
 
 
 @app.cell
-def _(LocalCache, Path, pl):
+def _(LocalCache, Path, get_settings, pl):
     print("Running UAT-C04-01: Cache Hit Accuracy")
-    cache_dir = Path("tests/uat/.test_cache_hit")
+    settings = get_settings()
+    cache_dir = Path(settings.uat_cache_root) / "hit"
     cache = LocalCache(cache_dir=cache_dir)
 
     # GIVEN a pre-calculated Polars DataFrame
@@ -59,10 +61,11 @@ def _(LocalCache, Path, pl):
 
 
 @app.cell
-def _(LocalCache, Path, os, pl, time):
+def _(LocalCache, Path, get_settings, os, pl, time):
     print("Running UAT-C04-02: TTL Expiration Logic")
-    cache_dir = Path("tests/uat/.test_cache_miss")
-    ttl = 3600  # 1 hour
+    settings = get_settings()
+    cache_dir = Path(settings.uat_cache_root) / "miss"
+    ttl = settings.cache_ttl
     cache = LocalCache(cache_dir=cache_dir, ttl_seconds=ttl)
 
     from datetime import date
