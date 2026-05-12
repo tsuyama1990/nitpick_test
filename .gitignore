@@ -8,3 +8,28 @@ logs/
 .nitpick/worktrees/
 .coverage
 __pycache__/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pytest
+.pytest_cache/
+
+# Mypy
+.mypy_cache/
+
+# Ruff
+.ruff_cache/
+
+# Environments
+.env
+.env.local
+.venv/
+venv/
+env/
+
+# OS generated files
+.DS_Store
+
+# Critical System State
+.nitpick/
