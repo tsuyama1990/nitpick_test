@@ -22,7 +22,9 @@ dev = [
     "ruff>=0.15.12",
     "pytest-httpx",
     "pytest-mock",
-    "marimo"
+    "marimo",
+    "playwright>=1.59.0",
+    "pytest-playwright>=0.7.2",
 ]
 
 [tool.ruff]
