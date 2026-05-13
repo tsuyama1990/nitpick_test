@@ -8,3 +8,26 @@ logs/
 .nitpick/worktrees/
 .coverage
 __pycache__/
+
+# Python cache directories
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Testing and linters
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# Environments and configs
+.env
+.env.local
+.venv/
+venv/
+env/
+.DS_Store
+
+# Critical system state
+.nitpick/
