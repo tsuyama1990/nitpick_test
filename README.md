@@ -76,10 +76,11 @@ graph TD
    ```
 
 3. **Configure Environment Variables:**
-   Copy the example environment file and populate it with your GitHub Personal Access Token.
+   Copy the example environment file and populate it with your configuration.
    ```bash
    cp .env.example .env
    # Edit .env and set GITHUB_TOKEN=your_token_here
+   # You can also optionally set CACHE_DIR to customize the local cache location (defaults to .cache)
    ```
 
 ## Usage
