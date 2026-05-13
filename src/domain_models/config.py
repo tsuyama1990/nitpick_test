@@ -1,0 +1,9 @@
+import os
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Settings(BaseSettings):
+    CACHE_DIR: str = ".cache"
+
+    model_config = SettingsConfigDict(env_file=os.getenv("ENV_FILE", ".env"), extra="forbid")
