@@ -10,7 +10,7 @@ A modern, high-performance Proof-of-Concept (PoC) dashboard for analysing GitHub
 
 - **Automated Data Ingestion:** Seamlessly connects to the GitHub REST API with robust error handling and strict rate limit protection.
 - **High-Performance Aggregation:** Leverages `Polars` for zero-copy, lightning-fast tabular data transformations.
-- **Zero-Config Local Caching:** Implements an intelligent, Time-To-Live (TTL) based local Parquet file cache to drastically reduce API latency and respect network constraints.
+- **Zero-Config Local Caching:** Implements an intelligent, Time-To-Live (TTL) based local Parquet file cache to drastically reduce API latency and respect network constraints. It automatically handles cache invalidation and storage of Polars DataFrames efficiently.
 - **Interactive Visualisations:** Provides a clean, responsive web interface using `Streamlit` to display core repository KPIs and interactive charts of developer activity over time.
 - **Type-Safe Architecture:** Built with strict `Pydantic` domain models and rigorous MyPy static typing, ensuring data integrity from network response to frontend rendering.
 
@@ -85,6 +85,9 @@ graph TD
 ## Usage
 
 **Quick Start:**
+
+By default, the application uses a `.cache` directory in your current working directory to store Parquet files. You can customize this by setting the `CACHE_DIR` and `CACHE_TTL_SECONDS` in your `.env` file.
+
 
 To launch the interactive dashboard, run the Streamlit application via `uv`:
 
