@@ -3,6 +3,7 @@ import time
 from pathlib import Path
 
 import polars as pl
+import pytest
 
 from processing.cache import LocalCache
 
@@ -43,3 +44,10 @@ def test_cache_expiration(tmp_path: Path) -> None:
     os.utime(target_file, (past_time, past_time))
 
     assert cache.get("test_key") is None
+
+
+def test_cache_default_config_initialization(monkeypatch: pytest.MonkeyPatch) -> None:
+    # Ensure environment is clean
+    monkeypatch.delenv("CACHE_DIR", raising=False)
+    cache = LocalCache()
+    assert str(cache.cache_dir) == ".cache"

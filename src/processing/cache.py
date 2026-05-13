@@ -3,9 +3,15 @@ import time
 
 import polars as pl
 
+from domain_models.config import CacheConfig
+
 
 class LocalCache:
-    def __init__(self, cache_dir: str | pathlib.Path, ttl_seconds: int = 3600) -> None:
+    def __init__(
+        self, cache_dir: str | pathlib.Path | None = None, ttl_seconds: int = 3600
+    ) -> None:
+        if cache_dir is None:
+            cache_dir = CacheConfig().cache_dir
         self.cache_dir = pathlib.Path(cache_dir)
         self.ttl_seconds = ttl_seconds
         self.cache_dir.mkdir(parents=True, exist_ok=True)
