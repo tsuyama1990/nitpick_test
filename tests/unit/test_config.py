@@ -18,7 +18,9 @@ def test_cache_config_default_values() -> None:
 
 def test_cache_config_custom_values() -> None:
     with patch.dict(
-        os.environ, {"CACHE_DIR": "/custom/path/custom_cache", "CACHE_TTL_SECONDS": "7200"}, clear=True
+        os.environ,
+        {"CACHE_DIR": "/custom/path/custom_cache", "CACHE_TTL_SECONDS": "7200"},
+        clear=True,
     ):
         config = CacheConfig()
         assert config.cache_dir == Path("/custom/path/custom_cache")
