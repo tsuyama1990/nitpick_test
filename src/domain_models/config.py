@@ -13,3 +13,4 @@ class AppSettings(BaseSettings):
 
     # Cache Configuration
     cache_dir: Path = Path(".cache")
+    default_cache_subdir: str = "cache"

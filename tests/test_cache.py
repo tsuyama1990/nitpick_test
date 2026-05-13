@@ -5,6 +5,7 @@ from pathlib import Path
 import polars as pl
 from polars.testing import assert_frame_equal
 
+from src.config import get_settings
 from src.processing.cache import LocalCache
 
 
@@ -16,7 +17,7 @@ def test_cache_directory_creation(tmp_path: Path) -> None:
 
 
 def test_cache_hit_workflow(tmp_path: Path) -> None:
-    cache_dir = tmp_path / "cache"
+    cache_dir = tmp_path / get_settings().default_cache_subdir
     cache = LocalCache(cache_dir=cache_dir)
     df = pl.DataFrame({"a": [1, 2, 3], "b": ["x", "y", "z"]})
     cache.set("test_key", df)
@@ -27,7 +28,7 @@ def test_cache_hit_workflow(tmp_path: Path) -> None:
 
 
 def test_cache_miss_workflow(tmp_path: Path) -> None:
-    cache_dir = tmp_path / "cache"
+    cache_dir = tmp_path / get_settings().default_cache_subdir
     cache = LocalCache(cache_dir=cache_dir)
     retrieved_df = cache.get("non_existent_key")
 
@@ -35,7 +36,7 @@ def test_cache_miss_workflow(tmp_path: Path) -> None:
 
 
 def test_cache_expiration_ttl_check(tmp_path: Path) -> None:
-    cache_dir = tmp_path / "cache"
+    cache_dir = tmp_path / get_settings().default_cache_subdir
     # Setting TTL to 100 seconds
     cache = LocalCache(cache_dir=cache_dir, ttl_seconds=100)
     df = pl.DataFrame({"a": [1, 2, 3]})
