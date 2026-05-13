@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=os.getenv("ENV_FILE", ".env"),
         env_file_encoding="utf-8",
-        extra="ignore",
+        extra="forbid",
     )
 
 
