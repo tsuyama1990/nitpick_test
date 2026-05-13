@@ -50,7 +50,7 @@ def test_cache_expiration_ttl_check(tmp_path: pathlib.Path, dummy_df: pl.DataFra
     assert file_path.exists()
 
     # Backdate the modification time to be older than TTL (e.g., 2 hours ago)
-    now = pathlib.Path.stat(file_path).st_mtime
+    now = file_path.stat().st_mtime
     past_time = now - 7200
     os.utime(file_path, (now, past_time))
 
