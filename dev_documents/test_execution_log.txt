@@ -3,22 +3,44 @@ platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0
 rootdir: /app
 configfile: pyproject.toml
 plugins: mock-3.15.1, cov-7.1.0, anyio-4.13.0, httpx-0.36.2
-collected 0 items
+collected 4 items
 
-WARNING: Failed to generate report: No data to report.
+tests/test_cache.py ....                                                 [100%]
+
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Name                            Stmts   Miss  Cover   Missing
+-------------------------------------------------------------
+src/__init__.py                     0      0   100%
+src/domain_models/__init__.py       0      0   100%
+src/domain_models/config.py         7      7     0%   1-17
+src/processing/__init__.py          0      0   100%
+src/processing/cache.py            19      0   100%
+-------------------------------------------------------------
+TOTAL                              26      7    73%
+============================== 4 passed in 0.57s ===============================
 
 
-=============================== warnings summary ===============================
-.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1581
-  /app/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1581: PytestConfigWarning: No files were found in testpaths; consider removing or adjusting your testpaths configuration. Searching recursively from the current directory instead.
-    self.args, self.args_source = self._decide_args(
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0
+rootdir: /app
+configfile: pyproject.toml
+plugins: mock-3.15.1, cov-7.1.0, anyio-4.13.0, httpx-0.36.2
+collected 2 items
 
--- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-============================== 1 warning in 0.07s ==============================
-/app/.venv/lib/python3.12/site-packages/coverage/inorout.py:561: CoverageWarning: Module src was never imported. (module-not-imported); see https://coverage.readthedocs.io/en/7.13.5/messages.html#warning-module-not-imported
-  self.warn(f"Module {pkg} was never imported.", slug="module-not-imported")
-/app/.venv/lib/python3.12/site-packages/coverage/control.py:958: CoverageWarning: No data was collected. (no-data-collected); see https://coverage.readthedocs.io/en/7.13.5/messages.html#warning-no-data-collected
-  self._warn("No data was collected.", slug="no-data-collected")
-/app/.venv/lib/python3.12/site-packages/pytest_cov/plugin.py:366: CovReportWarning: Failed to generate report: No data to report.
+tests/uat/uat_and_tutorial.py ..                                         [100%]
 
-  warnings.warn(CovReportWarning(message), stacklevel=1)
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Name                            Stmts   Miss  Cover   Missing
+-------------------------------------------------------------
+src/__init__.py                     0      0   100%
+src/domain_models/__init__.py       0      0   100%
+src/domain_models/config.py         7      7     0%   1-17
+src/processing/__init__.py          0      0   100%
+src/processing/cache.py            19      1    95%   20
+-------------------------------------------------------------
+TOTAL                              26      8    69%
+============================== 2 passed in 0.64s ===============================
