@@ -14,12 +14,12 @@ Name                            Stmts   Miss  Cover   Missing
 -------------------------------------------------------------
 src/__init__.py                     0      0   100%
 src/domain_models/__init__.py       0      0   100%
-src/domain_models/config.py         7      7     0%   1-17
+src/domain_models/config.py         8      0   100%
 src/processing/__init__.py          0      0   100%
-src/processing/cache.py            19      0   100%
+src/processing/cache.py            21      0   100%
 -------------------------------------------------------------
-TOTAL                              26      7    73%
-============================== 4 passed in 0.56s ===============================
+TOTAL                              29      0   100%
+============================== 4 passed in 1.00s ===============================
 
 
 ============================= test session starts ==============================
@@ -38,9 +38,9 @@ Name                            Stmts   Miss  Cover   Missing
 -------------------------------------------------------------
 src/__init__.py                     0      0   100%
 src/domain_models/__init__.py       0      0   100%
-src/domain_models/config.py         7      7     0%   1-17
+src/domain_models/config.py         8      0   100%
 src/processing/__init__.py          0      0   100%
-src/processing/cache.py            19      1    95%   20
+src/processing/cache.py            21      1    95%   23
 -------------------------------------------------------------
-TOTAL                              26      8    69%
-============================== 2 passed in 0.54s ===============================
+TOTAL                              29      1    97%
+============================== 2 passed in 0.92s ===============================

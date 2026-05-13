@@ -3,11 +3,14 @@ import time
 
 import polars as pl
 
+from src.domain_models.config import get_settings
+
 
 class LocalCache:
-    def __init__(self, cache_dir: str | pathlib.Path, ttl_seconds: int = 3600) -> None:
+    def __init__(self, cache_dir: str | pathlib.Path, ttl_seconds: int | None = None) -> None:
+        settings = get_settings()
         self.cache_dir = pathlib.Path(cache_dir)
-        self.ttl_seconds = ttl_seconds
+        self.ttl_seconds = ttl_seconds if ttl_seconds is not None else settings.CACHE_TTL_SECONDS
         self.cache_dir.mkdir(parents=True, exist_ok=True)
 
     def set_value(self, key: str, df: pl.DataFrame) -> None:
