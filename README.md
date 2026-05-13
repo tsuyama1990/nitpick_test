@@ -80,6 +80,7 @@ graph TD
    ```bash
    cp .env.example .env
    # Edit .env and set GITHUB_TOKEN=your_token_here
+   # CACHE_DIR can also be set to specify where parquet cache files are saved (defaults to .cache)
    ```
 
 ## Usage
@@ -110,9 +111,9 @@ This project adheres to strict code quality standards.
   ```bash
   uv run pytest
   ```
-- **Run User Acceptance Tests (Marimo):**
+- **Run User Acceptance Tests:**
   ```bash
-  uv run marimo run tests/uat/UAT_AND_TUTORIAL.py
+  uv run python tests/uat/uat_and_tutorial.py
   ```
 
 ## Project Structure
