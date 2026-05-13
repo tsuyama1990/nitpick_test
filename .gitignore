@@ -8,3 +8,8 @@ logs/
 .nitpick/worktrees/
 .coverage
 __pycache__/
+
+# Cycle 04
+*.parquet
+.cache/
+.nitpick/

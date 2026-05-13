@@ -82,6 +82,13 @@ graph TD
    # Edit .env and set GITHUB_TOKEN=your_token_here
    ```
 
+## Configuration
+
+The application's behaviour can be customised via environment variables defined in your `.env` file:
+
+- `GITHUB_TOKEN`: Your Personal Access Token for the GitHub API (Required).
+- `CACHE_DIR`: The directory path where local Parquet cache files will be stored. Defaults to `.cache` in the current working directory. The application will automatically manage the cache and clean up stale data based on a 1-hour Time-To-Live (TTL).
+
 ## Usage
 
 **Quick Start:**
