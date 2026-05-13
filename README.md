@@ -9,8 +9,9 @@ A modern, high-performance Proof-of-Concept (PoC) dashboard for analysing GitHub
 ## Key Features
 
 - **Automated Data Ingestion:** Seamlessly connects to the GitHub REST API with robust error handling and strict rate limit protection.
+- **Local Caching:** Utilizes a highly efficient local caching layer for Polars DataFrames using Parquet serialization. Protects upstream APIs from rate limits via an intelligent TTL expiration mechanism.
 - **High-Performance Aggregation:** Leverages `Polars` for zero-copy, lightning-fast tabular data transformations.
-- **Zero-Config Local Caching:** Implements an intelligent, Time-To-Live (TTL) based local Parquet file cache to drastically reduce API latency and respect network constraints.
+
 - **Interactive Visualisations:** Provides a clean, responsive web interface using `Streamlit` to display core repository KPIs and interactive charts of developer activity over time.
 - **Type-Safe Architecture:** Built with strict `Pydantic` domain models and rigorous MyPy static typing, ensuring data integrity from network response to frontend rendering.
 
