@@ -10,7 +10,7 @@ class LocalCache:
         self.ttl_seconds = ttl_seconds
         self.cache_dir.mkdir(parents=True, exist_ok=True)
 
-    def set(self, key: str, df: pl.DataFrame) -> None:
+    def set_value(self, key: str, df: pl.DataFrame) -> None:
         path = self.cache_dir / f"{key}.parquet"
         df.write_parquet(path)
 

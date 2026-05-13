@@ -23,7 +23,7 @@ def test_uat_c04_01_cache_hit_accuracy(tmp_path: pathlib.Path) -> None:
     cache = LocalCache(cache_dir=tmp_path)
 
     # WHEN the DataFrame is saved to the cache and immediately retrieved
-    cache.set("uat_hit_accuracy", df)
+    cache.set_value("uat_hit_accuracy", df)
     retrieved_df = cache.get("uat_hit_accuracy")
 
     # THEN the retrieved DataFrame must be structurally identical to the original DataFrame
@@ -41,7 +41,7 @@ def test_uat_c04_02_ttl_expiration_logic(tmp_path: pathlib.Path) -> None:
     # GIVEN a cached Parquet file containing historical commit data
     df = pl.DataFrame({"data": [1, 2, 3]})
     cache = LocalCache(cache_dir=tmp_path, ttl_seconds=3600)
-    cache.set("uat_ttl_expiration", df)
+    cache.set_value("uat_ttl_expiration", df)
 
     file_path = tmp_path / "uat_ttl_expiration.parquet"
     assert file_path.exists()
@@ -50,6 +50,7 @@ def test_uat_c04_02_ttl_expiration_logic(tmp_path: pathlib.Path) -> None:
     now = pathlib.Path.stat(file_path).st_mtime
     two_hours_ago = now - 7200
     import os
+
     os.utime(file_path, (now, two_hours_ago))
 
     # WHEN the system attempts to retrieve the data from a cache configured with a 1-hour TTL

@@ -27,7 +27,7 @@ def test_cache_initialization(tmp_path: pathlib.Path) -> None:
 
 def test_cache_hit_workflow(tmp_path: pathlib.Path, dummy_df: pl.DataFrame) -> None:
     cache = LocalCache(cache_dir=tmp_path)
-    cache.set("test_key", dummy_df)
+    cache.set_value("test_key", dummy_df)
 
     cached_df = cache.get("test_key")
     assert cached_df is not None
@@ -43,7 +43,7 @@ def test_cache_miss_file_not_found(tmp_path: pathlib.Path) -> None:
 
 def test_cache_expiration_ttl_check(tmp_path: pathlib.Path, dummy_df: pl.DataFrame) -> None:
     cache = LocalCache(cache_dir=tmp_path, ttl_seconds=3600)
-    cache.set("test_key", dummy_df)
+    cache.set_value("test_key", dummy_df)
 
     # Path where the cache writes the file
     file_path = tmp_path / "test_key.parquet"
