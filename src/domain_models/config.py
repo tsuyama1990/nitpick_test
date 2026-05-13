@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -12,5 +13,13 @@ class AppSettings(BaseSettings):
     )
 
     # Cache Configuration
-    cache_dir: Path = Path(".cache")
-    default_cache_subdir: str = "cache"
+    cache_dir: Path = Field(
+        default=Path(".cache"), description="Directory path for the local Parquet cache."
+    )
+    uat_cache_dir: Path = Field(
+        default=Path(".uat_cache_dir"),
+        description="Cache directory used specifically for User Acceptance Testing.",
+    )
+    default_cache_subdir: str = Field(
+        default="cache", description="Default subdirectory name used in testing."
+    )

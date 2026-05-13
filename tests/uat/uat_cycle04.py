@@ -17,7 +17,7 @@ from src.processing.cache import LocalCache  # noqa: E402
 
 def uat_c04_01() -> None:
     print("--- Running UAT-C04-01: Cache Hit Accuracy ---")  # noqa: T201
-    cache_dir = get_settings().cache_dir
+    cache_dir = get_settings().uat_cache_dir
     cache = LocalCache(cache_dir=cache_dir)
 
     # GIVEN a pre-calculated Polars DataFrame representing aggregated commit data
@@ -46,7 +46,7 @@ def uat_c04_01() -> None:
 
 def uat_c04_02() -> None:
     print("\n--- Running UAT-C04-02: TTL Expiration Logic ---")  # noqa: T201
-    cache_dir = get_settings().cache_dir
+    cache_dir = get_settings().uat_cache_dir
     # Configuring cache with 1-hour TTL (3600 seconds)
     cache = LocalCache(cache_dir=cache_dir, ttl_seconds=3600)
 
