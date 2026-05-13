@@ -34,7 +34,7 @@ Review your code critically against the following checklists:
 ### 1. Functional Implementation & Scope
 - [ ] **Logic Correctness**: Is the logic correct, optimal and efficient? Did your refactoring accidentally break anything?
 - [ ] **System Integrity**: Did you accidentally delete or modify the `.nitpick/` directory? **Check your git status and ensures it is UNTOUCHED.** If your PR contains a deletion of `.nitpick/`, YOU MUST FIX IT IMMEDIATELY.
-- [ ] **Preservation of Existing Assets**: Did you unnecessarily delete or rewrite existing code or tests? 
+- [ ] **Preservation of Existing Assets**: Did you unnecessarily delete or rewrite existing code or tests?
 
 ### 2. Architecture, Design & Maintainability
 - [ ] **Layer Compliance**: Follows `SYSTEM_ARCHITECTURE.md` without bypassing layers?
@@ -73,7 +73,7 @@ Once the test log is saved, you must enter a **Zero-Modification State**.
 
 **LAST STEP**:
 Only when the Zero-Modification state is achieved, you are authorized to conclude. **You MUST ensure your final test log and any approved refactorings are pushed.**
-You MUST explicitly call `finalize_session` (or `open_pr`) to update the PR with your final polished work and the `dev_documents/test_execution_log.txt` evidence. 
+You MUST explicitly call `finalize_session` (or `open_pr`) to update the PR with your final polished work and the `dev_documents/test_execution_log.txt` evidence.
 Only after the PR is updated should you provide your final JSON review below.
 
 ## FINAL MESSAGE REQUIREMENT:
