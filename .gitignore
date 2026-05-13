@@ -8,3 +8,23 @@ logs/
 .nitpick/worktrees/
 .coverage
 __pycache__/
+
+# Python caching & environments
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+.venv/
+venv/
+env/
+.env.local
+
+# Cache storage
+*.parquet
+.cache/
+
+# OS artifacts
+.DS_Store
