@@ -13,10 +13,7 @@ def main() -> None:
     cache_dir = Path(".test_cache")
     cache = LocalCache(cache_dir=cache_dir)
 
-    df = pl.DataFrame({
-        "date": ["2024-01-01", "2024-01-02", "2024-01-03"],
-        "commits": [10, 20, 15]
-    })
+    df = pl.DataFrame({"date": ["2024-01-01", "2024-01-02", "2024-01-03"], "commits": [10, 20, 15]})
 
     # WHEN the DataFrame is saved to the cache and immediately retrieved
     cache.set("commits_by_date", df)
@@ -31,7 +28,7 @@ def main() -> None:
     print("Running UAT-C04-02: TTL Expiration Logic")  # noqa: T201
     # GIVEN a cached Parquet file containing historical commit data
     # AND the file's metadata indicates it was created 2 hours ago
-    ttl_seconds = 3600 # 1 hour
+    ttl_seconds = 3600  # 1 hour
     cache_ttl = LocalCache(cache_dir=cache_dir, ttl_seconds=ttl_seconds)
 
     file_path = cache_dir / "commits_by_date.parquet"
@@ -55,6 +52,7 @@ def main() -> None:
         cache_dir.rmdir()
 
     print("All UATs passed!")  # noqa: T201
+
 
 if __name__ == "__main__":
     main()
