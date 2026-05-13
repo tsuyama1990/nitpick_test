@@ -1,4 +1,10 @@
-# GitHub Repository Analytics Dashboard
+# GitHub
+**Configuration Options:**
+The application relies on local caching to prevent rate-limiting from the GitHub API. This is fully configurable via environment variables in your `.env` file:
+- `CACHE_DIR`: Directory where Parquet files will be stored (defaults to `.cache`).
+- `CACHE_TTL_SECONDS`: Duration in seconds before cached data becomes stale (defaults to `3600`, or 1 hour).
+
+ Repository Analytics Dashboard
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 ![Python Version](https://img.shields.io/badge/python-3.12%2B-blue)
@@ -83,6 +89,12 @@ graph TD
    ```
 
 ## Usage
+
+**Configuration Options:**
+The application relies on local caching to prevent rate-limiting from the GitHub API. This is fully configurable via environment variables in your `.env` file:
+- `CACHE_DIR`: Directory where Parquet files will be stored (defaults to `.cache`).
+- `CACHE_TTL_SECONDS`: Duration in seconds before cached data becomes stale (defaults to `3600`, or 1 hour).
+
 
 **Quick Start:**
 

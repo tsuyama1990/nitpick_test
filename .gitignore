@@ -8,3 +8,6 @@ logs/
 .nitpick/worktrees/
 .coverage
 __pycache__/
+
+# Caching directory
+.cache/
