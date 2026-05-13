@@ -84,6 +84,13 @@ graph TD
 
 ## Usage
 
+
+**Environment Variables:**
+
+- `CACHE_DIR`: (Optional) Specifies the directory where the local Parquet cache will be stored. Defaults to `.cache` in the current working directory.
+- `GITHUB_TOKEN`: (Required) Your GitHub Personal Access Token for API authentication.
+
+
 **Quick Start:**
 
 To launch the interactive dashboard, run the Streamlit application via `uv`:
