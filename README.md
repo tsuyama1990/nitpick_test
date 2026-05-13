@@ -124,12 +124,12 @@ This project adheres to strict code quality standards.
 ├── README.md            # Project documentation
 ├── src/
 │   ├── app.py           # Streamlit frontend application
-│   ├── config.py        # Pydantic-based configuration management
-│   ├── domain/          # Pydantic schemas and custom exceptions
+│   ├── config.py        # Settings and configurations
+│   ├── domain_models/   # Pydantic schemas and models
 │   ├── ingestion/       # GitHub API client
-│   └── processing/      # Orchestrator, Polars transformations, and Cache
+│   └── processing/      # Local Cache, Orchestrator, and Polars transformations
 └── tests/
-    ├── uat/             # Marimo notebooks for UAT and tutorials
+    ├── uat/             # User Acceptance Test scripts
     └── ...              # Unit and integration tests
 ```
 
