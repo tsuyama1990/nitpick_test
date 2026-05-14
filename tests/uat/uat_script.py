@@ -1,14 +1,9 @@
 import os
 import shutil
-
-# In UAT scripts, we adjust the python path so imports from src work.
-import sys
 import time
 from pathlib import Path
 
 import polars as pl
-
-sys.path.insert(0, ".")
 
 from src.processing.cache import LocalCache
 

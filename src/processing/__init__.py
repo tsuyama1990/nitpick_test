@@ -1,3 +1,3 @@
-from src.processing.cache import LocalCache
+from .cache import LocalCache
 
 __all__ = ["LocalCache"]

@@ -16,9 +16,9 @@ Name                            Stmts   Miss  Cover   Missing
 -------------------------------------------------------------
 src/__init__.py                     0      0   100%
 src/domain_models/__init__.py       2      0   100%
-src/domain_models/config.py         6      0   100%
+src/domain_models/config.py         5      0   100%
 src/processing/__init__.py          2      0   100%
-src/processing/cache.py            19      0   100%
+src/processing/cache.py            21      0   100%
 -------------------------------------------------------------
-TOTAL                              29      0   100%
-============================== 5 passed in 1.24s ===============================
+TOTAL                              30      0   100%
+============================== 5 passed in 0.92s ===============================

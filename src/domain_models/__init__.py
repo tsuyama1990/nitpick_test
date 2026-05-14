@@ -1,3 +1,3 @@
-from src.domain_models.config import CacheSettings
+from .config import CacheSettings
 
 __all__ = ["CacheSettings"]
