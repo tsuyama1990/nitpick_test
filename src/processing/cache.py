@@ -58,4 +58,7 @@ class LocalCache:
         if file_age > self.ttl_seconds:
             return None
 
-        return pl.read_parquet(path)
+        df = pl.read_parquet(path)
+        if "date" in df.columns:
+            pass
+        return df
