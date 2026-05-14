@@ -76,10 +76,13 @@ graph TD
    ```
 
 3. **Configure Environment Variables:**
-   Copy the example environment file and populate it with your GitHub Personal Access Token.
+   Copy the example environment file and populate it with your GitHub Personal Access Token and Cache settings.
    ```bash
    cp .env.example .env
-   # Edit .env and set GITHUB_TOKEN=your_token_here
+   # Edit .env and set your secrets/configurations
+   # Example:
+   # GITHUB_TOKEN=your_token_here
+   # CACHE_DIR=.cache
    ```
 
 ## Usage
@@ -129,8 +132,9 @@ This project adheres to strict code quality standards.
 │   ├── ingestion/       # GitHub API client
 │   └── processing/      # Orchestrator, Polars transformations, and Cache
 └── tests/
-    ├── uat/             # Marimo notebooks for UAT and tutorials
-    └── ...              # Unit and integration tests
+    ├── e2e/             # End-to-end testing
+    ├── uat/             # UAT verification scripts
+    └── unit/            # Unit testing
 ```
 
 ## License
