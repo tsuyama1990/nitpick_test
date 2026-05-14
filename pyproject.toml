@@ -38,7 +38,7 @@ select = [
 ]
 
 ignore = [
-    "ANN101", "ANN002", "ANN003", "ANN001", "ANN401", "ARG001", "ARG005",
+    "ANN002", "ANN003", "ANN001", "ANN401", "ARG001", "ARG005",
     "PLR2004", "E501", "TRY003", "D", "ANN201", "N806", "PLC0415", "BLE001",
     "PT019", "RUF003", "ARG002", "RUF043", "RUF059", "PLR0913", "ANN202"
 ]
@@ -54,7 +54,8 @@ suppress-dummy-args = true
 
 [tool.pytest.ini_options]
 addopts = "--cov=src --cov-report=term-missing"
-testpaths = ["tests"]
+testpaths = ["tests/unit"]
+pythonpath = ["."]
 
 [tool.mypy]
 strict = true
