@@ -58,9 +58,4 @@ class LocalCache:
         if file_age > self.ttl_seconds:
             return None
 
-        df = pl.read_parquet(path)
-        # Add minimal explicit schema validation to satisfy the auditor constraint
-        expected_cols = {"date", "commits", "author", "a", "b"}
-        if set(df.columns) & expected_cols:
-            pass
-        return df
+        return pl.read_parquet(path)
