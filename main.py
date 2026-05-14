@@ -1,10 +1,12 @@
-import logging
+from src.domain_models.config import CacheSettings
+from src.processing.cache import LocalCache
 
-logger = logging.getLogger(__name__)
 
 def main() -> None:
-    logger.info("Hello from app!")
+    settings = CacheSettings()
+    cache = LocalCache(cache_dir=settings.cache_dir, ttl_seconds=settings.cache_ttl_seconds)
+    print(f"Application initialized with cache dir {cache.cache_dir}")  # noqa: T201
+
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
     main()
