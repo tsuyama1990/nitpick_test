@@ -16,7 +16,7 @@ def test_uat_c01_01_environment_enforcement() -> None:
     """
     UAT-C01-01: Verify the application enforces the presence of the GITHUB_TOKEN environment variable.
     """
-    print("Running UAT-C01-01: Environment Configuration Enforcement")
+    print("Running UAT-C01-01: Environment Configuration Enforcement")  # noqa: T201
 
     # GIVEN the application environment is completely clear of any GitHub tokens
     env = os.environ.copy()
@@ -32,16 +32,16 @@ def test_uat_c01_01_environment_enforcement() -> None:
         Settings(_env_file=None)  # type: ignore[call-arg]
 
         # If it reaches here, the test failed
-        print("❌ FAILED: Settings loaded without GITHUB_TOKEN")
+        print("❌ FAILED: Settings loaded without GITHUB_TOKEN")  # noqa: T201
         sys.exit(1)
 
     except ValidationError as e:
         # THEN the system must immediately raise a validation exception
         # AND the error message must clearly state that GITHUB_TOKEN is missing
         if "GITHUB_TOKEN" in str(e) or "github_token" in str(e).lower():
-            print("✅ PASSED: GITHUB_TOKEN is strictly required.")
+            print("✅ PASSED: GITHUB_TOKEN is strictly required.")  # noqa: T201
         else:
-            print(
+            print(  # noqa: T201
                 f"❌ FAILED: Validation error raised but does not mention GITHUB_TOKEN. Error: {e}"
             )
             sys.exit(1)
@@ -51,7 +51,7 @@ def test_uat_c01_02_domain_model_validation() -> None:
     """
     UAT-C01-02: Verify the Pydantic domain models correctly parse mock JSON payloads representing GitHub API responses.
     """
-    print("\nRunning UAT-C01-02: Domain Model Validation")
+    print("\nRunning UAT-C01-02: Domain Model Validation")  # noqa: T201
 
     # GIVEN a JSON string representing a valid GitHub commit payload
     valid_payload = {
@@ -85,18 +85,18 @@ def test_uat_c01_02_domain_model_validation() -> None:
 
         try:
             CommitItem(**invalid_payload)  # type: ignore[arg-type]
-            print("❌ FAILED: Did not raise ValidationError on missing 'name' field")
+            print("❌ FAILED: Did not raise ValidationError on missing 'name' field")  # noqa: T201
             sys.exit(1)
         except ValidationError:
             # AND if a required field is missing, a validation error must be raised
-            print("✅ PASSED: Successfully parsed valid payload and rejected invalid payload.")
+            print("✅ PASSED: Successfully parsed valid payload and rejected invalid payload.")  # noqa: T201
 
     except Exception as e:
-        print(f"❌ FAILED: Unexpected error during parsing: {e}")
+        print(f"❌ FAILED: Unexpected error during parsing: {e}")  # noqa: T201
         sys.exit(1)
 
 
 if __name__ == "__main__":
     test_uat_c01_01_environment_enforcement()
     test_uat_c01_02_domain_model_validation()
-    print("\n🎉 All UAT scenarios passed!")
+    print("\n🎉 All UAT scenarios passed!")  # noqa: T201
