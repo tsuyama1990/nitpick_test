@@ -10,7 +10,14 @@ def main() -> None:
     and the Streamlit UI. It does not return a value; `None` is the
     intentional return type.
     """
-    logger.info("Hello from app!")
+    from src.config import get_settings
+
+    logger.info("Initializing GitHub Analytics Dashboard...")
+    settings = get_settings()
+    logger.info(
+        f"Loaded configuration. Cache Dir: {settings.CACHE_DIR}, Cache TTL: {settings.CACHE_TTL}"
+    )
+    logger.info("Ready for GitHub Client and Streamlit UI in future cycles.")
 
 
 if __name__ == "__main__":
