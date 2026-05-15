@@ -123,11 +123,14 @@ This project adheres to strict code quality standards.
 ├── pyproject.toml       # Dependency and linter configuration
 ├── README.md            # Project documentation
 ├── src/
+│   ├── app.py           # Streamlit frontend application
 │   ├── config.py        # Pydantic-based configuration management
-│   └── domain_models/   # Pydantic schemas and custom exceptions
+│   ├── domain/          # Pydantic schemas and custom exceptions
+│   ├── ingestion/       # GitHub API client
+│   └── processing/      # Orchestrator, Polars transformations, and Cache
 └── tests/
-    ├── uat/             # Scripts for UAT and tutorials
-    └── unit/            # Unit tests for domain models and config
+    ├── uat/             # Marimo notebooks for UAT and tutorials
+    └── ...              # Unit and integration tests
 ```
 
 ## License

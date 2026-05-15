@@ -55,7 +55,6 @@ suppress-dummy-args = true
 [tool.pytest.ini_options]
 addopts = "--cov=src --cov-report=term-missing"
 testpaths = ["tests"]
-pythonpath = ["."]
 
 [tool.mypy]
 strict = true
