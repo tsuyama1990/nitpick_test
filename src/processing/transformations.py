@@ -1,5 +1,6 @@
 import polars as pl
 
+from src.domain_models.config import get_settings
 from src.domain_models.schemas import CommitItem
 
 
@@ -25,11 +26,16 @@ def aggregate_commits_by_date(raw_commits: list[dict[str, object]]) -> pl.DataFr
     )
 
 
-def get_top_committers(raw_commits: list[dict[str, object]], top_n: int = 5) -> pl.DataFrame:
+def get_top_committers(
+    raw_commits: list[dict[str, object]], top_n: int | None = None
+) -> pl.DataFrame:
     """
     Validates raw commit JSON, extracts the author name, aggregates to find the
     top committers, and resolves ties alphabetically.
     """
+    if top_n is None:
+        top_n = get_settings().DEFAULT_TOP_COMMITTERS
+
     if not raw_commits:
         return pl.DataFrame(
             {"name": pl.Series(dtype=pl.String), "commit_count": pl.Series(dtype=pl.UInt32)}
