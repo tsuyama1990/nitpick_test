@@ -53,8 +53,9 @@ def test_settings_valid(monkeypatch: pytest.MonkeyPatch) -> None:
     assert settings.github_token == "test_token"  # noqa: S105
 
 
-def test_settings_missing_token() -> None:
+def test_settings_missing_token(monkeypatch: pytest.MonkeyPatch) -> None:
     # Ensure validation error is raised when GITHUB_TOKEN is missing
+    monkeypatch.delenv("GITHUB_TOKEN", raising=False)
     get_settings.cache_clear()
     with pytest.raises(ValidationError):
         Settings()  # type: ignore[call-arg]
