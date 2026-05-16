@@ -21,7 +21,7 @@ src/domain_models/manifest.py         0      0   100%
 src/domain_models/schemas.py         24      0   100%
 ---------------------------------------------------------------
 TOTAL                                35      0   100%
-============================== 10 passed in 0.85s ==============================
+============================== 10 passed in 0.58s ==============================
 Starting Cycle 01 UAT...
 Running UAT-C01-01: Environment Configuration Enforcement...
   ✓ Passed: System raised ValidationError when GITHUB_TOKEN was missing.
