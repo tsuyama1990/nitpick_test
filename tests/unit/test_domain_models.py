@@ -49,5 +49,12 @@ def test_commit_item_valid() -> None:
 def test_settings_valid(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("GITHUB_TOKEN", "test_token")
     get_settings.cache_clear()
-    settings = Settings()
+    settings = Settings()  # type: ignore[call-arg]
     assert settings.github_token == "test_token"  # noqa: S105
+
+
+def test_settings_missing_token() -> None:
+    # Ensure validation error is raised when GITHUB_TOKEN is missing
+    get_settings.cache_clear()
+    with pytest.raises(ValidationError):
+        Settings()  # type: ignore[call-arg]
