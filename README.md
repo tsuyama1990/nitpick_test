@@ -119,18 +119,17 @@ This project adheres to strict code quality standards.
 
 ```text
 .
-├── .env.example         # Template for environment variables
-├── pyproject.toml       # Dependency and linter configuration
-├── README.md            # Project documentation
+├── .env.example            # Template for environment variables
+├── pyproject.toml          # Dependency and linter configuration
+├── README.md               # Project documentation
 ├── src/
-│   ├── app.py           # Streamlit frontend application
-│   ├── config.py        # Pydantic-based configuration management
-│   ├── domain/          # Pydantic schemas and custom exceptions
-│   ├── ingestion/       # GitHub API client
-│   └── processing/      # Orchestrator, Polars transformations, and Cache
+│   ├── domain_models/      # Pydantic schemas, config, exceptions, and manifest
+│   ├── ingestion/          # GitHub API client wrapper (HTTPX)
+│   └── ...                 # Other source components
 └── tests/
-    ├── uat/             # Marimo notebooks for UAT and tutorials
-    └── ...              # Unit and integration tests
+    ├── unit/               # Pytest unit tests mocking network requests
+    ├── uat/                # User Acceptance Testing scripts
+    └── e2e/                # End-to-end tests
 ```
 
 ## License
