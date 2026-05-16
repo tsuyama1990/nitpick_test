@@ -13,6 +13,5 @@ class RepositoryNotFoundError(GitHubAnalyticsError):
     """Exception raised when a requested GitHub repository is not found."""
 
 
-
 class RateLimitExceededError(GitHubAnalyticsError):
     """Exception raised when the GitHub API rate limit is exceeded."""

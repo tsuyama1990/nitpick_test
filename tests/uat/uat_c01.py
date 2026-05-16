@@ -10,7 +10,7 @@ from src.domain_models import CommitItem, Settings, get_settings
 
 def verify_uat_c01_01() -> None:
     """Verify application enforces GITHUB_TOKEN presence (UAT-C01-01)."""
-    print("Running UAT-C01-01: Environment Configuration Enforcement") # noqa: T201
+    print("Running UAT-C01-01: Environment Configuration Enforcement")  # noqa: T201
     get_settings.cache_clear()
 
     with patch.dict(os.environ, {}, clear=True):
@@ -28,7 +28,7 @@ def verify_uat_c01_01() -> None:
 
 def verify_uat_c01_02() -> None:
     """Verify parsing and validation of GitHub commit data (UAT-C01-02)."""
-    print("Running UAT-C01-02: Domain Model Validation") # noqa: T201
+    print("Running UAT-C01-02: Domain Model Validation")  # noqa: T201
 
     # Valid payload test
     valid_payload: dict[str, object] = {

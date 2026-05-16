@@ -16,4 +16,4 @@ class Settings(BaseSettings):
 @functools.lru_cache
 def get_settings() -> Settings:
     """Singleton pattern to provide lazy evaluation and globally accessible cached configuration."""
-    return Settings() # type: ignore[call-arg]
+    return Settings()  # type: ignore[call-arg]

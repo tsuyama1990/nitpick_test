@@ -82,7 +82,7 @@ def test_commit_item_invalid_data() -> None:
 def test_settings_valid_token() -> None:
     with patch.dict(os.environ, {"GITHUB_TOKEN": "valid_token"}):
         settings = get_settings()
-        assert settings.GITHUB_TOKEN == "valid_token" # noqa: S105
+        assert settings.GITHUB_TOKEN == "valid_token"  # noqa: S105
 
 
 def test_settings_missing_token() -> None:
