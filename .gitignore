@@ -1,5 +1,6 @@
 # AC-CDD Configuration
 .env
+.env.local
 .nitpick/
 .nitpick/project_state_local.json
 dev_documents/project_state.json
@@ -8,3 +9,14 @@ logs/
 .nitpick/worktrees/
 .coverage
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+.venv/
+venv/
+env/
+.DS_Store

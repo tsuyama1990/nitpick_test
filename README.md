@@ -12,7 +12,8 @@ A modern, high-performance Proof-of-Concept (PoC) dashboard for analysing GitHub
 - **High-Performance Aggregation:** Leverages `Polars` for zero-copy, lightning-fast tabular data transformations.
 - **Zero-Config Local Caching:** Implements an intelligent, Time-To-Live (TTL) based local Parquet file cache to drastically reduce API latency and respect network constraints.
 - **Interactive Visualisations:** Provides a clean, responsive web interface using `Streamlit` to display core repository KPIs and interactive charts of developer activity over time.
-- **Type-Safe Architecture:** Built with strict `Pydantic` domain models and rigorous MyPy static typing, ensuring data integrity from network response to frontend rendering.
+- **Type-Safe Architecture:** Built with strict `Pydantic` domain models (like `RepositoryMetrics` and `CommitItem`) and rigorous MyPy static typing, ensuring data integrity from network response to frontend rendering.
+- **Robust Configuration Management:** Utilizes `pydantic-settings` to strictly enforce the presence of required environment variables (such as `GITHUB_TOKEN`), ensuring the application never runs in an unconfigured state.
 
 ## Architecture Overview
 
@@ -76,11 +77,12 @@ graph TD
    ```
 
 3. **Configure Environment Variables:**
-   Copy the example environment file and populate it with your GitHub Personal Access Token.
+   Copy the example environment file and populate it with your GitHub Personal Access Token. This `.env.example` file acts as a safe template.
    ```bash
    cp .env.example .env
    # Edit .env and set GITHUB_TOKEN=your_token_here
    ```
+   **Important**: The application will crash on initialization if the `GITHUB_TOKEN` is not provided.
 
 ## Usage
 
