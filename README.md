@@ -8,6 +8,8 @@ A modern, high-performance Proof-of-Concept (PoC) dashboard for analysing GitHub
 
 ## Key Features
 
+- **Strict Configuration Management:** Utilizes `pydantic-settings` to securely load and enforce the presence of required environment variables like `GITHUB_TOKEN`.
+- **Domain-Driven Design Models:** Employs `Pydantic` to enforce rigorous validation and data stripping of GitHub API schemas, preventing downstream issues.
 - **Automated Data Ingestion:** Seamlessly connects to the GitHub REST API with robust error handling and strict rate limit protection.
 - **High-Performance Aggregation:** Leverages `Polars` for zero-copy, lightning-fast tabular data transformations.
 - **Zero-Config Local Caching:** Implements an intelligent, Time-To-Live (TTL) based local Parquet file cache to drastically reduce API latency and respect network constraints.
@@ -84,6 +86,13 @@ graph TD
 
 ## Usage
 
+**Verifying Configuration:**
+
+To verify the setup and ensure your configuration passes all schema constraints, run the UAT scripts:
+```bash
+uv run python tests/uat/uat_script.py
+```
+
 **Quick Start:**
 
 To launch the interactive dashboard, run the Streamlit application via `uv`:
@@ -125,7 +134,7 @@ This project adheres to strict code quality standards.
 ├── src/
 │   ├── app.py           # Streamlit frontend application
 │   ├── config.py        # Pydantic-based configuration management
-│   ├── domain/          # Pydantic schemas and custom exceptions
+│   ├── domain_models/   # Pydantic schemas and custom exceptions
 │   ├── ingestion/       # GitHub API client
 │   └── processing/      # Orchestrator, Polars transformations, and Cache
 └── tests/
