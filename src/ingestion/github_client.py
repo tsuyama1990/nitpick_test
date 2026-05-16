@@ -1,5 +1,9 @@
+from types import TracebackType
+from typing import Self
+
 import httpx
 
+from src.domain_models.config import Settings
 from src.domain_models.exceptions import RateLimitExceededError, RepositoryNotFoundError
 from src.domain_models.schemas import CommitHistory, RepositoryMetrics
 
@@ -7,19 +11,47 @@ from src.domain_models.schemas import CommitHistory, RepositoryMetrics
 class GitHubClient:
     """Client for interacting with the GitHub REST API."""
 
-    def __init__(self, token: str) -> None:
-        """Initialize the GitHub API client with a specific token."""
+    def __init__(self, settings: Settings) -> None:
+        """Initialize the GitHub API client using application settings."""
+        if not settings.GITHUB_TOKEN:
+            err_msg = "GitHub token must be provided via Settings"
+            raise ValueError(err_msg)
+
         self.client = httpx.Client(
-            base_url="https://api.github.com",
+            base_url=settings.GITHUB_API_BASE_URL,
             headers={
-                "Accept": "application/vnd.github.v3+json",
-                "Authorization": f"Bearer {token}",
+                "Accept": settings.GITHUB_API_ACCEPT_HEADER,
+                "Authorization": f"Bearer {settings.GITHUB_TOKEN}",
             },
-            timeout=10.0,
+            timeout=settings.GITHUB_API_TIMEOUT,
         )
 
+    def __enter__(self) -> Self:
+        """Enter the context manager."""
+        return self
+
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
+        """Exit the context manager and close the client."""
+        self.close()
+
     def _handle_response(self, response: httpx.Response, owner: str, repo: str) -> None:
-        """Process the httpx.Response and translate errors."""
+        """Process the httpx.Response and translate HTTP errors into domain exceptions.
+
+        Args:
+            response: The raw response from the HTTP client.
+            owner: The repository owner, used for error messages.
+            repo: The repository name, used for error messages.
+
+        Raises:
+            RepositoryNotFoundError: If a 404 status code is returned.
+            RateLimitExceededError: If a 403 or 429 status code is returned.
+            httpx.HTTPStatusError: For other non-2xx status codes.
+        """
         if response.status_code == 404:
             err_msg = f"Repository {owner}/{repo} not found."
             raise RepositoryNotFoundError(err_msg)

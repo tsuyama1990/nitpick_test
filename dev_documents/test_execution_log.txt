@@ -4,10 +4,10 @@ rootdir: /app
 configfile: pyproject.toml
 testpaths: tests
 plugins: mock-3.15.1, cov-7.1.0, anyio-4.13.0, httpx-0.36.2
-collected 8 items
+collected 9 items
 
-tests/uat/test_uat.py ..                                                 [ 25%]
-tests/unit/test_ingestion.py .....s                                      [100%]
+tests/uat/test_uat.py ..                                                 [ 22%]
+tests/unit/test_ingestion.py ......s                                     [100%]
 
 ================================ tests coverage ================================
 _______________ coverage: platform linux, python 3.12.13-final-0 _______________
@@ -16,12 +16,12 @@ Name                              Stmts   Miss  Cover   Missing
 ---------------------------------------------------------------
 src/__init__.py                       0      0   100%
 src/domain_models/__init__.py         5      0   100%
-src/domain_models/config.py           8      1    88%   17
+src/domain_models/config.py          11      1    91%   20
 src/domain_models/exceptions.py       2      0   100%
 src/domain_models/manifest.py         4      0   100%
 src/domain_models/schemas.py         11      0   100%
 src/ingestion/__init__.py             2      0   100%
-src/ingestion/github_client.py       28      1    96%   60
+src/ingestion/github_client.py       38      0   100%
 ---------------------------------------------------------------
-TOTAL                                60      2    97%
-========================= 7 passed, 1 skipped in 0.81s =========================
+TOTAL                                73      1    99%
+========================= 8 passed, 1 skipped in 0.77s =========================

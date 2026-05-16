@@ -1,6 +1,7 @@
 import pytest
 from pytest_httpx import HTTPXMock
 
+from src.domain_models.config import Settings
 from src.domain_models.exceptions import RepositoryNotFoundError
 from src.domain_models.schemas import RepositoryMetrics
 from src.ingestion.github_client import GitHubClient
@@ -16,7 +17,7 @@ def test_uat_c02_01_successful_data_retrieval(httpx_mock: HTTPXMock) -> None:
          (`stargazers_count`, `forks_count`, `open_issues_count`) corresponding to the mock data.
     """
     # GIVEN
-    client = GitHubClient(token="valid_mock_token")  # noqa: S106
+    settings = Settings(GITHUB_TOKEN="valid_mock_token")  # noqa: S106
     mock_payload = {
         "stargazers_count": 30000,
         "forks_count": 3000,
@@ -30,7 +31,8 @@ def test_uat_c02_01_successful_data_retrieval(httpx_mock: HTTPXMock) -> None:
     )
 
     # WHEN
-    result = client.get_repository_metrics("streamlit", "streamlit")
+    with GitHubClient(settings=settings) as client:
+        result = client.get_repository_metrics("streamlit", "streamlit")
 
     # THEN
     assert isinstance(result, RepositoryMetrics)
@@ -48,14 +50,17 @@ def test_uat_c02_02_graceful_error_translation(httpx_mock: HTTPXMock) -> None:
     AND explicitly raise a `RepositoryNotFoundError` to prevent raw HTTP traces from propagating up the application stack.
     """
     # GIVEN
-    client = GitHubClient(token="valid_mock_token")  # noqa: S106
+    settings = Settings(GITHUB_TOKEN="valid_mock_token")  # noqa: S106
     httpx_mock.add_response(
         url="https://api.github.com/repos/invalid-owner/invalid-repo",
         status_code=404,
     )
 
     # WHEN / THEN
-    with pytest.raises(
-        RepositoryNotFoundError, match="Repository invalid-owner/invalid-repo not found"
+    with (
+        GitHubClient(settings=settings) as client,
+        pytest.raises(
+            RepositoryNotFoundError, match="Repository invalid-owner/invalid-repo not found"
+        ),
     ):
         client.get_repository_metrics("invalid-owner", "invalid-repo")
