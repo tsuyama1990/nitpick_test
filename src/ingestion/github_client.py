@@ -19,7 +19,18 @@ class GitHubClient:
         )
 
     def _handle_response(self, response: httpx.Response, owner: str, repo: str) -> None:
-        """Process the httpx.Response and translate errors."""
+        """Process the httpx.Response and translate HTTP errors into domain exceptions.
+
+        Args:
+            response: The raw response from the HTTP client.
+            owner: The repository owner, used for error messages.
+            repo: The repository name, used for error messages.
+
+        Raises:
+            RepositoryNotFoundError: If a 404 status code is returned.
+            RateLimitExceededError: If a 403 or 429 status code is returned.
+            httpx.HTTPStatusError: For other non-2xx status codes.
+        """
         if response.status_code == 404:
             err_msg = f"Repository {owner}/{repo} not found."
             raise RepositoryNotFoundError(err_msg)
