@@ -13,6 +13,7 @@ A modern, high-performance Proof-of-Concept (PoC) dashboard for analysing GitHub
 - **Zero-Config Local Caching:** Implements an intelligent, Time-To-Live (TTL) based local Parquet file cache to drastically reduce API latency and respect network constraints.
 - **Interactive Visualisations:** Provides a clean, responsive web interface using `Streamlit` to display core repository KPIs and interactive charts of developer activity over time.
 - **Type-Safe Architecture:** Built with strict `Pydantic` domain models and rigorous MyPy static typing, ensuring data integrity from network response to frontend rendering.
+- **Secure Configuration Enforcement:** Ensures environmental integrity by strictly requiring explicit credentials (like `GITHUB_TOKEN`) before boot, preventing downstream failures caused by insecure states.
 
 ## Architecture Overview
 
@@ -124,8 +125,8 @@ This project adheres to strict code quality standards.
 ├── README.md            # Project documentation
 ├── src/
 │   ├── app.py           # Streamlit frontend application
-│   ├── config.py        # Pydantic-based configuration management
-│   ├── domain/          # Pydantic schemas and custom exceptions
+│   ├── config.py        # Proxy for backwards-compatible configuration management
+│   ├── domain_models/   # Pydantic schemas, configurations, and custom exceptions
 │   ├── ingestion/       # GitHub API client
 │   └── processing/      # Orchestrator, Polars transformations, and Cache
 └── tests/
