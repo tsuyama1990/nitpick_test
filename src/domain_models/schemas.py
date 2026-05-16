@@ -15,6 +15,8 @@ def _strip_extra(cls: Any, data: Any) -> Any:
 
 
 class RepositoryMetrics(BaseModel):
+    """Container for essential repository KPI metrics from GitHub."""
+
     stargazers_count: int
     forks_count: int
     open_issues_count: int
@@ -28,6 +30,8 @@ class RepositoryMetrics(BaseModel):
 
 
 class CommitAuthor(BaseModel):
+    """Represents the author of a commit, including their name and the commit timestamp."""
+
     name: str
     date: datetime
 
@@ -40,6 +44,8 @@ class CommitAuthor(BaseModel):
 
 
 class CommitData(BaseModel):
+    """Contains the inner data of a single commit, matching GitHub's nested payload structure."""
+
     author: CommitAuthor
 
     model_config = ConfigDict(extra="forbid")
@@ -51,6 +57,8 @@ class CommitData(BaseModel):
 
 
 class CommitItem(BaseModel):
+    """Represents a single commit item in the array returned by the GitHub API."""
+
     commit: CommitData
 
     model_config = ConfigDict(extra="forbid")
