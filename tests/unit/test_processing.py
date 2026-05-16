@@ -1,3 +1,5 @@
+from collections.abc import Callable
+
 import polars as pl
 import pytest
 from pydantic import ValidationError
@@ -24,15 +26,6 @@ def test_aggregate_commits_by_date_valid() -> None:
     assert results[1]["commit_count"] == 1  # Oct 2
 
 
-def test_aggregate_commits_by_date_empty() -> None:
-    df = aggregate_commits_by_date([])
-
-    assert isinstance(df, pl.DataFrame)
-    assert len(df) == 0
-    assert df.columns == ["date", "commit_count"]
-    assert df.schema["date"] == pl.Date
-
-
 def test_get_top_committers_valid() -> None:
     raw_data: list[dict[str, object]] = [
         {"commit": {"author": {"name": "Alice", "date": "2023-10-01T10:00:00Z"}}},
@@ -55,15 +48,6 @@ def test_get_top_committers_valid() -> None:
     assert results[1]["commit_count"] == 1
 
 
-def test_get_top_committers_empty() -> None:
-    df = get_top_committers([])
-
-    assert isinstance(df, pl.DataFrame)
-    assert len(df) == 0
-    assert df.columns == ["name", "commit_count"]
-    assert df.schema["name"] == pl.String
-
-
 def test_get_top_committers_deterministic_sorting() -> None:
     # 3 authors, 2 commits each.
     raw_data: list[dict[str, object]] = [
@@ -82,6 +66,29 @@ def test_get_top_committers_deterministic_sorting() -> None:
     assert len(results) == 2
     assert results[0]["name"] == "Alice"
     assert results[1]["name"] == "Bob"
+
+
+
+
+@pytest.mark.parametrize(
+    ("func", "expected_columns", "schema_col", "schema_type"),
+    [
+        (aggregate_commits_by_date, ["date", "commit_count"], "date", pl.Date),
+        (get_top_committers, ["name", "commit_count"], "name", pl.String),
+    ],
+)
+def test_empty_dataset_handling(
+    func: Callable[[list[dict[str, object]]], pl.DataFrame],
+    expected_columns: list[str],
+    schema_col: str,
+    schema_type: pl.DataType,
+) -> None:
+    df = func([])
+
+    assert isinstance(df, pl.DataFrame)
+    assert len(df) == 0
+    assert df.columns == expected_columns
+    assert df.schema[schema_col] == schema_type
 
 
 def test_validation_error_on_malformed_data() -> None:
