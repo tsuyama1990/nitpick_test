@@ -24,7 +24,11 @@ def test_repository_metrics_valid() -> None:
 
 
 def test_repository_metrics_invalid() -> None:
-    data: dict[str, object] = {"stargazers_count": "not_an_int", "forks_count": 5, "open_issues_count": 2}
+    data: dict[str, object] = {
+        "stargazers_count": "not_an_int",
+        "forks_count": 5,
+        "open_issues_count": 2,
+    }
     with pytest.raises(ValidationError):
         RepositoryMetrics(**data)  # type: ignore[arg-type]
 
