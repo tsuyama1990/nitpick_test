@@ -10,7 +10,7 @@ class Settings(BaseSettings):
 
     GITHUB_TOKEN: str
 
-    model_config = SettingsConfigDict(env_file=".env", extra="forbid")
+    model_config = SettingsConfigDict(env_file=None, extra="forbid")
 
 
 @functools.lru_cache
