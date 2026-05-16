@@ -10,6 +10,8 @@ A modern, high-performance Proof-of-Concept (PoC) dashboard for analysing GitHub
 
 - **Automated Data Ingestion:** Seamlessly connects to the GitHub REST API with robust error handling and strict rate limit protection.
 - **High-Performance Aggregation:** Leverages `Polars` for zero-copy, lightning-fast tabular data transformations.
+- **Date Aggregation:** Accurately groups commits by date to calculate activity volume over time.
+- **Top Committer Extraction:** Identifies leading contributors deterministically, sorting by commit count and alphabetical tie-breaking.
 - **Zero-Config Local Caching:** Implements an intelligent, Time-To-Live (TTL) based local Parquet file cache to drastically reduce API latency and respect network constraints.
 - **Interactive Visualisations:** Provides a clean, responsive web interface using `Streamlit` to display core repository KPIs and interactive charts of developer activity over time.
 - **Type-Safe Architecture:** Built with strict `Pydantic` domain models and rigorous MyPy static typing, ensuring data integrity from network response to frontend rendering.
@@ -119,18 +121,16 @@ This project adheres to strict code quality standards.
 
 ```text
 .
-├── .env.example         # Template for environment variables
-├── pyproject.toml       # Dependency and linter configuration
-├── README.md            # Project documentation
+├── .env.example           # Template for environment variables
+├── pyproject.toml         # Dependency and linter configuration
+├── README.md              # Project documentation
 ├── src/
-│   ├── app.py           # Streamlit frontend application
-│   ├── config.py        # Pydantic-based configuration management
-│   ├── domain/          # Pydantic schemas and custom exceptions
-│   ├── ingestion/       # GitHub API client
-│   └── processing/      # Orchestrator, Polars transformations, and Cache
+│   ├── domain_models/     # Pydantic schemas and config models
+│   └── processing/        # Polars transformations module
 └── tests/
-    ├── uat/             # Marimo notebooks for UAT and tutorials
-    └── ...              # Unit and integration tests
+    ├── e2e/               # End-to-end integration tests
+    ├── uat/               # UAT scenarios
+    └── unit/              # Unit tests
 ```
 
 ## License
