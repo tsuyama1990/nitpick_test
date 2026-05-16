@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     GITHUB_API_ACCEPT_HEADER: str = "application/vnd.github.v3+json"
     GITHUB_API_TIMEOUT: float = 10.0
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="forbid")
 
 
 @lru_cache
