@@ -18,20 +18,39 @@ def aggregate_commits_by_date(raw_commits: list[dict[str, object]]) -> pl.DataFr
             {"date": [], "commit_count": []}, schema={"date": pl.Date, "commit_count": pl.UInt32}
         )
 
-    # Validate and flatten data
-    valid_data = []
-    for commit_dict in raw_commits:
-        item = CommitItem(**commit_dict)  # type: ignore[arg-type]
-        valid_data.append({"date": item.commit.author.date})
+    from collections.abc import Iterator
 
-    df = pl.DataFrame(valid_data)
+    # Validate and flatten data into an iterator
+    def iterate_valid_commits() -> Iterator[dict[str, object]]:
+        for commit_dict in raw_commits:
+            item = CommitItem(**commit_dict)  # type: ignore[arg-type]
+            yield {"date": item.commit.author.date}
+
+    # Process the iterator in chunks to avoid OOM
+    schema = {"date": pl.Datetime}
+    lf = pl.LazyFrame({"date": []}, schema=schema)
+
+    chunk_size = 1000
+    current_chunk = []
+
+    for item in iterate_valid_commits():
+        current_chunk.append(item)
+        if len(current_chunk) >= chunk_size:
+            chunk_lf = pl.LazyFrame(current_chunk, schema=schema)
+            lf = pl.concat([lf, chunk_lf])
+            current_chunk = []
+
+    if current_chunk:
+        chunk_lf = pl.LazyFrame(current_chunk, schema=schema)
+        lf = pl.concat([lf, chunk_lf])
 
     # Cast date, group by, and aggregate
     return (
-        df.with_columns(pl.col("date").cast(pl.Date))
+        lf.with_columns(pl.col("date").cast(pl.Date))
         .group_by("date")
         .agg(pl.len().alias("commit_count"))
         .sort("date")
+        .collect()
     )
 
 
@@ -52,16 +71,36 @@ def get_top_committers(raw_commits: list[dict[str, object]], top_n: int = 5) -> 
             {"name": [], "commit_count": []}, schema={"name": pl.String, "commit_count": pl.UInt32}
         )
 
-    valid_data = []
-    for commit_dict in raw_commits:
-        item = CommitItem(**commit_dict)  # type: ignore[arg-type]
-        valid_data.append({"name": item.commit.author.name})
+    from collections.abc import Iterator
 
-    df = pl.DataFrame(valid_data)
+    # Validate and flatten data into an iterator
+    def iterate_valid_committers() -> Iterator[dict[str, object]]:
+        for commit_dict in raw_commits:
+            item = CommitItem(**commit_dict)  # type: ignore[arg-type]
+            yield {"name": item.commit.author.name}
+
+    # Process the iterator in chunks to avoid OOM
+    schema = {"name": pl.String}
+    lf = pl.LazyFrame({"name": []}, schema=schema)
+
+    chunk_size = 1000
+    current_chunk = []
+
+    for item in iterate_valid_committers():
+        current_chunk.append(item)
+        if len(current_chunk) >= chunk_size:
+            chunk_lf = pl.LazyFrame(current_chunk, schema=schema)
+            lf = pl.concat([lf, chunk_lf])
+            current_chunk = []
+
+    if current_chunk:
+        chunk_lf = pl.LazyFrame(current_chunk, schema=schema)
+        lf = pl.concat([lf, chunk_lf])
 
     return (
-        df.group_by("name")
+        lf.group_by("name")
         .agg(pl.len().alias("commit_count"))
         .sort(["commit_count", "name"], descending=[True, False])
         .head(top_n)
+        .collect()
     )
