@@ -1,8 +1,11 @@
 """Configuration schema and loading logic for GitHub Analytics Dashboard."""
 
 import functools
+import os
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+env_path = os.getenv("ENV_FILE", ".env")
 
 
 class Settings(BaseSettings):
@@ -10,7 +13,7 @@ class Settings(BaseSettings):
 
     GITHUB_TOKEN: str
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="forbid")
+    model_config = SettingsConfigDict(env_file=env_path, env_file_encoding="utf-8", extra="forbid")
 
 
 @functools.lru_cache
