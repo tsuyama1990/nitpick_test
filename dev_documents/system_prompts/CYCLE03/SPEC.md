@@ -23,7 +23,7 @@ The file structure introduces the processing module. The files explicitly marked
 .
 ├── src/
 │   ├── config.py
-│   ├── domain/
+│   ├── domain_models/
 │   │   ├── exceptions.py
 │   │   └── schemas.py
 │   └── processing/
@@ -45,7 +45,7 @@ These functions act as strict boundaries. They take primitive types (lists of di
 
 ## Implementation Approach
 1. **Dependency Verification:** Ensure `polars` and `pydantic` are properly installed in the `uv` environment.
-2. **Implement Transformation Module:** Create `src/processing/transformations.py`. Import `polars as pl` and the relevant schemas from `src.domain.schemas`.
+2. **Implement Transformation Module:** Create `src/processing/transformations.py`. Import `polars as pl` and the relevant schemas from `src.domain_models.schemas`.
 3. **Implement Date Aggregation:** Define `aggregate_commits_by_date`.
    - Iterate over the `raw_commits` and instantiate the `CommitItem` model to validate the data. Extract the necessary fields (date) into a flat list of dictionaries suitable for Polars initialization.
    - Initialize a `pl.DataFrame` from the flattened data.
