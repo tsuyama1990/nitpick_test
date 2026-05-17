@@ -22,15 +22,22 @@ The file structure introduces the processing module. The files explicitly marked
 ```text
 .
 ├── src/
-│   ├── config.py
-│   ├── domain/
-│   │   ├── exceptions.py
+│   ├── domain_models/
+│   │   ├── __init__.py
+│   │   ├── config.py
+│   │   ├── manifest.py
 │   │   └── schemas.py
 │   └── processing/
 │       ├── __init__.py
 │       └── **transformations.py**
 └── tests/
-    └── **test_processing.py**
+    ├── e2e/
+    │   └── test_processing_e2e.py
+    ├── uat/
+    │   └── uat_cycle03.py
+    └── unit/
+        ├── test_domain_models.py
+        └── **test_processing.py**
 ```
 
 ## Design Architecture
@@ -45,9 +52,9 @@ These functions act as strict boundaries. They take primitive types (lists of di
 
 ## Implementation Approach
 1. **Dependency Verification:** Ensure `polars` and `pydantic` are properly installed in the `uv` environment.
-2. **Implement Transformation Module:** Create `src/processing/transformations.py`. Import `polars as pl` and the relevant schemas from `src.domain.schemas`.
+2. **Implement Transformation Module:** Create `src/processing/transformations.py`. Import `polars as pl` and the relevant schemas from `src.domain_models`.
 3. **Implement Date Aggregation:** Define `aggregate_commits_by_date`.
-   - Iterate over the `raw_commits` and instantiate the `CommitItem` model to validate the data. Extract the necessary fields (date) into a flat list of dictionaries suitable for Polars initialization.
+   - Iterate over the `raw_commits` and explicitly parse date keys into `datetime` before instantiating the `CommitItem` model to validate the data, strictly failing over on missing keys explicitly via `ValidationError`. Extract the necessary fields (date) into a flat list of dictionaries suitable for Polars initialization.
    - Initialize a `pl.DataFrame` from the flattened data.
    - Use Polars expressions (e.g., `df.with_columns(pl.col("date").cast(pl.Date))`) to ensure schema correctness.
    - Use `df.group_by("date").agg(pl.len().alias("commit_count")).sort("date")` to perform the aggregation.
@@ -63,7 +70,7 @@ These functions act as strict boundaries. They take primitive types (lists of di
 ## Test Strategy
 
 ### Unit Testing Approach
-Unit testing will reside in `tests/test_processing.py`. This phase demands meticulous testing of edge cases and data validation.
+Unit testing will reside in `tests/unit/test_processing.py`. This phase demands meticulous testing of edge cases and data validation.
 - **Valid Data Aggregation:** Create a mock list of dictionary payloads representing 10 commits spread across 3 different days by 4 different authors. Pass this to both functions. Assert that the resulting `pl.DataFrame` has the correct schema (columns and data types) and the mathematically correct counts (using `df.filter` or converting to dicts for assertion).
 - **Empty Dataset Handling:** Pass an empty list `[]` to both functions. Assert that they return an empty `pl.DataFrame` with the correct column schemas rather than crashing.
 - **Deterministic Sorting (Top Committers):** Create a specific mock payload where 3 authors all have exactly 2 commits. Pass this to `get_top_committers(..., top_n=2)`. Assert that the returned authors strictly follow the secondary alphabetical sort order, proving the tie-breaking logic works and tests remain deterministic.

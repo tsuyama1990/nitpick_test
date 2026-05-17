@@ -22,11 +22,12 @@ dev = [
     "ruff>=0.15.12",
     "pytest-httpx",
     "pytest-mock",
-    "marimo"
+    "marimo",
+    "playwright"
 ]
 
 [tool.ruff]
-target-version = "py311"
+target-version = "py312"
 line-length = 100
 fix = true
 
