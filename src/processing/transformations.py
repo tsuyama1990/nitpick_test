@@ -10,7 +10,7 @@ def _validate_and_flatten(raw_commits: list[dict[str, object]]) -> list[dict[str
         # Pydantic validation ensures the payload matches the expected shape
         item = CommitItem(
             name=commit.get("name"),  # type: ignore[arg-type]
-            date=commit.get("date")   # type: ignore[arg-type]
+            date=commit.get("date"),  # type: ignore[arg-type]
         )
         flattened.append({"name": item.name, "date": item.date.date()})
     return flattened
