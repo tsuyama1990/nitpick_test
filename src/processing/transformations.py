@@ -1,25 +1,16 @@
 import polars as pl
 from pydantic import ValidationError
 
-from src.domain_models.schemas import CommitItem
+from src.domain_models.schemas import CommitItem, strip_commit_item
 
 
 def _parse_commit_item(rc: object) -> CommitItem:
     """Helper to parse a raw commit item with strict schema enforcement."""
-    if not isinstance(rc, dict) or "commit" not in rc or not isinstance(rc["commit"], dict):
-        err_msg = "Validation error"
+    if not isinstance(rc, dict):
+        err_msg = "Validation error: Input is not a dictionary"
         raise ValidationError.from_exception_data(err_msg, [])
 
-    commit_dict = rc["commit"]
-    if "author" not in commit_dict or not isinstance(commit_dict["author"], dict):
-        err_msg = "Validation error"
-        raise ValidationError.from_exception_data(err_msg, [])
-
-    author_dict = commit_dict["author"]
-
-    extracted_rc = {
-        "commit": {"author": {"name": author_dict.get("name"), "date": author_dict.get("date")}}
-    }
+    extracted_rc = strip_commit_item(rc)
     return CommitItem(**extracted_rc)  # type: ignore[arg-type]
 
 
@@ -33,7 +24,7 @@ def aggregate_commits_by_date(raw_commits: list[dict[str, object]]) -> pl.DataFr
         except Exception as e:
             if isinstance(e, ValidationError):
                 raise
-            err_msg = "Validation error"
+            err_msg = "Validation error during parsing"
             raise ValidationError.from_exception_data(err_msg, []) from e
 
     if not valid_data:
@@ -59,7 +50,7 @@ def get_top_committers(raw_commits: list[dict[str, object]], top_n: int = 5) -> 
         except Exception as e:
             if isinstance(e, ValidationError):
                 raise
-            err_msg = "Validation error"
+            err_msg = "Validation error during parsing"
             raise ValidationError.from_exception_data(err_msg, []) from e
 
     if not valid_data:

@@ -107,3 +107,10 @@ def test_other_exception() -> None:
         aggregate_commits_by_date(malformed_commits)  # type: ignore[arg-type]
     with pytest.raises(ValidationError):
         get_top_committers(malformed_commits)  # type: ignore[arg-type]
+
+def test_validation_error_not_dict_rc() -> None:
+    malformed_commits = ["not a dict"]
+    with pytest.raises(ValidationError):
+        aggregate_commits_by_date(malformed_commits) # type: ignore[arg-type]
+    with pytest.raises(ValidationError):
+        get_top_committers(malformed_commits) # type: ignore[arg-type]

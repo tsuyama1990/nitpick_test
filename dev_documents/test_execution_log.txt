@@ -4,10 +4,10 @@ rootdir: /app
 configfile: pyproject.toml
 testpaths: tests
 plugins: mock-3.15.1, cov-7.1.0, anyio-4.13.0, httpx-0.36.2
-collected 13 items
+collected 14 items
 
-tests/unit/test_domain_models.py .....                                   [ 38%]
-tests/unit/test_processing.py ........                                   [100%]
+tests/unit/test_domain_models.py .....                                   [ 35%]
+tests/unit/test_processing.py .........                                  [100%]
 
 ================================ tests coverage ================================
 _______________ coverage: platform linux, python 3.12.13-final-0 _______________
@@ -18,9 +18,9 @@ src/__init__.py                         0      0   100%
 src/domain_models/__init__.py           3      0   100%
 src/domain_models/config.py             5      0   100%
 src/domain_models/manifest.py           0      0   100%
-src/domain_models/schemas.py           17      0   100%
+src/domain_models/schemas.py           25      0   100%
 src/processing/__init__.py              0      0   100%
-src/processing/transformations.py      44      4    91%   36-37, 62-63
+src/processing/transformations.py      39      4    90%   27-28, 53-54
 -----------------------------------------------------------------
-TOTAL                                  69      4    94%
-============================== 13 passed in 1.17s ==============================
+TOTAL                                  72      4    94%
+============================== 14 passed in 1.04s ==============================
