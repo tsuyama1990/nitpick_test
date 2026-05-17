@@ -24,7 +24,8 @@ def test_manifest_default_version() -> None:
     assert manifest.version == "1.0.0"
 
 
-def test_settings_missing_token() -> None:
+def test_settings_missing_token(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("GITHUB_TOKEN", raising=False)
     with pytest.raises(ValidationError):
         Settings()  # type: ignore[call-arg]
 
