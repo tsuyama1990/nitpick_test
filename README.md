@@ -86,6 +86,18 @@ graph TD
 
 **Quick Start:**
 
+The application now supports advanced data aggregation using Polars. To utilize the data transformation processing:
+
+```python
+from src.processing.transformations import aggregate_commits_by_date, get_top_committers
+
+# Your list of raw commit dictionaries:
+# raw_commits = [{"name": "Alice", "date": "2023-10-01T10:00:00Z"}, ...]
+
+df_by_date = aggregate_commits_by_date(raw_commits)
+df_top_committers = get_top_committers(raw_commits, top_n=5)
+```
+
 To launch the interactive dashboard, run the Streamlit application via `uv`:
 
 ```bash
