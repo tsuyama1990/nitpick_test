@@ -1,3 +1,4 @@
+from datetime import UTC
 from typing import Any
 
 import polars as pl
@@ -81,3 +82,12 @@ def test_pydantic_validation_error() -> None:
         aggregate_commits_by_date(data)
     with pytest.raises(ValidationError):
         get_top_committers(data)
+
+
+def test_pydantic_validation_error_date_not_str() -> None:
+    from datetime import datetime
+
+    # Test fallback flow where date is already a datetime
+    data: list[dict[str, Any]] = [{"date": datetime(2023, 10, 1, tzinfo=UTC), "name": "Alice"}]
+    df = aggregate_commits_by_date(data)
+    assert len(df) == 1

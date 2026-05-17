@@ -1,6 +1,8 @@
+from datetime import datetime
 from typing import Any
 
 import polars as pl
+from pydantic import ValidationError
 
 from src.domain_models import CommitItem
 
@@ -9,12 +11,23 @@ def _validate_and_flatten(raw_commits: list[dict[str, Any]]) -> list[dict[str, A
     """Validates raw commits against CommitItem schema and returns flattened dicts."""
     flattened = []
     for commit_data in raw_commits:
-        # Strict validation
-        # We know we are unpacking from raw json, so we explicitly map required fields
-        date_str = str(commit_data.get("date", ""))
-        name_str = str(commit_data.get("name", ""))
-        item = CommitItem(date=date_str, name=name_str)  # type: ignore[arg-type]
-        flattened.append({"date": item.date, "name": item.name})
+        try:
+            date_val = commit_data["date"]
+            name_val = commit_data["name"]
+
+            if isinstance(date_val, str) and date_val.endswith("Z"):
+                date_val = date_val.replace("Z", "+00:00")
+                parsed_date = datetime.fromisoformat(date_val)
+            else:
+                parsed_date = date_val
+
+            item = CommitItem(date=parsed_date, name=name_val)
+            flattened.append({"date": item.date, "name": item.name})
+        except KeyError as e:
+            model_name = "CommitItem"
+            raise ValidationError.from_exception_data(
+                model_name, [{"type": "missing", "loc": ("body", e.args[0]), "input": commit_data}]
+            ) from e
     return flattened
 
 
