@@ -125,7 +125,7 @@ This project adheres to strict code quality standards.
 ├── src/
 │   ├── app.py           # Streamlit frontend application
 │   ├── config.py        # Pydantic-based configuration management
-│   ├── domain/          # Pydantic schemas and custom exceptions
+│   ├── domain_models/   # Pydantic schemas and custom exceptions
 │   ├── ingestion/       # GitHub API client
 │   └── processing/      # Orchestrator, Polars transformations, and Cache
 └── tests/
