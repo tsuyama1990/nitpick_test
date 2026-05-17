@@ -16,16 +16,19 @@ def _validate_and_flatten_commits(raw_commits: list[dict[str, object]]) -> list[
         # Pydantic validation (will raise ValidationError if malformed, Pydantic natively parses dates)
         author = CommitAuthor(
             name=str(raw_author_dict.get("name", "")),
-            date=raw_author_dict.get("date") # type: ignore[arg-type]
+            date=raw_author_dict.get("date"),  # type: ignore[arg-type]
         )
         commit_data = CommitData(author=author)
         item = CommitItem(commit=commit_data)
 
-        flattened_data.append({
-            "name": item.commit.author.name,
-            "date": item.commit.author.date.date(),
-        })
+        flattened_data.append(
+            {
+                "name": item.commit.author.name,
+                "date": item.commit.author.date.date(),
+            }
+        )
     return flattened_data
+
 
 def aggregate_commits_by_date(raw_commits: list[dict[str, object]]) -> pl.DataFrame:
     if not raw_commits:
@@ -35,12 +38,12 @@ def aggregate_commits_by_date(raw_commits: list[dict[str, object]]) -> pl.DataFr
     df = pl.DataFrame(flattened)
 
     return (
-        df
-        .with_columns(pl.col("date").cast(pl.Date))
+        df.with_columns(pl.col("date").cast(pl.Date))
         .group_by("date")
         .agg(pl.len().alias("commit_count"))
         .sort("date")
     )
+
 
 def get_top_committers(raw_commits: list[dict[str, object]], top_n: int = 5) -> pl.DataFrame:
     if not raw_commits:
@@ -50,8 +53,7 @@ def get_top_committers(raw_commits: list[dict[str, object]], top_n: int = 5) -> 
     df = pl.DataFrame(flattened)
 
     return (
-        df
-        .with_columns(pl.col("name").cast(pl.String))
+        df.with_columns(pl.col("name").cast(pl.String))
         .group_by("name")
         .agg(pl.len().alias("commit_count"))
         .sort(["commit_count", "name"], descending=[True, False])
