@@ -15,12 +15,12 @@ _______________ coverage: platform linux, python 3.12.13-final-0 _______________
 Name                                Stmts   Miss  Cover   Missing
 -----------------------------------------------------------------
 src/__init__.py                         0      0   100%
-src/domain_models/__init__.py           0      0   100%
+src/domain_models/__init__.py           3      0   100%
 src/domain_models/config.py             5      0   100%
 src/domain_models/manifest.py           0      0   100%
-src/domain_models/schemas.py           19      1    95%   9
+src/domain_models/schemas.py           17      0   100%
 src/processing/__init__.py              0      0   100%
 src/processing/transformations.py      44      4    91%   36-37, 62-63
 -----------------------------------------------------------------
-TOTAL                                  68      5    93%
-============================== 13 passed in 0.98s ==============================
+TOTAL                                  69      4    94%
+============================== 13 passed in 1.17s ==============================
