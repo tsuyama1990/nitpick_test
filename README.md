@@ -9,7 +9,7 @@ A modern, high-performance Proof-of-Concept (PoC) dashboard for analysing GitHub
 ## Key Features
 
 - **Automated Data Ingestion:** Seamlessly connects to the GitHub REST API with robust error handling and strict rate limit protection.
-- **High-Performance Aggregation:** Leverages `Polars` for zero-copy, lightning-fast tabular data transformations.
+- **High-Performance Aggregation:** Leverages `Polars` for zero-copy, lightning-fast tabular data transformations, specifically built for calculating commits by date and identifying top committers with absolute deterministic sorting.
 - **Zero-Config Local Caching:** Implements an intelligent, Time-To-Live (TTL) based local Parquet file cache to drastically reduce API latency and respect network constraints.
 - **Interactive Visualisations:** Provides a clean, responsive web interface using `Streamlit` to display core repository KPIs and interactive charts of developer activity over time.
 - **Type-Safe Architecture:** Built with strict `Pydantic` domain models and rigorous MyPy static typing, ensuring data integrity from network response to frontend rendering.
@@ -110,9 +110,10 @@ This project adheres to strict code quality standards.
   ```bash
   uv run pytest
   ```
-- **Run User Acceptance Tests (Marimo):**
+- **Run User Acceptance Tests (Marimo / Scripts):**
   ```bash
-  uv run marimo run tests/uat/UAT_AND_TUTORIAL.py
+  uv run python tests/uat/uat_c03_01.py
+  uv run python tests/uat/uat_c03_02.py
   ```
 
 ## Project Structure
@@ -124,13 +125,13 @@ This project adheres to strict code quality standards.
 ├── README.md            # Project documentation
 ├── src/
 │   ├── app.py           # Streamlit frontend application
-│   ├── config.py        # Pydantic-based configuration management
-│   ├── domain/          # Pydantic schemas and custom exceptions
+│   ├── domain_models/   # Pydantic schemas, configurations and exceptions
 │   ├── ingestion/       # GitHub API client
 │   └── processing/      # Orchestrator, Polars transformations, and Cache
 └── tests/
-    ├── uat/             # Marimo notebooks for UAT and tutorials
-    └── ...              # Unit and integration tests
+    ├── e2e/             # Integration tests
+    ├── uat/             # Scripts for UAT verification
+    └── unit/            # Unit tests for domain models and processing logic
 ```
 
 ## License
