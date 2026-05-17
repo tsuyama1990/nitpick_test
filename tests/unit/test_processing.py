@@ -36,15 +36,6 @@ def test_aggregate_commits_by_date_valid_data() -> None:
     assert results[2] == {"date": datetime.date(2023, 10, 3), "commit_count": 3}
 
 
-def test_aggregate_commits_by_date_empty() -> None:
-    """Test date aggregation with an empty dataset."""
-    df = aggregate_commits_by_date([])
-
-    assert df.schema["date"] == pl.Date
-    assert df.schema["commit_count"] == pl.UInt32
-    assert df.height == 0
-
-
 def test_get_top_committers_valid_data() -> None:
     """Test committer aggregation with ties for deterministic sorting."""
     raw_commits = [
@@ -70,13 +61,17 @@ def test_get_top_committers_valid_data() -> None:
     assert results[1] == {"name": "Bob", "commit_count": 2}
 
 
-def test_get_top_committers_empty() -> None:
-    """Test committer aggregation with an empty dataset."""
-    df = get_top_committers([])
+def test_empty_datasets() -> None:
+    """Test aggregation functions with an empty dataset."""
+    df_date = aggregate_commits_by_date([])
+    assert df_date.schema["date"] == pl.Date
+    assert df_date.schema["commit_count"] == pl.UInt32
+    assert df_date.height == 0
 
-    assert df.schema["name"] == pl.String
-    assert df.schema["commit_count"] == pl.UInt32
-    assert df.height == 0
+    df_committer = get_top_committers([])
+    assert df_committer.schema["name"] == pl.String
+    assert df_committer.schema["commit_count"] == pl.UInt32
+    assert df_committer.height == 0
 
 
 def test_pydantic_validation_error() -> None:
