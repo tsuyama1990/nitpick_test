@@ -1,66 +1,22 @@
-# GitHub Repository Analytics Dashboard
+# GitHub Repository Analytics Dashboard (Processing Engine Update)
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 ![Python Version](https://img.shields.io/badge/python-3.12%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-A modern, high-performance Proof-of-Concept (PoC) dashboard for analysing GitHub repository data. This application securely connects to the GitHub REST API to fetch, process, cache, and visualise repository metrics and commit histories, offering an intuitive interface built entirely in Python.
+A modern, high-performance dashboard for analysing GitHub repository data. This tool currently features a robust data processing engine that leverages strictly typed Pydantic models and Polars to securely validate and aggregate GitHub commit data at lightning speeds.
 
 ## Key Features
 
-- **Automated Data Ingestion:** Seamlessly connects to the GitHub REST API with robust error handling and strict rate limit protection.
-- **High-Performance Aggregation:** Leverages `Polars` for zero-copy, lightning-fast tabular data transformations.
-- **Zero-Config Local Caching:** Implements an intelligent, Time-To-Live (TTL) based local Parquet file cache to drastically reduce API latency and respect network constraints.
-- **Interactive Visualisations:** Provides a clean, responsive web interface using `Streamlit` to display core repository KPIs and interactive charts of developer activity over time.
-- **Type-Safe Architecture:** Built with strict `Pydantic` domain models and rigorous MyPy static typing, ensuring data integrity from network response to frontend rendering.
-
-## Architecture Overview
-
-The system is designed with a strict layered architecture, separating concerns across Data Ingestion, Transformation/Storage, and Visualisation. This prevents tight coupling and allows individual components to be tested and evolved independently.
-
-```mermaid
-graph TD
-    subgraph Streamlit Frontend [Visualisation Layer]
-        UI[Streamlit App UI]
-        Input[User Input: Owner/Repo]
-        Charts[Metrics & Charts]
-        UI --> Input
-        UI --> Charts
-    end
-
-    subgraph Service Layer [Transformation & Storage Layer]
-        Orchestrator[Data Orchestrator]
-        Pydantic[Pydantic Validation]
-        Polars[Polars Aggregation]
-        Cache[(Local Parquet Cache)]
-    end
-
-    subgraph API Client [Ingestion Layer]
-        HTTPClient[HTTPX Client]
-        Auth[Token Management]
-    end
-
-    GitHubAPI[GitHub REST API]
-
-    Input --> Orchestrator
-    Orchestrator --> Cache
-    Cache -- Cache Hit --> Orchestrator
-    Orchestrator -- Cache Miss --> HTTPClient
-    Auth --> HTTPClient
-    HTTPClient --> GitHubAPI
-    GitHubAPI --> HTTPClient
-    HTTPClient --> Pydantic
-    Pydantic --> Polars
-    Polars --> Cache
-    Polars --> Orchestrator
-    Orchestrator --> Charts
-```
+- **Strict Schema Validation:** Utilizes `Pydantic` with `extra="forbid"` to ensure that incoming API payloads strictly conform to expectations, rejecting malformed data before it pollutes the system.
+- **High-Performance Aggregation:** Leverages `Polars` for zero-copy, lightning-fast tabular data transformations. It aggregates commit counts by date and accurately determines top committers using deterministic stable sorting algorithms.
+- **Secure Configuration Management:** Manages sensitive API credentials securely via `pydantic-settings`, enforcing environment configuration without hardcoding secrets.
+- **Test-Driven Architecture:** Backed by a comprehensive suite of isolated unit tests and User Acceptance Testing (UAT) scripts to ensure reliable, mathematically correct aggregations without risky external network calls.
 
 ## Prerequisites
 
 - **Python:** 3.12 or newer.
 - **Package Manager:** `uv` is required for dependency and environment management.
-- **GitHub Token:** A Personal Access Token (PAT) is required to access the GitHub API.
 
 ## Installation & Setup
 
@@ -76,61 +32,61 @@ graph TD
    ```
 
 3. **Configure Environment Variables:**
-   Copy the example environment file and populate it with your GitHub Personal Access Token.
+   Create a `.env` file containing your GitHub token (or configure it in your CI pipeline):
    ```bash
-   cp .env.example .env
-   # Edit .env and set GITHUB_TOKEN=your_token_here
+   echo "GITHUB_TOKEN=your_token_here" > .env
    ```
 
 ## Usage
 
-**Quick Start:**
+**Running the Data Processor Programmatically:**
 
-To launch the interactive dashboard, run the Streamlit application via `uv`:
+The core processing functions can be imported and executed in your Python scripts:
 
-```bash
-uv run streamlit run src/app.py
+```python
+import polars as pl
+from src.processing.transformations import aggregate_commits_by_date, get_top_committers
+
+# Example raw data (e.g., fetched from GitHub)
+raw_commits = [
+    {"commit": {"author": {"name": "Alice", "date": "2023-01-01T10:00:00Z"}}},
+    {"commit": {"author": {"name": "Bob", "date": "2023-01-02T14:00:00Z"}}}
+]
+
+# Aggregate commits by date
+df_dates = aggregate_commits_by_date(raw_commits)
+print(df_dates)
+
+# Get top committers
+df_top = get_top_committers(raw_commits, top_n=5)
+print(df_top)
 ```
 
-Once the server starts, open your browser to `http://localhost:8501`. Enter a repository name in the format `owner/repo` (e.g., `streamlit/streamlit`) and click the analyze button to view the dashboard.
+**Running Tests and UAT:**
 
-## Development Workflow
+To verify the deterministic nature of the sorting and the strictness of the schema, you can run the test suite:
 
-This project adheres to strict code quality standards.
+```bash
+# Run unit and integration tests
+uv run pytest
 
-- **Run Linters (Ruff):**
-  ```bash
-  uv run ruff check .
-  ```
-- **Run Type Checker (MyPy):**
-  ```bash
-  uv run mypy .
-  ```
-- **Run Tests (Pytest):**
-  ```bash
-  uv run pytest
-  ```
-- **Run User Acceptance Tests (Marimo):**
-  ```bash
-  uv run marimo run tests/uat/UAT_AND_TUTORIAL.py
-  ```
+# Execute UAT scripts
+uv run python tests/uat/uat_script.py
+```
 
 ## Project Structure
 
 ```text
 .
-├── .env.example         # Template for environment variables
-├── pyproject.toml       # Dependency and linter configuration
+├── .gitignore           # Ignored files (caches, envs, etc)
+├── pyproject.toml       # Dependency and tool configuration
 ├── README.md            # Project documentation
 ├── src/
-│   ├── app.py           # Streamlit frontend application
-│   ├── config.py        # Pydantic-based configuration management
-│   ├── domain/          # Pydantic schemas and custom exceptions
-│   ├── ingestion/       # GitHub API client
-│   └── processing/      # Orchestrator, Polars transformations, and Cache
+│   ├── domain_models/   # Pydantic schemas, manifest, and settings config
+│   └── processing/      # Polars data transformations engine
 └── tests/
-    ├── uat/             # Marimo notebooks for UAT and tutorials
-    └── ...              # Unit and integration tests
+    ├── uat/             # User Acceptance Test scripts
+    └── unit/            # Unit tests for schemas and logic
 ```
 
 ## License
