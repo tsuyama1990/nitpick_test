@@ -18,31 +18,32 @@ No specific docker configurations are required for this cycle.
 - Live API tests are strictly forbidden unless explicitly marked and excluded from the default test suite execution. Failure to mock will result in CI pipeline failures due to rate limiting and missing API keys in the Sandbox environment.
 
 ## System Architecture
-The file structure for this cycle introduces the ingestion package. The files explicitly marked in bold represent the targets for creation during this cycle.
+The file structure for this cycle introduces the ingestion package and refines the core domain schema. The structure uses `src/domain_models` as the domain root instead of `src/domain` to be more explicit.
 
 ```text
 .
 ├── src/
-│   ├── config.py
-│   ├── domain/
+│   ├── domain_models/
+│   │   ├── __init__.py
+│   │   ├── config.py
 │   │   ├── exceptions.py
 │   │   └── schemas.py
 │   └── ingestion/
 │       ├── __init__.py
-│       └── **github_client.py**
+│       └── github_client.py
 └── tests/
     ├── conftest.py
-    └── **test_ingestion.py**
+    └── test_ingestion.py
 ```
 
 ## Design Architecture
 The design for the Ingestion Layer centers around the `GitHubClient` class within `src/ingestion/github_client.py`. This class acts as a dedicated wrapper around the `httpx.Client`.
 
-The initialization of the `GitHubClient` requires the `GITHUB_TOKEN`. It configures the underlying `httpx.Client` with the base URL (`https://api.github.com`), default timeout parameters (e.g., 10 seconds), and critically, default headers. These headers must include `Accept: application/vnd.github.v3+json` to ensure the correct API version, and `Authorization: Bearer {token}` to authenticate the requests.
+The initialization of the `GitHubClient` requires the `GITHUB_TOKEN`. It configures the underlying `httpx.Client` with the base URL (`https://api.github.com/`), default timeout parameters (e.g., 10 seconds), and critically, default headers. These headers must include `Accept: application/vnd.github.v3+json` to ensure the correct API version, and `Authorization: Bearer {token}` to authenticate the requests.
 
 The class exposes two primary methods:
-1. `get_repository_metrics(self, owner: str, repo: str) -> dict`: This method targets the `/repos/{owner}/{repo}` endpoint. Its responsibility is to fetch the core repository information. Before returning the raw JSON dictionary, it must inspect the `response.status_code`. If a 404 is encountered, it must raise the `RepositoryNotFoundError`. If a 403 or 429 is encountered, it must raise the `RateLimitExceededError`.
-2. `get_recent_commits(self, owner: str, repo: str, limit: int = 100) -> list[dict]`: This method targets the `/repos/{owner}/{repo}/commits` endpoint. It must include query parameters to enforce the limit (`per_page=100`). Similar to the metrics method, it must rigorously check status codes and translate HTTP errors into domain exceptions before returning the raw JSON array.
+1. `get_repository_metrics(self, owner: str, repo: str) -> dict[str, Any]`: This method targets the `repos/{owner}/{repo}` endpoint. Its responsibility is to fetch the core repository information. Before returning the raw JSON dictionary, it must inspect the `response.status_code`. If a 404 is encountered, it must raise the `RepositoryNotFoundError`. If a 403 or 429 is encountered, it must raise the `RateLimitExceededError`.
+2. `get_recent_commits(self, owner: str, repo: str, limit: int = 100) -> list[dict[str, Any]]`: This method targets the `repos/{owner}/{repo}/commits` endpoint. It must include query parameters to enforce the limit (`per_page=limit`). Similar to the metrics method, it must rigorously check status codes and translate HTTP errors into domain exceptions before returning the raw JSON array.
 
 **Important Constraint:** The `GitHubClient` should *not* instantiate the Pydantic models itself. Its sole responsibility is network transport and error translation. It returns raw `dict` or `list[dict]` objects. Validation and instantiation will occur in the service layer in subsequent cycles. This maintains a strict separation of concerns.
 
